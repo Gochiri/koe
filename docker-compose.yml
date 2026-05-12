@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: dan-koe-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: dankoe
+      POSTGRES_PASSWORD: dankoe
+      POSTGRES_DB: dankoe
+    ports:
+      - "5432:5432"
+    volumes:
+      - dan-koe-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dankoe -d dankoe"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  dan-koe-pgdata:
