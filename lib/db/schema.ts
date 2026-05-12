@@ -148,7 +148,7 @@ export const corNotes = pgTable("cor_notes", {
   concept: text("concept"),
   sourceUrl: text("source_url"),
   sourceLabel: text("source_label"),
-  tags: jsonb("tags").default([]).notNull(),
+  tags: jsonb("tags").$type<string[]>().default([]).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
@@ -179,7 +179,7 @@ export const skills = pgTable("skills", {
   name: text("name").notNull(),
   phase: skillPhaseEnum("phase").default("build").notNull(),
   project: text("project"),
-  contentLinks: jsonb("content_links").default([]).notNull(),
+  contentLinks: jsonb("content_links").$type<string[]>().default([]).notNull(),
   revenueUsd: numeric("revenue_usd", { precision: 10, scale: 2 }).default("0").notNull(),
   startedAt: date("started_at"),
   notes: text("notes"),
@@ -224,3 +224,14 @@ export const timeLog = pgTable(
   },
   (t) => [uniqueIndex("time_log_date_unique").on(t.date)]
 );
+
+export type OnePersonVision = typeof onePerson.$inferSelect;
+export type RoutineLog = typeof routineLog.$inferSelect;
+export type ContentPiece = typeof contentPieces.$inferSelect;
+export type CorNote = typeof corNotes.$inferSelect;
+export type ApagDraft = typeof apagDrafts.$inferSelect;
+export type TrustEntry = typeof trustEntries.$inferSelect;
+export type Skill = typeof skills.$inferSelect;
+export type Offer = typeof offers.$inferSelect;
+export type MvoEntry = typeof mvoPipeline.$inferSelect;
+export type TimeLogEntry = typeof timeLog.$inferSelect;

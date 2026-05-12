@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useChat } from "@ai-sdk/react";
+import { DefaultChatTransport } from "ai";
 import { Button } from "@/components/ui/button";
 import type { VaultItem } from "@/lib/db/vault-schema";
 
@@ -23,12 +24,25 @@ function buildContext(items: VaultItem[]): string {
 
 export function BoardChat({ items }: Props) {
   const [open, setOpen] = useState(false);
+  const [input, setInput] = useState("");
   const boardContext = buildContext(items);
 
-  const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
-    api: "/api/vault-chat",
-    body: { boardContext },
+  const { messages, sendMessage, status } = useChat({
+    transport: new DefaultChatTransport({
+      api: "/api/vault-chat",
+      body: () => ({ boardContext }),
+    }),
   });
+
+  const busy = status === "submitted" || status === "streaming";
+
+  const onSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const text = input.trim();
+    if (!text || busy) return;
+    sendMessage({ text });
+    setInput("");
+  };
 
   return (
     <div className="flex-shrink-0 w-80 flex flex-col border-l border-border">
@@ -48,33 +62,39 @@ export function BoardChat({ items }: Props) {
                 El asistente tiene acceso a todo el contenido de este board. Preguntale lo que quieras.
               </p>
             )}
-            {messages.map((m) => (
-              <div
-                key={m.id}
-                className={`text-sm rounded-lg px-3 py-2 ${
-                  m.role === "user"
-                    ? "bg-primary text-primary-foreground ml-6"
-                    : "bg-muted mr-6"
-                }`}
-              >
-                <p className="whitespace-pre-wrap">{m.content}</p>
-              </div>
-            ))}
-            {isLoading && (
+            {messages.map((m) => {
+              const text = m.parts
+                .filter((p): p is { type: "text"; text: string } => p.type === "text")
+                .map((p) => p.text)
+                .join("");
+              return (
+                <div
+                  key={m.id}
+                  className={`text-sm rounded-lg px-3 py-2 ${
+                    m.role === "user"
+                      ? "bg-primary text-primary-foreground ml-6"
+                      : "bg-muted mr-6"
+                  }`}
+                >
+                  <p className="whitespace-pre-wrap">{text}</p>
+                </div>
+              );
+            })}
+            {busy && (
               <div className="bg-muted rounded-lg px-3 py-2 mr-6">
                 <span className="text-xs text-muted-foreground">Escribiendo...</span>
               </div>
             )}
           </div>
 
-          <form onSubmit={handleSubmit} className="border-t border-border px-4 py-3 flex gap-2">
+          <form onSubmit={onSubmit} className="border-t border-border px-4 py-3 flex gap-2">
             <input
               value={input}
-              onChange={handleInputChange}
+              onChange={(e) => setInput(e.target.value)}
               placeholder="Preguntá algo..."
               className="flex-1 text-sm bg-transparent focus:outline-none placeholder:text-muted-foreground"
             />
-            <Button type="submit" size="sm" disabled={isLoading || !input.trim()}>
+            <Button type="submit" size="sm" disabled={busy || !input.trim()}>
               →
             </Button>
           </form>
