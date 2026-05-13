@@ -4,10 +4,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, Target, BookOpen, Timer, Zap, ChevronLeft, ChevronRight } from "lucide-react";
+import { LayoutDashboard, Target, BookOpen, Timer, Zap, ChevronLeft, ChevronRight, CheckSquare } from "lucide-react";
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/tasks",     label: "Tasks",     icon: CheckSquare },
   { href: "/goals",     label: "Goals",     icon: Target },
   { href: "/eden",      label: "Eden",      icon: BookOpen },
   { href: "/focus",     label: "Focus",     icon: Timer },

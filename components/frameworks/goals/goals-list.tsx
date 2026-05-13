@@ -3,16 +3,17 @@
 import { useState, useTransition } from "react";
 import { createGoal } from "@/app/(dashboard)/goals/actions";
 import { toast } from "sonner";
-import type { Goal, Task } from "@/lib/db/goals-schema";
+import type { Goal, Task, Milestone } from "@/lib/db/goals-schema";
 import { GoalCard } from "./goal-card";
 
 interface Props {
   goals: Goal[];
   tasks: Task[];
+  milestones: Milestone[];
   horizon: string;
 }
 
-export function GoalsList({ goals, tasks, horizon }: Props) {
+export function GoalsList({ goals, tasks, milestones, horizon }: Props) {
   const [adding, setAdding] = useState(false);
   const [title, setTitle] = useState("");
   const [, startTransition] = useTransition();
@@ -50,7 +51,12 @@ export function GoalsList({ goals, tasks, horizon }: Props) {
       )}
 
       {goals.map((goal) => (
-        <GoalCard key={goal.id} goal={goal} tasks={tasks.filter((t) => t.goalId === goal.id)} allTasks={tasks} />
+        <GoalCard
+          key={goal.id}
+          goal={goal}
+          tasks={tasks.filter((t) => t.goalId === goal.id)}
+          milestones={milestones.filter((m) => m.goalId === goal.id)}
+        />
       ))}
 
       {/* Add goal form */}

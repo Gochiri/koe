@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { auth } from "@/auth";
 import { db } from "@/lib/db/client";
-import { goals, tasks } from "@/lib/db/goals-schema";
+import { goals, tasks, milestones } from "@/lib/db/goals-schema";
 import { eq, and } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
@@ -21,7 +21,12 @@ const goalSchema = z.object({
   purpose: z.string().max(1000).optional().or(z.literal("")),
   horizon: z.enum(["90days", "1year", "3year", "lifetime"]).default("90days"),
   deadline: z.string().optional().or(z.literal("")),
-  status: z.enum(["active", "completed", "paused"]).default("active"),
+  status: z.enum(["not_started", "active", "completed", "paused"]).default("active"),
+  smartSpecific: z.string().max(2000).optional().or(z.literal("")),
+  smartMeasurable: z.string().max(2000).optional().or(z.literal("")),
+  smartAchievable: z.string().max(2000).optional().or(z.literal("")),
+  smartRelevant: z.string().max(2000).optional().or(z.literal("")),
+  smartTimeBound: z.string().max(2000).optional().or(z.literal("")),
 });
 
 export async function createGoal(formData: FormData) {
@@ -33,6 +38,11 @@ export async function createGoal(formData: FormData) {
     horizon: formData.get("horizon") ?? "90days",
     deadline: formData.get("deadline") ?? "",
     status: "active",
+    smartSpecific: formData.get("smartSpecific") ?? "",
+    smartMeasurable: formData.get("smartMeasurable") ?? "",
+    smartAchievable: formData.get("smartAchievable") ?? "",
+    smartRelevant: formData.get("smartRelevant") ?? "",
+    smartTimeBound: formData.get("smartTimeBound") ?? "",
   });
   await db.insert(goals).values({
     userId,
@@ -41,6 +51,11 @@ export async function createGoal(formData: FormData) {
     purpose: parsed.purpose || null,
     horizon: parsed.horizon,
     deadline: parsed.deadline || null,
+    smartSpecific: parsed.smartSpecific || null,
+    smartMeasurable: parsed.smartMeasurable || null,
+    smartAchievable: parsed.smartAchievable || null,
+    smartRelevant: parsed.smartRelevant || null,
+    smartTimeBound: parsed.smartTimeBound || null,
   });
   revalidatePath("/goals");
 }
@@ -55,6 +70,11 @@ export async function updateGoal(formData: FormData) {
     horizon: formData.get("horizon") ?? undefined,
     deadline: formData.get("deadline") ?? undefined,
     status: formData.get("status") ?? undefined,
+    smartSpecific: formData.get("smartSpecific") ?? undefined,
+    smartMeasurable: formData.get("smartMeasurable") ?? undefined,
+    smartAchievable: formData.get("smartAchievable") ?? undefined,
+    smartRelevant: formData.get("smartRelevant") ?? undefined,
+    smartTimeBound: formData.get("smartTimeBound") ?? undefined,
   });
   await db
     .update(goals)
@@ -63,6 +83,11 @@ export async function updateGoal(formData: FormData) {
       result: parsed.result || null,
       purpose: parsed.purpose || null,
       deadline: parsed.deadline || null,
+      smartSpecific: parsed.smartSpecific !== undefined ? (parsed.smartSpecific || null) : undefined,
+      smartMeasurable: parsed.smartMeasurable !== undefined ? (parsed.smartMeasurable || null) : undefined,
+      smartAchievable: parsed.smartAchievable !== undefined ? (parsed.smartAchievable || null) : undefined,
+      smartRelevant: parsed.smartRelevant !== undefined ? (parsed.smartRelevant || null) : undefined,
+      smartTimeBound: parsed.smartTimeBound !== undefined ? (parsed.smartTimeBound || null) : undefined,
       updatedAt: new Date(),
     })
     .where(and(eq(goals.id, id), eq(goals.userId, userId)));
@@ -107,6 +132,7 @@ export async function createTask(formData: FormData) {
     deadline: parsed.deadline || null,
   });
   revalidatePath("/goals");
+  revalidatePath("/tasks");
 }
 
 export async function updateTask(formData: FormData) {
@@ -131,11 +157,46 @@ export async function updateTask(formData: FormData) {
     })
     .where(and(eq(tasks.id, id), eq(tasks.userId, userId)));
   revalidatePath("/goals");
+  revalidatePath("/tasks");
 }
 
 export async function deleteTask(formData: FormData) {
   const userId = await requireUser();
   const id = Number(formData.get("id"));
   await db.delete(tasks).where(and(eq(tasks.id, id), eq(tasks.userId, userId)));
+  revalidatePath("/goals");
+  revalidatePath("/tasks");
+}
+
+// ── Milestones ─────────────────────────────────────────────────────────────────
+
+export async function createMilestone(formData: FormData) {
+  const userId = await requireUser();
+  const goalId = Number(formData.get("goalId"));
+  const title = z.string().min(1).max(300).parse(formData.get("title")?.toString() ?? "");
+  const position = Number(formData.get("position") ?? 0);
+  await db.insert(milestones).values({ userId, goalId, title, position });
+  revalidatePath("/goals");
+}
+
+export async function updateMilestone(formData: FormData) {
+  const userId = await requireUser();
+  const id = Number(formData.get("id"));
+  const completedRaw = formData.get("completed");
+  const titleRaw = formData.get("title")?.toString();
+  await db
+    .update(milestones)
+    .set({
+      ...(completedRaw !== null && { completed: completedRaw === "true" }),
+      ...(titleRaw && { title: titleRaw }),
+    })
+    .where(and(eq(milestones.id, id), eq(milestones.userId, userId)));
+  revalidatePath("/goals");
+}
+
+export async function deleteMilestone(formData: FormData) {
+  const userId = await requireUser();
+  const id = Number(formData.get("id"));
+  await db.delete(milestones).where(and(eq(milestones.id, id), eq(milestones.userId, userId)));
   revalidatePath("/goals");
 }

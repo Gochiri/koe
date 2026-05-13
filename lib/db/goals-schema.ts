@@ -16,11 +16,17 @@ export const goals = pgTable("goals", {
   title: text("title").notNull(),
   result: text("result"),    // ¿Qué resultado específico quiero?
   purpose: text("purpose"),  // ¿Por qué importa?
-  status: text("status").notNull().default("active"),    // active | completed | paused
+  status: text("status").notNull().default("active"),    // not_started | active | completed | paused
   horizon: text("horizon").notNull().default("90days"),  // 90days | 1year | 3year | lifetime
   deadline: date("deadline"),
   progress: integer("progress").default(0),  // 0-100
   position: integer("position").default(0),
+  // SMART fields
+  smartSpecific: text("smart_specific"),
+  smartMeasurable: text("smart_measurable"),
+  smartAchievable: text("smart_achievable"),
+  smartRelevant: text("smart_relevant"),
+  smartTimeBound: text("smart_time_bound"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -64,3 +70,18 @@ export const focusSessions = pgTable("focus_sessions", {
 
 export type FocusSession = typeof focusSessions.$inferSelect;
 export type NewFocusSession = typeof focusSessions.$inferInsert;
+
+// ── Milestones ────────────────────────────────────────────────────────────────
+
+export const milestones = pgTable("milestones", {
+  id: serial("id").primaryKey(),
+  userId: text("user_id").notNull(),
+  goalId: integer("goal_id").notNull(),
+  title: text("title").notNull(),
+  completed: boolean("completed").notNull().default(false),
+  position: integer("position").notNull().default(0),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export type Milestone = typeof milestones.$inferSelect;
+export type NewMilestone = typeof milestones.$inferInsert;

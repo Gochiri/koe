@@ -36,6 +36,7 @@ export async function endSession(formData: FormData) {
   const userId = await requireUser();
   const id = Number(formData.get("id"));
   const durationMinutes = Number(formData.get("durationMinutes"));
+  const breakMinutes = formData.get("breakMinutes") ? Number(formData.get("breakMinutes")) : 0;
   const completed = formData.get("completed") === "true";
   const notes = formData.get("notes")?.toString() ?? null;
 
@@ -43,6 +44,7 @@ export async function endSession(formData: FormData) {
     .update(focusSessions)
     .set({
       durationMinutes,
+      breakMinutes,
       completed,
       notes,
       endedAt: new Date(),

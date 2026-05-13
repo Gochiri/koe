@@ -6,6 +6,8 @@ import { MetricCard } from "./metric-card";
 import { GoalProgressList } from "./goal-progress-list";
 import { FocusChart } from "./focus-chart";
 import { TasksSummary } from "./tasks-summary";
+import { ProductivityScore } from "./productivity-score";
+import { Achievements } from "./achievements";
 
 interface Props {
   activeGoals: Goal[];
@@ -16,6 +18,12 @@ interface Props {
   weeklyFocusMinutes: number;
   focusByDay: Record<string, number>;
   recentSessions: FocusSession[];
+  productivityScore: number;
+  previousScore: number;
+  highImpactTotal: number;
+  highImpactCompleted: number;
+  streak: number;
+  completedGoals: number;
 }
 
 function getGreeting() {
@@ -33,9 +41,24 @@ export function DashboardLayout({
   tasksCompletedThisWeek,
   weeklyFocusMinutes,
   focusByDay,
+  productivityScore,
+  previousScore,
+  streak,
+  completedGoals,
+  recentSessions,
 }: Props) {
   const weeklyFocusHours = (weeklyFocusMinutes / 60).toFixed(1);
   const pendingTasks = allTasks.filter((t) => t.status !== "done").length;
+  const allTasksDone = allTasks.filter((t) => t.status === "done").length;
+
+  const achievements = [
+    { id: "first_session",  title: "First Session",  description: "Complete your first focus session",   unlocked: recentSessions.length > 0 || completedGoals > 0 },
+    { id: "streak_3",       title: "3-Day Streak",   description: "Focus 3 days in a row",               unlocked: streak >= 3 },
+    { id: "streak_7",       title: "Week Warrior",   description: "Focus 7 days in a row",               unlocked: streak >= 7 },
+    { id: "focus_hour",     title: "Hour of Power",  description: "Log 1+ hour of focus this week",      unlocked: weeklyFocusMinutes >= 60 },
+    { id: "ten_tasks",      title: "Task Machine",   description: "Complete 10 tasks total",              unlocked: allTasksDone >= 10 },
+    { id: "goal_crusher",   title: "Goal Crusher",   description: "Complete at least one goal",           unlocked: completedGoals >= 1 },
+  ];
 
   return (
     <div className="max-w-5xl mx-auto py-8 px-6 space-y-7">
@@ -52,6 +75,16 @@ export function DashboardLayout({
             month: "long",
           })}
         </p>
+      </div>
+
+      {/* Score + Achievements row */}
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-5">
+        <div className="lg:col-span-2">
+          <ProductivityScore score={productivityScore} previousScore={previousScore} />
+        </div>
+        <div className="lg:col-span-3">
+          <Achievements achievements={achievements} />
+        </div>
       </div>
 
       {/* Metric cards */}
