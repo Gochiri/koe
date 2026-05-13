@@ -1,33 +1,34 @@
 import type { Task } from "@/lib/db/goals-schema";
+import { ListTodo } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface Props {
   tasks: Task[];
 }
 
-const STATUS_LABELS: Record<string, string> = {
-  todo: "Por hacer",
-  in_progress: "En progreso",
-  done: "Completadas",
-  blocked: "Bloqueadas",
+const STATUS_CONFIG: Record<string, { label: string; dot: string; bar: string }> = {
+  todo:        { label: "Por hacer",   dot: "bg-slate-400",   bar: "bg-slate-400" },
+  in_progress: { label: "En progreso", dot: "bg-blue-400",    bar: "bg-blue-400" },
+  done:        { label: "Completadas", dot: "bg-emerald-500", bar: "bg-emerald-500" },
+  blocked:     { label: "Bloqueadas",  dot: "bg-red-400",     bar: "bg-red-400" },
 };
 
-const STATUS_COLORS: Record<string, string> = {
-  todo: "bg-slate-400",
-  in_progress: "bg-blue-500",
-  done: "bg-emerald-500",
-  blocked: "bg-red-400",
-};
-
-const PRIORITY_LABELS: Record<string, string> = {
-  high: "Alta",
-  medium: "Media",
-  low: "Baja",
-};
-
-const PRIORITY_COLORS: Record<string, string> = {
-  high: "bg-red-500/15 text-red-600 dark:text-red-400",
-  medium: "bg-amber-500/15 text-amber-600 dark:text-amber-400",
-  low: "bg-slate-500/15 text-slate-500",
+const PRIORITY_CONFIG: Record<string, { label: string; style: string; valueStyle: string }> = {
+  high:   {
+    label: "Alta",
+    style: "bg-red-500/8 border border-red-500/15",
+    valueStyle: "text-red-400",
+  },
+  medium: {
+    label: "Media",
+    style: "bg-amber-500/8 border border-amber-500/15",
+    valueStyle: "text-amber-400",
+  },
+  low: {
+    label: "Baja",
+    style: "bg-slate-500/8 border border-slate-500/15",
+    valueStyle: "text-slate-400",
+  },
 };
 
 export function TasksSummary({ tasks }: Props) {
@@ -42,41 +43,61 @@ export function TasksSummary({ tasks }: Props) {
   }));
 
   const total = tasks.length;
+  const doneCount = tasks.filter((t) => t.status === "done").length;
+  const completionPct = total > 0 ? Math.round((doneCount / total) * 100) : 0;
 
   return (
-    <div className="rounded-xl border border-border bg-card px-4 py-4">
-      <h3 className="text-sm font-semibold mb-3">Tareas</h3>
-
-      {/* Status breakdown */}
-      <div className="space-y-2 mb-4">
-        {byStatus.map(({ key, count }) => (
-          <div key={key} className="flex items-center gap-2">
-            <div className={`w-2 h-2 rounded-full ${STATUS_COLORS[key]}`} />
-            <span className="text-sm flex-1">{STATUS_LABELS[key]}</span>
-            <span className="text-sm font-medium">{count}</span>
-            {total > 0 && (
-              <div className="w-16 h-1.5 bg-muted rounded-full overflow-hidden">
-                <div
-                  className={`h-full rounded-full ${STATUS_COLORS[key]}`}
-                  style={{ width: `${(count / total) * 100}%` }}
-                />
-              </div>
-            )}
-          </div>
-        ))}
+    <div className="rounded-xl border border-border bg-card px-5 py-5 h-full">
+      {/* Header */}
+      <div className="flex items-center gap-2 mb-4">
+        <div className="w-7 h-7 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center">
+          <ListTodo className="w-3.5 h-3.5 text-amber-400" />
+        </div>
+        <div>
+          <h3 className="text-sm font-semibold">Tareas</h3>
+          <p className="text-[10px] text-muted-foreground/50">{completionPct}% completadas</p>
+        </div>
       </div>
 
-      {/* Priority of pending tasks */}
-      <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/50 mb-2">
+      {/* Status breakdown */}
+      <div className="space-y-2.5 mb-5">
+        {byStatus.map(({ key, count }) => {
+          const cfg = STATUS_CONFIG[key];
+          return (
+            <div key={key} className="flex items-center gap-2.5">
+              <div className={cn("w-2 h-2 rounded-full flex-shrink-0", cfg.dot)} />
+              <span className="text-xs text-muted-foreground flex-1">{cfg.label}</span>
+              <span className="text-xs font-semibold tabular-nums">{count}</span>
+              {total > 0 && (
+                <div className="w-14 h-1 bg-muted rounded-full overflow-hidden">
+                  <div
+                    className={cn("h-full rounded-full transition-all", cfg.bar)}
+                    style={{ width: `${(count / total) * 100}%` }}
+                  />
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Divider */}
+      <div className="border-t border-border/60 mb-4" />
+
+      {/* Priority */}
+      <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/40 mb-2.5">
         Pendientes por prioridad
       </p>
-      <div className="flex gap-2">
-        {byPriority.map(({ key, count }) => (
-          <div key={key} className={`flex-1 rounded-lg px-2 py-1.5 text-center ${PRIORITY_COLORS[key]}`}>
-            <p className="text-lg font-bold">{count}</p>
-            <p className="text-[10px] font-medium">{PRIORITY_LABELS[key]}</p>
-          </div>
-        ))}
+      <div className="grid grid-cols-3 gap-2">
+        {byPriority.map(({ key, count }) => {
+          const cfg = PRIORITY_CONFIG[key];
+          return (
+            <div key={key} className={cn("rounded-lg px-2 py-2.5 text-center", cfg.style)}>
+              <p className={cn("text-xl font-bold tabular-nums", cfg.valueStyle)}>{count}</p>
+              <p className="text-[10px] text-muted-foreground/60 font-medium mt-0.5">{cfg.label}</p>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
