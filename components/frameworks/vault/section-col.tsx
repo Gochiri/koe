@@ -2,7 +2,7 @@
 
 import { useRef, useState, useTransition } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { createItem, deleteSection } from "@/app/(dashboard)/vault/actions";
+import { createItem, deleteSection } from "@/app/(dashboard)/eden/actions";
 import { ItemCard } from "./item-card";
 import { QuickCapture } from "./quick-capture";
 import { toast } from "sonner";

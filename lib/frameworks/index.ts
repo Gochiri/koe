@@ -251,6 +251,27 @@ export const vault: FrameworkMeta = {
   ],
 };
 
+export const eden: FrameworkMeta = {
+  slug: "eden",
+  name: "Eden — Knowledge Base",
+  tagline: "Tu segundo cerebro: boards de ideas, contenido referencial, links y docs con AI integrado.",
+  domain: "Knowledge Management / Ideación",
+  howItWorks: [
+    {
+      heading: "Boards y Spaces",
+      body: "Organizá tu conocimiento en boards temáticos dentro de spaces (carpetas). Cada board puede tener secciones tipo tab para filtrar por etapa o categoría.",
+    },
+    {
+      heading: "Cards, Docs, Ideas y Links",
+      body: "Cards para notas rápidas, docs para contenido largo, ideas con estructura COR, links con preview automático de YouTube y otros sitios.",
+    },
+    {
+      heading: "AI integrado",
+      body: "El asistente lee todo el contenido del board activo y te ayuda a escribir, expandir ideas, generar títulos o conectar conceptos.",
+    },
+  ],
+};
+
 export const allFrameworks = {
   "one-person": onePerson,
   content: contentEcosystem,
@@ -263,6 +284,7 @@ export const allFrameworks = {
   mvo,
   "koes-law": koesLaw,
   vault,
+  eden,
 } satisfies Record<string, FrameworkMeta>;
 
 export type FrameworkSlug = keyof typeof allFrameworks;

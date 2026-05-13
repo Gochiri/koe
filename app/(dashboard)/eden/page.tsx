@@ -2,14 +2,14 @@ import { db } from "@/lib/db/client";
 import { vaultSpaces, vaultBoards, vaultSections, vaultItems } from "@/lib/db/vault-schema";
 import { eq, asc } from "drizzle-orm";
 import { FrameworkShell } from "@/components/frameworks/framework-shell";
-import { vault } from "@/lib/frameworks";
+import { eden } from "@/lib/frameworks";
 import { VaultLayout } from "@/components/frameworks/vault/vault-layout";
 
 interface Props {
   searchParams: Promise<{ boardId?: string }>;
 }
 
-export default async function VaultPage({ searchParams }: Props) {
+export default async function EdenPage({ searchParams }: Props) {
   const { boardId: boardIdParam } = await searchParams;
   const boardId = boardIdParam ? Number(boardIdParam) : null;
 
@@ -27,7 +27,7 @@ export default async function VaultPage({ searchParams }: Props) {
   const activeBoard = boards.find((b) => b.id === boardId) ?? null;
 
   return (
-    <FrameworkShell framework={vault}>
+    <FrameworkShell framework={eden}>
       <VaultLayout
         spaces={spaces}
         boards={boards}

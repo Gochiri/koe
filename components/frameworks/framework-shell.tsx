@@ -16,7 +16,7 @@ export function FrameworkShell({
   children: React.ReactNode;
 }) {
   return (
-    <div className="space-y-6 max-w-4xl">
+    <div className="space-y-6 w-full">
       <div>
         <div className="flex items-center gap-2 mb-1">
           <Badge variant="secondary" className="text-xs">

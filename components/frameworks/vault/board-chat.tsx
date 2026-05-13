@@ -1,12 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useRef, useState, useTransition } from "react";
 import { useChat } from "@ai-sdk/react";
-import { Button } from "@/components/ui/button";
+import { DefaultChatTransport, isTextUIPart, type UIMessagePart, type UIDataTypes, type UITools } from "ai";
+import { createItem } from "@/app/(dashboard)/eden/actions";
+import { toast } from "sonner";
 import type { VaultItem } from "@/lib/db/vault-schema";
 
 interface Props {
   items: VaultItem[];
+  boardId: number;
+  activeSectionId?: number;
 }
 
 function buildContext(items: VaultItem[]): string {
@@ -21,64 +25,160 @@ function buildContext(items: VaultItem[]): string {
     .join("\n\n---\n\n");
 }
 
-export function BoardChat({ items }: Props) {
-  const [open, setOpen] = useState(false);
+function getMessageText(parts: UIMessagePart<UIDataTypes, UITools>[]): string {
+  return parts
+    .filter(isTextUIPart)
+    .map((p) => p.text)
+    .join("");
+}
+
+export function BoardChat({ items, boardId, activeSectionId }: Props) {
+  const [open, setOpen] = useState(true);
+  const [inputValue, setInputValue] = useState("");
+  const [savingId, setSavingId] = useState<string | null>(null);
+  const [, startTransition] = useTransition();
+  const messagesEndRef = useRef<HTMLDivElement>(null);
   const boardContext = buildContext(items);
 
-  const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
-    api: "/api/vault-chat",
-    body: { boardContext },
+  const transport = useMemo(
+    () =>
+      new DefaultChatTransport({
+        api: "/api/vault-chat",
+        body: { boardContext },
+      }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [boardContext]
+  );
+
+  const { messages, sendMessage, status } = useChat({
+    transport,
+    onFinish: () => {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    },
   });
 
+  const isLoading = status === "submitted" || status === "streaming";
+
+  function handleSubmit(e?: React.FormEvent) {
+    e?.preventDefault();
+    const text = inputValue.trim();
+    if (!text || isLoading) return;
+    setInputValue("");
+    sendMessage({ role: "user", parts: [{ type: "text", text }] });
+  }
+
+  function saveAsDoc(messageId: string, content: string) {
+    setSavingId(messageId);
+    const fd = new FormData();
+    fd.set("boardId", String(boardId));
+    fd.set("kind", "doc");
+    fd.set("title", "Chat — " + content.slice(0, 60).replace(/\n/g, " ") + (content.length > 60 ? "…" : ""));
+    fd.set("body", content);
+    if (activeSectionId) fd.set("sectionId", String(activeSectionId));
+    startTransition(async () => {
+      try {
+        await createItem(fd);
+        toast.success("Guardado como doc en el board");
+      } catch {
+        toast.error("Error al guardar");
+      } finally {
+        setSavingId(null);
+      }
+    });
+  }
+
   return (
-    <div className="flex-shrink-0 w-80 flex flex-col border-l border-border">
-      <button
-        onClick={() => setOpen((v) => !v)}
-        className="flex items-center justify-between px-4 py-3 text-sm font-medium hover:bg-accent/50 transition-colors"
-      >
-        <span>Chat con el board</span>
-        <span className="text-muted-foreground text-xs">{open ? "▲" : "▼"}</span>
-      </button>
+    <div className={`flex-shrink-0 flex flex-col border-l border-border transition-all duration-200 ${open ? "w-80" : "w-10"}`}>
+      {/* Header */}
+      <div className="flex items-center justify-between px-3 py-3 border-b border-border/60 shrink-0">
+        {open && (
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-semibold text-foreground">Chat</span>
+            <span className="text-[10px] text-muted-foreground/50 bg-muted/40 rounded px-1.5 py-0.5">
+              {items.length} items
+            </span>
+          </div>
+        )}
+        <button
+          onClick={() => setOpen((v) => !v)}
+          className="text-muted-foreground hover:text-foreground transition-colors text-xs w-6 h-6 flex items-center justify-center rounded hover:bg-muted/50 shrink-0 ml-auto"
+          title={open ? "Cerrar chat" : "Abrir chat"}
+        >
+          {open ? "✕" : "💬"}
+        </button>
+      </div>
 
       {open && (
-        <div className="flex flex-col flex-1 min-h-0">
-          <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3 max-h-[60vh]">
+        <>
+          {/* Messages */}
+          <div className="flex-1 overflow-y-auto px-3 py-3 space-y-3 min-h-0">
             {messages.length === 0 && (
-              <p className="text-xs text-muted-foreground">
-                El asistente tiene acceso a todo el contenido de este board. Preguntale lo que quieras.
-              </p>
-            )}
-            {messages.map((m) => (
-              <div
-                key={m.id}
-                className={`text-sm rounded-lg px-3 py-2 ${
-                  m.role === "user"
-                    ? "bg-primary text-primary-foreground ml-6"
-                    : "bg-muted mr-6"
-                }`}
-              >
-                <p className="whitespace-pre-wrap">{m.content}</p>
+              <div className="text-center py-8">
+                <p className="text-2xl mb-2">💬</p>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Tengo acceso a todo el contenido de este board. Preguntame lo que quieras.
+                </p>
               </div>
-            ))}
+            )}
+            {messages.map((m) => {
+              const text = getMessageText(m.parts as UIMessagePart<UIDataTypes, UITools>[]);
+              return (
+                <div key={m.id} className={`space-y-1 ${m.role === "user" ? "items-end flex flex-col" : ""}`}>
+                  <div
+                    className={`text-sm rounded-xl px-3 py-2 leading-relaxed ${
+                      m.role === "user"
+                        ? "bg-primary text-primary-foreground ml-4"
+                        : "bg-muted mr-2"
+                    }`}
+                  >
+                    <p className="whitespace-pre-wrap">{text}</p>
+                  </div>
+                  {m.role === "assistant" && text && (
+                    <button
+                      onClick={() => saveAsDoc(m.id, text)}
+                      disabled={savingId === m.id}
+                      className="text-[10px] text-muted-foreground/50 hover:text-muted-foreground transition-colors px-1 disabled:opacity-40"
+                    >
+                      {savingId === m.id ? "Guardando..." : "💾 Guardar como doc"}
+                    </button>
+                  )}
+                </div>
+              );
+            })}
             {isLoading && (
-              <div className="bg-muted rounded-lg px-3 py-2 mr-6">
-                <span className="text-xs text-muted-foreground">Escribiendo...</span>
+              <div className="bg-muted rounded-xl px-3 py-2 mr-2">
+                <span className="text-xs text-muted-foreground animate-pulse">Escribiendo...</span>
               </div>
             )}
+            <div ref={messagesEndRef} />
           </div>
 
-          <form onSubmit={handleSubmit} className="border-t border-border px-4 py-3 flex gap-2">
+          {/* Input */}
+          <form
+            onSubmit={handleSubmit}
+            className="border-t border-border px-3 py-3 flex gap-2 shrink-0"
+          >
             <input
-              value={input}
-              onChange={handleInputChange}
-              placeholder="Preguntá algo..."
-              className="flex-1 text-sm bg-transparent focus:outline-none placeholder:text-muted-foreground"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              placeholder="Preguntá sobre el board..."
+              className="flex-1 text-sm bg-muted/30 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-primary/20 placeholder:text-muted-foreground/40"
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSubmit();
+                }
+              }}
             />
-            <Button type="submit" size="sm" disabled={isLoading || !input.trim()}>
-              →
-            </Button>
+            <button
+              type="submit"
+              disabled={isLoading || !inputValue.trim()}
+              className="text-sm font-medium text-primary w-8 h-8 flex items-center justify-center rounded-lg hover:bg-primary/10 transition-colors disabled:opacity-30 shrink-0"
+            >
+              ↑
+            </button>
           </form>
-        </div>
+        </>
       )}
     </div>
   );

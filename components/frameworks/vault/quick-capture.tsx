@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useTransition } from "react";
-import { createItem } from "@/app/(dashboard)/vault/actions";
+import { createItem } from "@/app/(dashboard)/eden/actions";
 import { toast } from "sonner";
 
 interface Props {

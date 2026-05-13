@@ -19,7 +19,7 @@ export async function createSpace(formData: FormData) {
   const name = z.string().min(1).max(100).parse(formData.get("name")?.toString() ?? "");
   const position = Number(formData.get("position") ?? 0);
   await db.insert(vaultSpaces).values({ name, position });
-  revalidatePath("/vault");
+  revalidatePath("/eden");
 }
 
 export async function deleteSpace(formData: FormData) {
@@ -27,7 +27,7 @@ export async function deleteSpace(formData: FormData) {
   const id = Number(formData.get("id"));
   // boards inside get spaceId=null via ON DELETE SET NULL
   await db.delete(vaultSpaces).where(eq(vaultSpaces.id, id));
-  revalidatePath("/vault");
+  revalidatePath("/eden");
 }
 
 export async function moveBoardToSpace(formData: FormData) {
@@ -36,7 +36,7 @@ export async function moveBoardToSpace(formData: FormData) {
   const spaceIdRaw = formData.get("spaceId");
   const spaceId = spaceIdRaw ? Number(spaceIdRaw) : null;
   await db.update(vaultBoards).set({ spaceId }).where(eq(vaultBoards.id, boardId));
-  revalidatePath("/vault");
+  revalidatePath("/eden");
 }
 
 // ── Boards ────────────────────────────────────────────────────────────────────
@@ -47,14 +47,14 @@ export async function createBoard(formData: FormData) {
   const spaceIdRaw = formData.get("spaceId");
   const spaceId = spaceIdRaw ? Number(spaceIdRaw) : null;
   await db.insert(vaultBoards).values({ name, spaceId });
-  revalidatePath("/vault");
+  revalidatePath("/eden");
 }
 
 export async function deleteBoard(formData: FormData) {
   await requireSession();
   const id = Number(formData.get("id"));
   await db.delete(vaultBoards).where(eq(vaultBoards.id, id));
-  revalidatePath("/vault");
+  revalidatePath("/eden");
 }
 
 // ── Sections ──────────────────────────────────────────────────────────────────
@@ -65,14 +65,14 @@ export async function createSection(formData: FormData) {
   const name = z.string().min(1).max(100).parse(formData.get("name")?.toString() ?? "");
   const position = Number(formData.get("position") ?? 0);
   await db.insert(vaultSections).values({ boardId, name, position });
-  revalidatePath("/vault");
+  revalidatePath("/eden");
 }
 
 export async function deleteSection(formData: FormData) {
   await requireSession();
   const id = Number(formData.get("id"));
   await db.delete(vaultSections).where(eq(vaultSections.id, id));
-  revalidatePath("/vault");
+  revalidatePath("/eden");
 }
 
 // ── Items ─────────────────────────────────────────────────────────────────────
@@ -101,7 +101,7 @@ export async function createItem(formData: FormData) {
     title: parsed.title || null,
     body: parsed.body || null,
   });
-  revalidatePath("/vault");
+  revalidatePath("/eden");
 }
 
 export async function updateItem(formData: FormData) {
@@ -113,14 +113,14 @@ export async function updateItem(formData: FormData) {
     .update(vaultItems)
     .set({ title: title || null, body: body || null, updatedAt: new Date() })
     .where(eq(vaultItems.id, id));
-  revalidatePath("/vault");
+  revalidatePath("/eden");
 }
 
 export async function deleteItem(formData: FormData) {
   await requireSession();
   const id = Number(formData.get("id"));
   await db.delete(vaultItems).where(eq(vaultItems.id, id));
-  revalidatePath("/vault");
+  revalidatePath("/eden");
 }
 
 // ── Link resolver ─────────────────────────────────────────────────────────────

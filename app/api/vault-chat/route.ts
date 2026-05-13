@@ -1,4 +1,4 @@
-import { streamText } from "ai";
+import { streamText, convertToModelMessages } from "ai";
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { auth } from "@/auth";
 
@@ -6,7 +6,9 @@ export async function POST(req: Request) {
   const session = await auth();
   if (!session?.user) return new Response("Unauthorized", { status: 401 });
 
-  const { messages, boardContext } = await req.json();
+  const body = await req.json();
+  // v3 SDK sends { messages: UIMessage[], ...body }
+  const { messages, boardContext } = body;
 
   const anthropic = createAnthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
@@ -16,9 +18,9 @@ export async function POST(req: Request) {
 Tenés acceso al contenido del board del usuario. Usá ese contexto para ayudar a escribir, expandir ideas, generar títulos, transformar notas en posts, o responder cualquier pregunta.
 
 Contenido del board:
-${boardContext}`,
-    messages,
+${boardContext ?? ""}`,
+    messages: await convertToModelMessages(messages ?? []),
   });
 
-  return result.toDataStreamResponse();
+  return result.toUIMessageStreamResponse();
 }
