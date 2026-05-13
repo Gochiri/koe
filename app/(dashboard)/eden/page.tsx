@@ -1,8 +1,6 @@
 import { db } from "@/lib/db/client";
 import { vaultSpaces, vaultBoards, vaultSections, vaultItems } from "@/lib/db/vault-schema";
 import { eq, asc } from "drizzle-orm";
-import { FrameworkShell } from "@/components/frameworks/framework-shell";
-import { eden } from "@/lib/frameworks";
 import { VaultLayout } from "@/components/frameworks/vault/vault-layout";
 
 interface Props {
@@ -27,14 +25,12 @@ export default async function EdenPage({ searchParams }: Props) {
   const activeBoard = boards.find((b) => b.id === boardId) ?? null;
 
   return (
-    <FrameworkShell framework={eden}>
-      <VaultLayout
-        spaces={spaces}
-        boards={boards}
-        activeBoard={activeBoard}
-        sections={sections}
-        items={items}
-      />
-    </FrameworkShell>
+    <VaultLayout
+      spaces={spaces}
+      boards={boards}
+      activeBoard={activeBoard}
+      sections={sections}
+      items={items}
+    />
   );
 }
