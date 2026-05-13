@@ -213,14 +213,14 @@ export function GoalCard({ goal, tasks, milestones }: Props) {
           <button
             onClick={(e) => { e.stopPropagation(); setEditing((v) => !v); if (!editing) setExpanded(true); }}
             className="opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-foreground text-xs w-5 h-5 flex items-center justify-center rounded hover:bg-accent transition-colors"
-            title="Edit goal"
+            title="Editar meta"
           >
             <Pencil className="w-3 h-3" />
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); handleDelete(); }}
             className="opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-destructive text-xs w-5 h-5 flex items-center justify-center rounded hover:bg-destructive/10 transition-colors"
-            title="Delete goal"
+            title="Eliminar meta"
           >
             ×
           </button>

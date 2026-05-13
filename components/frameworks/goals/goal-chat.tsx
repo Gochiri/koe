@@ -73,16 +73,16 @@ export function GoalChat({ goals, tasks }: Props) {
       <div className="flex items-center justify-between px-3 py-3 border-b border-border/60 shrink-0">
         {open && (
           <div className="flex items-center gap-2">
-            <span className="text-xs font-semibold text-foreground">AI Coach</span>
+            <span className="text-xs font-semibold text-foreground">Coach IA</span>
             <span className="text-[10px] text-muted-foreground/50 bg-muted/40 rounded px-1.5 py-0.5">
-              {goals.length} goals
+              {goals.length} metas
             </span>
           </div>
         )}
         <button
           onClick={() => setOpen((v) => !v)}
           className="text-muted-foreground hover:text-foreground transition-colors text-xs w-6 h-6 flex items-center justify-center rounded hover:bg-muted/50 shrink-0 ml-auto"
-          title={open ? "Close coach" : "Open coach"}
+          title={open ? "Cerrar coach" : "Abrir coach"}
         >
           {open ? "✕" : "🤖"}
         </button>
@@ -96,7 +96,7 @@ export function GoalChat({ goals, tasks }: Props) {
               <div className="text-center py-8">
                 <p className="text-2xl mb-2">🤖</p>
                 <p className="text-xs text-muted-foreground leading-relaxed">
-                  I&apos;m your AI Coach. I know all your goals and tasks. Ask me what to do today, how to prioritize, or ask me to help you define a goal better.
+                  Soy tu Coach IA. Conozco todas tus metas y tareas. Preguntame qué hacer hoy, cómo priorizar, o pedime que te ayude a definir mejor una meta.
                 </p>
               </div>
             )}
@@ -118,7 +118,7 @@ export function GoalChat({ goals, tasks }: Props) {
             })}
             {isLoading && (
               <div className="bg-muted rounded-xl px-3 py-2 mr-2">
-                <span className="text-xs text-muted-foreground animate-pulse">Thinking...</span>
+                <span className="text-xs text-muted-foreground animate-pulse">Pensando...</span>
               </div>
             )}
             <div ref={messagesEndRef} />
@@ -132,7 +132,7 @@ export function GoalChat({ goals, tasks }: Props) {
             <input
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              placeholder="Ask your coach..."
+              placeholder="Preguntale al coach..."
               className="flex-1 text-sm bg-muted/30 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-primary/20 placeholder:text-muted-foreground/40"
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
