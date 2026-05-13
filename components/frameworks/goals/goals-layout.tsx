@@ -14,10 +14,10 @@ interface Props {
 }
 
 const HORIZONS = [
-  { key: "90days", label: "90 Days" },
-  { key: "1year",  label: "1 Year" },
-  { key: "3year",  label: "3 Years" },
-  { key: "lifetime", label: "Lifetime" },
+  { key: "90days",   label: "90 Días" },
+  { key: "1year",    label: "1 Año" },
+  { key: "3year",    label: "3 Años" },
+  { key: "lifetime", label: "Vida" },
 ] as const;
 
 type ViewMode = "list" | "kanban";
@@ -65,7 +65,7 @@ export function GoalsLayout({ goals, tasks, milestones }: Props) {
             );
           })}
           {viewMode === "kanban" && (
-            <span className="text-sm font-medium text-foreground/60 px-1">All Goals</span>
+            <span className="text-sm font-medium text-foreground/60 px-1">Todas las metas</span>
           )}
 
           {/* Spacer */}

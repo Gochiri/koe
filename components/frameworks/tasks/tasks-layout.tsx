@@ -14,10 +14,10 @@ interface Props {
 type Filter = "all" | "todo" | "in_progress" | "done";
 
 const FILTER_LABELS: Record<Filter, string> = {
-  all: "All",
-  todo: "Todo",
-  in_progress: "In progress",
-  done: "Done",
+  all: "Todas",
+  todo: "Por hacer",
+  in_progress: "En progreso",
+  done: "Listo",
 };
 
 export function TasksLayout({ tasks, goals }: Props) {
@@ -32,11 +32,11 @@ export function TasksLayout({ tasks, goals }: Props) {
       {/* Header */}
       <div className="flex items-baseline justify-between">
         <div>
-          <p className="text-[11px] font-medium text-muted-foreground/45 uppercase tracking-[0.1em] mb-1">Tasks</p>
-          <h1 className="text-xl font-semibold tracking-tight">All Tasks</h1>
+          <p className="text-[11px] font-medium text-muted-foreground/45 uppercase tracking-[0.1em] mb-1">Tareas</p>
+          <h1 className="text-xl font-semibold tracking-tight">Todas las tareas</h1>
         </div>
         <p className="text-[11px] text-muted-foreground/40 tabular-nums">
-          {pending} pending · {done} done
+          {pending} pendientes · {done} listas
         </p>
       </div>
 
@@ -69,7 +69,7 @@ export function TasksLayout({ tasks, goals }: Props) {
       <div className="rounded-xl border border-border bg-card divide-y divide-border/30">
         {visible.length === 0 ? (
           <div className="px-4 py-8 text-center text-sm text-muted-foreground/50">
-            No tasks here yet
+            Todavía no hay tareas aquí
           </div>
         ) : (
           <div className="px-3 py-2 space-y-0.5">

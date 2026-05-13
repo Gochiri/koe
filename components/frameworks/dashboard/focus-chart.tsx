@@ -16,7 +16,7 @@ export function FocusChart({ focusByDay }: Props) {
 
   function dayLabel(dateStr: string): string {
     const d = new Date(dateStr);
-    return d.toLocaleDateString("en-US", { weekday: "short" }).toUpperCase().slice(0, 2);
+    return d.toLocaleDateString("es-419", { weekday: "short" }).toUpperCase().slice(0, 2);
   }
 
   function formatMinutes(m: number): string {
@@ -37,13 +37,13 @@ export function FocusChart({ focusByDay }: Props) {
         <div className="flex items-center gap-2">
           <Clock className="w-3.5 h-3.5 text-muted-foreground/40" />
           <div>
-            <h3 className="text-sm font-semibold">Focus — last 7 days</h3>
-            <p className="text-[10px] text-muted-foreground/40 mt-0.5">Completed session time</p>
+            <h3 className="text-sm font-semibold">Enfoque — últimos 7 días</h3>
+            <p className="text-[10px] text-muted-foreground/40 mt-0.5">Tiempo de sesiones completadas</p>
           </div>
         </div>
         <div className="text-right">
           <p className="text-xl font-bold tabular-nums">{totalHours}h</p>
-          <p className="text-[10px] text-muted-foreground/40 mt-0.5">this week</p>
+          <p className="text-[10px] text-muted-foreground/40 mt-0.5">esta semana</p>
         </div>
       </div>
 
@@ -99,7 +99,7 @@ export function FocusChart({ focusByDay }: Props) {
 
       {allZero && (
         <p className="text-[11px] text-muted-foreground/30 text-center mt-4">
-          No sessions this week — start one in Focus
+          Sin sesiones esta semana — iniciá una en Enfoque
         </p>
       )}
     </div>

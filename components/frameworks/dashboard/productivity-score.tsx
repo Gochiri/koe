@@ -7,12 +7,12 @@ interface Props {
 
 export function ProductivityScore({ score, previousScore }: Props) {
   const diff = score - previousScore;
-  const diffLabel = diff === 0 ? "same as last week" : diff > 0 ? `+${diff} vs last week` : `${diff} vs last week`;
+  const diffLabel = diff === 0 ? "igual que la semana pasada" : diff > 0 ? `+${diff} vs semana pasada` : `${diff} vs semana pasada`;
 
   return (
     <div className="rounded-xl border border-border bg-card px-5 py-4">
       <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-muted-foreground/35 mb-3">
-        Productivity Score
+        Puntuación de productividad
       </p>
       <div className="flex items-end gap-3 mb-3">
         <span className="text-5xl font-bold tabular-nums leading-none tracking-tight">{score}</span>

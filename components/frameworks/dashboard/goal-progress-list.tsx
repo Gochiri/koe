@@ -19,11 +19,11 @@ export function GoalProgressList({ goals, tasks }: Props) {
       <div className="rounded-xl border border-border bg-card px-5 py-5 h-full">
         <div className="flex items-center gap-2 mb-4">
           <Target className="w-3.5 h-3.5 text-muted-foreground/40" />
-          <h3 className="text-sm font-semibold">Active goals</h3>
+          <h3 className="text-sm font-semibold">Metas activas</h3>
         </div>
         <div className="flex flex-col items-center justify-center py-8 gap-2">
-          <p className="text-sm text-muted-foreground/60">No active goals yet</p>
-          <p className="text-xs text-muted-foreground/35">Create your first goal in Goals</p>
+          <p className="text-sm text-muted-foreground/60">Sin metas activas aún</p>
+          <p className="text-xs text-muted-foreground/35">Creá tu primera meta en Metas</p>
         </div>
       </div>
     );
@@ -33,8 +33,8 @@ export function GoalProgressList({ goals, tasks }: Props) {
     <div className="rounded-xl border border-border bg-card px-5 py-5 h-full">
       <div className="flex items-center gap-2 mb-5">
         <Target className="w-3.5 h-3.5 text-muted-foreground/40" />
-        <h3 className="text-sm font-semibold">Active goals</h3>
-        <span className="text-[10px] text-muted-foreground/35 font-medium ml-auto">{goals.length} in progress</span>
+        <h3 className="text-sm font-semibold">Metas activas</h3>
+        <span className="text-[10px] text-muted-foreground/35 font-medium ml-auto">{goals.length} en progreso</span>
       </div>
 
       <div className="space-y-5">
@@ -67,7 +67,7 @@ export function GoalProgressList({ goals, tasks }: Props) {
               </div>
 
               <p className="text-[10px] text-muted-foreground/30 mt-1.5 tabular-nums">
-                {done}/{total} tasks
+                {done}/{total} tareas
               </p>
             </div>
           );

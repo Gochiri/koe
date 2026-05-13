@@ -15,10 +15,10 @@ interface Props {
 }
 
 const STATUS_LABELS: Record<string, string> = {
-  not_started: "Not Started",
-  active: "Active",
-  completed: "Completed",
-  paused: "Paused",
+  not_started: "Sin iniciar",
+  active: "Activa",
+  completed: "Completada",
+  paused: "Pausada",
 };
 
 const STATUS_STYLES: Record<string, string> = {
@@ -30,8 +30,8 @@ const STATUS_STYLES: Record<string, string> = {
 
 const HORIZON_LABELS: Record<string, string> = {
   "90days": "90d",
-  "1year": "1yr",
-  "3year": "3yr",
+  "1year":  "1a",
+  "3year":  "3a",
   lifetime: "∞",
 };
 
@@ -43,11 +43,11 @@ function formatDate(d: string | null | undefined): string {
 }
 
 const SMART_FIELDS = [
-  { key: "smartSpecific",   label: "Specific",    placeholder: "What exactly do you want to accomplish?" },
-  { key: "smartMeasurable", label: "Measurable",  placeholder: "How will you measure success?" },
-  { key: "smartAchievable", label: "Achievable",  placeholder: "Is this realistic?" },
-  { key: "smartRelevant",   label: "Relevant",    placeholder: "Why does this matter to your life vision?" },
-  { key: "smartTimeBound",  label: "Time-bound",  placeholder: "By when specifically?" },
+  { key: "smartSpecific",   label: "Específica",   placeholder: "¿Qué exactamente querés lograr?" },
+  { key: "smartMeasurable", label: "Medible",       placeholder: "¿Cómo vas a medir el éxito?" },
+  { key: "smartAchievable", label: "Alcanzable",    placeholder: "¿Es esto realista?" },
+  { key: "smartRelevant",   label: "Relevante",     placeholder: "¿Por qué importa para tu visión de vida?" },
+  { key: "smartTimeBound",  label: "Con tiempo",    placeholder: "¿Para cuándo específicamente?" },
 ] as const;
 
 export function GoalCard({ goal, tasks, milestones }: Props) {
@@ -87,7 +87,7 @@ export function GoalCard({ goal, tasks, milestones }: Props) {
     fd.set("id", String(goal.id));
     startTransition(async () => {
       try { await deleteGoal(fd); }
-      catch { toast.error("Failed to delete goal"); }
+      catch { toast.error("No se pudo eliminar la meta"); }
     });
   }
 
@@ -105,7 +105,7 @@ export function GoalCard({ goal, tasks, milestones }: Props) {
     Object.entries(editSmart).forEach(([k, v]) => fd.set(k, v));
     startTransition(async () => {
       try { await updateGoal(fd); setEditing(false); }
-      catch { toast.error("Failed to update goal"); }
+      catch { toast.error("No se pudo actualizar la meta"); }
     });
   }
 
@@ -139,7 +139,7 @@ export function GoalCard({ goal, tasks, milestones }: Props) {
         setTaskTitle("");
         setTaskPriority("medium");
         setAddingTask(false);
-      } catch { toast.error("Failed to create task"); }
+      } catch { toast.error("No se pudo crear la tarea"); }
     });
   }
 
@@ -155,7 +155,7 @@ export function GoalCard({ goal, tasks, milestones }: Props) {
         await createMilestone(fd);
         setMilestoneTitle("");
         setAddingMilestone(false);
-      } catch { toast.error("Failed to create milestone"); }
+      } catch { toast.error("No se pudo crear el hito"); }
     });
   }
 
@@ -191,7 +191,7 @@ export function GoalCard({ goal, tasks, milestones }: Props) {
             )}
             {milestones.length > 0 && (
               <span className="text-[10px] text-foreground/35 tabular-nums">
-                {completedMilestones}/{milestones.length} milestones
+                {completedMilestones}/{milestones.length} hitos
               </span>
             )}
           </div>
@@ -234,7 +234,7 @@ export function GoalCard({ goal, tasks, milestones }: Props) {
           {editing && (
             <form onSubmit={handleEditSave} onClick={(e) => e.stopPropagation()} className="space-y-3 pb-3 border-b border-border/30">
               <div className="space-y-1">
-                <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/50">Title</label>
+                <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/50">Título</label>
                 <input
                   value={editTitle}
                   onChange={(e) => setEditTitle(e.target.value)}
@@ -243,55 +243,55 @@ export function GoalCard({ goal, tasks, milestones }: Props) {
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/50">Result</label>
+                <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/50">Resultado</label>
                 <textarea
                   value={editResult}
                   onChange={(e) => setEditResult(e.target.value)}
                   rows={2}
-                  placeholder="What specific result do you want?"
+                  placeholder="¿Qué resultado específico querés?"
                   className="w-full text-sm rounded-lg border border-border bg-background px-3 py-1.5 focus:outline-none focus:border-ring/60 resize-none"
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/50">Why it matters</label>
+                <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/50">Por qué importa</label>
                 <textarea
                   value={editPurpose}
                   onChange={(e) => setEditPurpose(e.target.value)}
                   rows={2}
-                  placeholder="Why does this goal matter?"
+                  placeholder="¿Por qué es importante esta meta?"
                   className="w-full text-sm rounded-lg border border-border bg-background px-3 py-1.5 focus:outline-none focus:border-ring/60 resize-none"
                 />
               </div>
               <div className="flex gap-3">
                 <div className="flex-1 space-y-1">
-                  <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/50">Horizon</label>
+                  <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/50">Horizonte</label>
                   <select
                     value={editHorizon}
                     onChange={(e) => setEditHorizon(e.target.value)}
                     className="w-full text-sm rounded-lg border border-border bg-background px-3 py-1.5 focus:outline-none focus:border-ring/60"
                   >
-                    <option value="90days">90 Days</option>
-                    <option value="1year">1 Year</option>
-                    <option value="3year">3 Years</option>
-                    <option value="lifetime">Lifetime</option>
+                    <option value="90days">90 Días</option>
+                    <option value="1year">1 Año</option>
+                    <option value="3year">3 Años</option>
+                    <option value="lifetime">Vida</option>
                   </select>
                 </div>
                 <div className="flex-1 space-y-1">
-                  <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/50">Status</label>
+                  <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/50">Estado</label>
                   <select
                     value={editStatus}
                     onChange={(e) => setEditStatus(e.target.value)}
                     className="w-full text-sm rounded-lg border border-border bg-background px-3 py-1.5 focus:outline-none focus:border-ring/60"
                   >
-                    <option value="not_started">Not Started</option>
-                    <option value="active">Active</option>
-                    <option value="paused">Paused</option>
-                    <option value="completed">Completed</option>
+                    <option value="not_started">Sin iniciar</option>
+                    <option value="active">Activa</option>
+                    <option value="paused">Pausada</option>
+                    <option value="completed">Completada</option>
                   </select>
                 </div>
               </div>
               <div className="space-y-1">
-                <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/50">Deadline</label>
+                <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/50">Fecha límite</label>
                 <input
                   type="date"
                   value={editDeadline}
@@ -308,7 +308,7 @@ export function GoalCard({ goal, tasks, milestones }: Props) {
                   className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/50 hover:text-muted-foreground/70 transition-colors"
                 >
                   <ChevronDown className={`w-3 h-3 transition-transform ${smartOpen ? "" : "-rotate-90"}`} />
-                  SMART fields
+                  Campos SMART
                 </button>
                 {smartOpen && (
                   <div className="mt-2 space-y-2">
@@ -332,14 +332,14 @@ export function GoalCard({ goal, tasks, milestones }: Props) {
                   type="submit"
                   className="text-xs px-3 py-1.5 rounded-lg border border-border/60 bg-foreground/5 hover:bg-foreground/10 transition-colors font-medium"
                 >
-                  Save
+                  Guardar
                 </button>
                 <button
                   type="button"
                   onClick={handleEditCancel}
                   className="text-xs px-3 py-1.5 rounded-lg border border-border/30 text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  Cancel
+                  Cancelar
                 </button>
               </div>
             </form>
@@ -350,13 +350,13 @@ export function GoalCard({ goal, tasks, milestones }: Props) {
             <div className="space-y-2 text-sm text-muted-foreground">
               {goal.result && (
                 <div>
-                  <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/50 block mb-0.5">Result</span>
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/50 block mb-0.5">Resultado</span>
                   <p className="leading-relaxed">{goal.result}</p>
                 </div>
               )}
               {goal.purpose && (
                 <div>
-                  <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/50 block mb-0.5">Why it matters</span>
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/50 block mb-0.5">Por qué importa</span>
                   <p className="leading-relaxed">{goal.purpose}</p>
                 </div>
               )}
@@ -371,7 +371,7 @@ export function GoalCard({ goal, tasks, milestones }: Props) {
                 className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/40 hover:text-muted-foreground/60 transition-colors"
               >
                 <ChevronDown className={`w-3 h-3 transition-transform ${smartOpen ? "" : "-rotate-90"}`} />
-                SMART breakdown
+                Análisis SMART
               </button>
               {smartOpen && (
                 <div className="mt-2 space-y-2 pl-1">
@@ -394,7 +394,7 @@ export function GoalCard({ goal, tasks, milestones }: Props) {
           <div className="space-y-1">
             {milestones.length > 0 && (
               <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/50 mb-2">
-                Milestones
+                Hitos
               </p>
             )}
             {milestones.map((m) => (
@@ -406,22 +406,22 @@ export function GoalCard({ goal, tasks, milestones }: Props) {
                   autoFocus
                   value={milestoneTitle}
                   onChange={(e) => setMilestoneTitle(e.target.value)}
-                  placeholder="Milestone..."
+                  placeholder="Hito..."
                   onBlur={() => { if (!milestoneTitle.trim()) setAddingMilestone(false); }}
                   onKeyDown={(e) => {
                     if (e.key === "Escape") { setAddingMilestone(false); setMilestoneTitle(""); }
                   }}
                   className="flex-1 text-sm rounded-lg border border-border bg-background px-3 py-1.5 focus:outline-none focus:border-ring/60"
                 />
-                <button type="submit" className="text-xs px-2 py-1.5 rounded border border-border/50 text-foreground/60 hover:text-foreground transition-colors">Add</button>
-                <button type="button" onClick={() => { setAddingMilestone(false); setMilestoneTitle(""); }} className="text-xs text-muted-foreground hover:text-foreground transition-colors">Cancel</button>
+                <button type="submit" className="text-xs px-2 py-1.5 rounded border border-border/50 text-foreground/60 hover:text-foreground transition-colors">Agregar</button>
+                <button type="button" onClick={() => { setAddingMilestone(false); setMilestoneTitle(""); }} className="text-xs text-muted-foreground hover:text-foreground transition-colors">Cancelar</button>
               </form>
             ) : (
               <button
                 onClick={() => setAddingMilestone(true)}
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1 py-0.5"
               >
-                <span className="text-base leading-none">+</span> Add milestone
+                <span className="text-base leading-none">+</span> Agregar hito
               </button>
             )}
           </div>
@@ -429,7 +429,7 @@ export function GoalCard({ goal, tasks, milestones }: Props) {
           {/* ── Tasks ── */}
           <div className="space-y-1">
             {tasks.length > 0 && (
-              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/50 mb-2">Tasks</p>
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/50 mb-2">Tareas</p>
             )}
             {tasks.map((task) => (
               <TaskItem key={task.id} task={task} />
@@ -440,7 +440,7 @@ export function GoalCard({ goal, tasks, milestones }: Props) {
                   autoFocus
                   value={taskTitle}
                   onChange={(e) => setTaskTitle(e.target.value)}
-                  placeholder="New task..."
+                  placeholder="Nueva tarea..."
                   className="w-full text-sm rounded-lg border border-border bg-background px-3 py-1.5 focus:outline-none focus:border-ring/60"
                   onBlur={() => { if (!taskTitle.trim()) setAddingTask(false); }}
                   onKeyDown={(e) => {
@@ -453,12 +453,12 @@ export function GoalCard({ goal, tasks, milestones }: Props) {
                     onChange={(e) => setTaskPriority(e.target.value as "high" | "medium" | "low")}
                     className="text-xs rounded-lg border border-border bg-background px-2 py-1 focus:outline-none focus:border-ring/60"
                   >
-                    <option value="high">High</option>
-                    <option value="medium">Medium</option>
-                    <option value="low">Low</option>
+                    <option value="high">Alta</option>
+                    <option value="medium">Media</option>
+                    <option value="low">Baja</option>
                   </select>
-                  <button type="submit" className="text-xs px-2 py-1 rounded border border-border/50 text-foreground/60 hover:text-foreground transition-colors">Add</button>
-                  <button type="button" onClick={() => { setAddingTask(false); setTaskTitle(""); }} className="text-xs text-muted-foreground hover:text-foreground transition-colors">Cancel</button>
+                  <button type="submit" className="text-xs px-2 py-1 rounded border border-border/50 text-foreground/60 hover:text-foreground transition-colors">Agregar</button>
+                  <button type="button" onClick={() => { setAddingTask(false); setTaskTitle(""); }} className="text-xs text-muted-foreground hover:text-foreground transition-colors">Cancelar</button>
                 </div>
               </form>
             ) : (
@@ -466,7 +466,7 @@ export function GoalCard({ goal, tasks, milestones }: Props) {
                 onClick={() => setAddingTask(true)}
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1 py-1"
               >
-                <span className="text-base leading-none">+</span> Add task
+                <span className="text-base leading-none">+</span> Agregar tarea
               </button>
             )}
           </div>

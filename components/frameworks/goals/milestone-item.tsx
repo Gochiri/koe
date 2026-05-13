@@ -20,7 +20,7 @@ export function MilestoneItem({ milestone }: Props) {
     fd.set("completed", String(!milestone.completed));
     startTransition(async () => {
       try { await updateMilestone(fd); }
-      catch { toast.error("Failed to update milestone"); }
+      catch { toast.error("No se pudo actualizar el hito"); }
     });
   }
 
@@ -32,7 +32,7 @@ export function MilestoneItem({ milestone }: Props) {
     fd.set("title", trimmed);
     startTransition(async () => {
       try { await updateMilestone(fd); setEditing(false); }
-      catch { toast.error("Failed to update milestone"); }
+      catch { toast.error("No se pudo actualizar el hito"); }
     });
   }
 
@@ -42,7 +42,7 @@ export function MilestoneItem({ milestone }: Props) {
     fd.set("id", String(milestone.id));
     startTransition(async () => {
       try { await deleteMilestone(fd); }
-      catch { toast.error("Failed to delete milestone"); }
+      catch { toast.error("No se pudo eliminar el hito"); }
     });
   }
 
@@ -56,7 +56,7 @@ export function MilestoneItem({ milestone }: Props) {
             ? "bg-foreground/50 border-foreground/50"
             : "border-border/60 hover:border-foreground/40"
         }`}
-        title={milestone.completed ? "Mark incomplete" : "Mark complete"}
+        title={milestone.completed ? "Marcar incompleto" : "Marcar completo"}
       >
         {milestone.completed && (
           <svg viewBox="0 0 8 8" className="w-2 h-2 text-background fill-current">
@@ -93,7 +93,7 @@ export function MilestoneItem({ milestone }: Props) {
       <button
         onClick={handleDelete}
         className="opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-destructive text-xs w-4 h-4 flex items-center justify-center shrink-0 mt-0.5 transition-opacity"
-        title="Delete milestone"
+        title="Eliminar hito"
       >
         ×
       </button>

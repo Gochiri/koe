@@ -8,25 +8,25 @@ interface Props {
 
 // Monochrome opacity scale — no colors, hierarchy through brightness
 const STATUS_CONFIG: Record<string, { label: string; dot: string; bar: string }> = {
-  todo:        { label: "To do",       dot: "bg-foreground/20", bar: "bg-foreground/20" },
-  in_progress: { label: "In progress", dot: "bg-foreground/55", bar: "bg-foreground/55" },
-  done:        { label: "Completed",   dot: "bg-foreground/85", bar: "bg-foreground/85" },
-  blocked:     { label: "Blocked",     dot: "bg-foreground/15", bar: "bg-foreground/15" },
+  todo:        { label: "Por hacer",   dot: "bg-foreground/20", bar: "bg-foreground/20" },
+  in_progress: { label: "En progreso", dot: "bg-foreground/55", bar: "bg-foreground/55" },
+  done:        { label: "Completado",  dot: "bg-foreground/85", bar: "bg-foreground/85" },
+  blocked:     { label: "Bloqueado",   dot: "bg-foreground/15", bar: "bg-foreground/15" },
 };
 
 const PRIORITY_CONFIG: Record<string, { label: string; style: string; valueStyle: string }> = {
   high:   {
-    label: "High",
+    label: "Alta",
     style: "bg-foreground/[0.06] border border-foreground/10",
     valueStyle: "text-foreground/75",
   },
   medium: {
-    label: "Med",
+    label: "Media",
     style: "bg-foreground/[0.04] border border-foreground/8",
     valueStyle: "text-foreground/55",
   },
   low: {
-    label: "Low",
+    label: "Baja",
     style: "bg-foreground/[0.03] border border-foreground/6",
     valueStyle: "text-foreground/35",
   },
@@ -52,9 +52,9 @@ export function TasksSummary({ tasks }: Props) {
       {/* Header */}
       <div className="flex items-center gap-2 mb-5">
         <ListTodo className="w-3.5 h-3.5 text-muted-foreground/40" />
-        <h3 className="text-sm font-semibold">Tasks</h3>
+        <h3 className="text-sm font-semibold">Tareas</h3>
         <span className="text-[10px] text-muted-foreground/35 font-medium ml-auto tabular-nums">
-          {completionPct}% done
+          {completionPct}% listo
         </span>
       </div>
 
@@ -85,7 +85,7 @@ export function TasksSummary({ tasks }: Props) {
 
       {/* Priority */}
       <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-muted-foreground/30 mb-3">
-        Pending by priority
+        Pendientes por prioridad
       </p>
       <div className="grid grid-cols-3 gap-2">
         {byPriority.map(({ key, count }) => {

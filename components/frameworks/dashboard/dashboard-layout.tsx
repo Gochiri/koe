@@ -28,9 +28,9 @@ interface Props {
 
 function getGreeting() {
   const h = new Date().getHours();
-  if (h < 12) return "Good morning";
-  if (h < 18) return "Good afternoon";
-  return "Good evening";
+  if (h < 12) return "Buenos días";
+  if (h < 18) return "Buenas tardes";
+  return "Buenas noches";
 }
 
 export function DashboardLayout({
@@ -52,12 +52,12 @@ export function DashboardLayout({
   const allTasksDone = allTasks.filter((t) => t.status === "done").length;
 
   const achievements = [
-    { id: "first_session",  title: "First Session",  description: "Complete your first focus session",   unlocked: recentSessions.length > 0 || completedGoals > 0 },
-    { id: "streak_3",       title: "3-Day Streak",   description: "Focus 3 days in a row",               unlocked: streak >= 3 },
-    { id: "streak_7",       title: "Week Warrior",   description: "Focus 7 days in a row",               unlocked: streak >= 7 },
-    { id: "focus_hour",     title: "Hour of Power",  description: "Log 1+ hour of focus this week",      unlocked: weeklyFocusMinutes >= 60 },
-    { id: "ten_tasks",      title: "Task Machine",   description: "Complete 10 tasks total",              unlocked: allTasksDone >= 10 },
-    { id: "goal_crusher",   title: "Goal Crusher",   description: "Complete at least one goal",           unlocked: completedGoals >= 1 },
+    { id: "first_session",  title: "Primera sesión",   description: "Completa tu primera sesión de enfoque",   unlocked: recentSessions.length > 0 || completedGoals > 0 },
+    { id: "streak_3",       title: "3 días seguidos",  description: "Enfocate 3 días consecutivos",             unlocked: streak >= 3 },
+    { id: "streak_7",       title: "Semana completa",  description: "Enfocate 7 días consecutivos",             unlocked: streak >= 7 },
+    { id: "focus_hour",     title: "1 hora de poder",  description: "Acumula 1+ hora de enfoque esta semana",   unlocked: weeklyFocusMinutes >= 60 },
+    { id: "ten_tasks",      title: "Máquina de tareas",description: "Completa 10 tareas en total",              unlocked: allTasksDone >= 10 },
+    { id: "goal_crusher",   title: "Meta cumplida",    description: "Completa al menos una meta",               unlocked: completedGoals >= 1 },
   ];
 
   return (
@@ -66,7 +66,7 @@ export function DashboardLayout({
       <div className="flex items-baseline justify-between">
         <div>
           <p className="text-[11px] font-medium text-muted-foreground/45 uppercase tracking-[0.1em] mb-1">{getGreeting()}</p>
-          <h1 className="text-xl font-semibold tracking-tight">Dashboard</h1>
+          <h1 className="text-xl font-semibold tracking-tight">Inicio</h1>
         </div>
         <p className="text-[11px] text-muted-foreground/40 tabular-nums">
           {new Date().toLocaleDateString("en-US", {
@@ -90,30 +90,30 @@ export function DashboardLayout({
       {/* Metric cards */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <MetricCard
-          label="Active goals"
+          label="Metas activas"
           value={String(activeGoals.length)}
-          sub={`${completedGoalsThisMonth} completed this month`}
+          sub={`${completedGoalsThisMonth} completadas este mes`}
           icon={Target}
           accent="violet"
         />
         <MetricCard
-          label="Tasks today"
+          label="Tareas hoy"
           value={String(tasksCompletedToday)}
-          sub={`${tasksCompletedThisWeek} this week`}
+          sub={`${tasksCompletedThisWeek} esta semana`}
           icon={CheckSquare}
           accent="emerald"
         />
         <MetricCard
-          label="Weekly focus"
+          label="Enfoque semanal"
           value={`${weeklyFocusHours}h`}
-          sub={`${weeklyFocusMinutes} minutes`}
+          sub={`${weeklyFocusMinutes} minutos`}
           icon={Clock}
           accent="blue"
         />
         <MetricCard
-          label="Pending"
+          label="Pendientes"
           value={String(pendingTasks)}
-          sub="tasks remaining"
+          sub="tareas restantes"
           icon={ListTodo}
           accent="amber"
         />

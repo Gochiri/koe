@@ -34,7 +34,7 @@ export function StandaloneTaskForm({ goals }: Props) {
         setGoalId("");
         setOpen(false);
       } catch {
-        toast.error("Failed to create task");
+        toast.error("No se pudo crear la tarea");
       }
     });
   }
@@ -45,7 +45,7 @@ export function StandaloneTaskForm({ goals }: Props) {
         onClick={() => setOpen(true)}
         className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors py-1.5"
       >
-        <span className="text-base leading-none">+</span> New task
+        <span className="text-base leading-none">+</span> Nueva tarea
       </button>
     );
   }
@@ -56,7 +56,7 @@ export function StandaloneTaskForm({ goals }: Props) {
         autoFocus
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-        placeholder="Task title..."
+        placeholder="Título de la tarea..."
         onKeyDown={(e) => { if (e.key === "Escape") { setOpen(false); setTitle(""); } }}
         className="w-full text-sm bg-transparent border-b border-border focus:outline-none focus:border-foreground/40 pb-1"
       />
@@ -66,9 +66,9 @@ export function StandaloneTaskForm({ goals }: Props) {
           onChange={(e) => setPriority(e.target.value as "high" | "medium" | "low")}
           className="text-xs rounded-lg border border-border bg-background px-2 py-1 focus:outline-none"
         >
-          <option value="high">High priority</option>
-          <option value="medium">Medium</option>
-          <option value="low">Low</option>
+          <option value="high">Alta prioridad</option>
+          <option value="medium">Media</option>
+          <option value="low">Baja</option>
         </select>
         <input
           type="date"
@@ -82,7 +82,7 @@ export function StandaloneTaskForm({ goals }: Props) {
             onChange={(e) => setGoalId(e.target.value)}
             className="text-xs rounded-lg border border-border bg-background px-2 py-1 focus:outline-none flex-1 min-w-0"
           >
-            <option value="">No goal</option>
+            <option value="">Sin meta</option>
             {goals.map((g) => (
               <option key={g.id} value={String(g.id)}>{g.title}</option>
             ))}
@@ -94,14 +94,14 @@ export function StandaloneTaskForm({ goals }: Props) {
           type="submit"
           className="text-xs px-3 py-1.5 rounded-lg border border-border/60 bg-foreground/5 hover:bg-foreground/10 transition-colors font-medium"
         >
-          Add task
+          Agregar tarea
         </button>
         <button
           type="button"
           onClick={() => { setOpen(false); setTitle(""); }}
           className="text-xs text-muted-foreground hover:text-foreground transition-colors"
         >
-          Cancel
+          Cancelar
         </button>
       </div>
     </form>

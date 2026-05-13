@@ -36,7 +36,7 @@ export function StreakCounter({ sessions }: Props) {
   return (
     <div className="rounded-xl border border-border bg-card px-4 py-3 flex flex-col items-center justify-center min-w-[88px]">
       <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-muted-foreground/35 mb-1.5">
-        Streak
+        Racha
       </p>
       <div className="flex items-baseline gap-1">
         <span className="text-2xl font-bold tabular-nums leading-none">{streak}</span>

@@ -18,10 +18,10 @@ import { updateGoal } from "@/app/(dashboard)/goals/actions";
 import { toast } from "sonner";
 
 const COLUMNS = [
-  { key: "not_started", label: "Not Started" },
-  { key: "active",      label: "In Progress" },
-  { key: "paused",      label: "Paused" },
-  { key: "completed",   label: "Completed" },
+  { key: "not_started", label: "Sin iniciar" },
+  { key: "active",      label: "En progreso" },
+  { key: "paused",      label: "Pausada" },
+  { key: "completed",   label: "Completada" },
 ] as const;
 
 type GoalStatus = (typeof COLUMNS)[number]["key"];
@@ -106,7 +106,7 @@ export function GoalsKanban({ goals, tasks, milestones: _milestones }: Props) {
     startTransition(async () => {
       try { await updateGoal(fd); }
       catch {
-        toast.error("Failed to move goal");
+        toast.error("No se pudo mover la meta");
         setLocalGoals(goals); // revert
       }
     });
@@ -151,7 +151,7 @@ export function GoalsKanban({ goals, tasks, milestones: _milestones }: Props) {
                   ))}
                   {colGoals.length === 0 && (
                     <div className="h-16 flex items-center justify-center">
-                      <span className="text-[11px] text-muted-foreground/30">Drop here</span>
+                      <span className="text-[11px] text-muted-foreground/30">Soltá aquí</span>
                     </div>
                   )}
                 </div>

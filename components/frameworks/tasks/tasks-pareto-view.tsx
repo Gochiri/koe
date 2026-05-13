@@ -15,11 +15,11 @@ export function TasksParetoView({ tasks }: Props) {
       <div className="rounded-xl border border-border/40 bg-card/50 p-4">
         <div className="flex items-center gap-2 mb-3">
           <span className="text-[10px] font-semibold uppercase tracking-[0.1em] text-foreground/35">
-            The 20% that matters
+            El 20% que importa
           </span>
         </div>
         <p className="text-sm text-muted-foreground/50 py-2">
-          No high-priority tasks pending — good work.
+          Sin tareas de alta prioridad pendientes — ¡buen trabajo!
         </p>
       </div>
     );

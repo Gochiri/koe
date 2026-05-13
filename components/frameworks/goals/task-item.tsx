@@ -80,7 +80,7 @@ export function TaskItem({ task }: Props) {
       try {
         await updateTask(fd);
       } catch {
-        toast.error("Failed to update task");
+        toast.error("No se pudo actualizar la tarea");
       }
     });
   }
@@ -95,7 +95,7 @@ export function TaskItem({ task }: Props) {
       try {
         await updateTask(fd);
       } catch {
-        toast.error("Failed to update task");
+        toast.error("No se pudo actualizar la tarea");
       }
     });
   }
@@ -122,7 +122,7 @@ export function TaskItem({ task }: Props) {
       try {
         await updateTask(fd);
       } catch {
-        toast.error("Failed to update task");
+        toast.error("No se pudo actualizar la tarea");
       }
     });
     setEditingTitle(false);
@@ -147,7 +147,7 @@ export function TaskItem({ task }: Props) {
       try {
         await updateTask(fd);
       } catch {
-        toast.error("Failed to update deadline");
+        toast.error("No se pudo actualizar la fecha");
       }
     });
     setEditingDeadline(false);
@@ -174,7 +174,7 @@ export function TaskItem({ task }: Props) {
       {/* Status indicator — cycles on click */}
       <button
         onClick={handleStatusClick}
-        title={`Status: ${task.status} — click to advance`}
+        title={`Estado: ${task.status} — clic para avanzar`}
         className={`mt-0.5 text-base leading-none shrink-0 transition-colors hover:opacity-80 select-none ${
           STATUS_STYLE[task.status] ?? "text-foreground/20"
         }`}
@@ -245,7 +245,7 @@ export function TaskItem({ task }: Props) {
       {/* Priority badge — cycles on click */}
       <button
         onClick={handlePriorityClick}
-        title={`Priority: ${task.priority} — click to change`}
+        title={`Prioridad: ${task.priority} — clic para cambiar`}
         className={`text-[10px] font-mono font-semibold shrink-0 mt-0.5 hover:opacity-70 transition-opacity select-none ${
           PRIORITY_STYLE[task.priority] ?? "text-foreground/55"
         }`}
@@ -257,7 +257,7 @@ export function TaskItem({ task }: Props) {
       <button
         onClick={handleDelete}
         className="opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-destructive text-xs w-4 h-4 flex items-center justify-center shrink-0 mt-0.5 transition-opacity"
-        title="Delete task"
+        title="Eliminar tarea"
       >
         ×
       </button>

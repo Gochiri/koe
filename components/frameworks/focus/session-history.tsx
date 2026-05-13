@@ -22,9 +22,9 @@ function formatDate(date: Date | string): string {
   const yesterday = new Date(today);
   yesterday.setDate(yesterday.getDate() - 1);
 
-  if (d.toDateString() === today.toDateString()) return "Today";
-  if (d.toDateString() === yesterday.toDateString()) return "Yesterday";
-  return d.toLocaleDateString("en-US", { weekday: "short", day: "numeric", month: "short" });
+  if (d.toDateString() === today.toDateString()) return "Hoy";
+  if (d.toDateString() === yesterday.toDateString()) return "Ayer";
+  return d.toLocaleDateString("es-419", { weekday: "short", day: "numeric", month: "short" });
 }
 
 export function SessionHistory({ sessions, goals, tasks }: Props) {
@@ -35,14 +35,14 @@ export function SessionHistory({ sessions, goals, tasks }: Props) {
     fd.set("id", String(id));
     startTransition(async () => {
       try { await deleteSession(fd); }
-      catch { toast.error("Failed to delete session"); }
+      catch { toast.error("No se pudo eliminar la sesión"); }
     });
   }
 
   if (sessions.length === 0) {
     return (
       <div className="rounded-xl border border-border bg-card px-4 py-6 text-center text-muted-foreground text-sm">
-        No sessions this week. Start your first timer!
+        Sin sesiones esta semana. ¡Iniciá tu primer temporizador!
       </div>
     );
   }
@@ -58,7 +58,7 @@ export function SessionHistory({ sessions, goals, tasks }: Props) {
   return (
     <div className="rounded-xl border border-border bg-card overflow-hidden">
       <div className="px-4 py-3 border-b border-border/60">
-        <h3 className="text-sm font-semibold">Session history — last 7 days</h3>
+        <h3 className="text-sm font-semibold">Historial — últimos 7 días</h3>
       </div>
       <div className="divide-y divide-border/40">
         {Object.entries(grouped).map(([dayStr, daySessions]) => {
@@ -88,7 +88,7 @@ export function SessionHistory({ sessions, goals, tasks }: Props) {
                       )}
                     </div>
                     <span className="text-xs text-muted-foreground/50">
-                      {new Date(session.startedAt).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })}
+                      {new Date(session.startedAt).toLocaleTimeString("es-419", { hour: "2-digit", minute: "2-digit" })}
                     </span>
                     <button
                       onClick={() => handleDelete(session.id)}

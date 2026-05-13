@@ -30,7 +30,7 @@ export function GoalsList({ goals, tasks, milestones, horizon }: Props) {
         setTitle("");
         setAdding(false);
       } catch {
-        toast.error("Failed to create goal");
+        toast.error("No se pudo crear la meta");
       }
     });
   }
@@ -40,12 +40,12 @@ export function GoalsList({ goals, tasks, milestones, horizon }: Props) {
       {goals.length === 0 && !adding && (
         <div className="flex flex-col items-center justify-center py-16 gap-3 text-muted-foreground">
           <span className="text-4xl">🎯</span>
-          <p className="text-sm">No goals for this horizon yet</p>
+          <p className="text-sm">Sin metas para este horizonte</p>
           <button
             onClick={() => { setAdding(true); }}
             className="text-sm text-primary hover:underline"
           >
-            + Create first goal
+            + Crear primera meta
           </button>
         </div>
       )}
@@ -66,7 +66,7 @@ export function GoalsList({ goals, tasks, milestones, horizon }: Props) {
             autoFocus
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="Goal name..."
+            placeholder="Nombre de la meta..."
             className="w-full text-sm rounded-lg border border-border bg-card px-3 py-2 focus:outline-none focus:border-ring/60"
             onBlur={() => { if (!title.trim()) setAdding(false); }}
             onKeyDown={(e) => { if (e.key === "Escape") { setAdding(false); setTitle(""); } }}
@@ -77,7 +77,7 @@ export function GoalsList({ goals, tasks, milestones, horizon }: Props) {
           onClick={() => setAdding(true)}
           className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1.5 px-1 py-1"
         >
-          <span className="text-lg leading-none">+</span> Add goal
+          <span className="text-lg leading-none">+</span> Agregar meta
         </button>
       ) : null}
     </div>

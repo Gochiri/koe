@@ -71,7 +71,7 @@ export function FocusTimer({ goals, tasks }: Props) {
           if (s <= 1) {
             clearTimer();
             setTimerState("idle");
-            toast.success("Break over — ready for the next session");
+            toast.success("Descanso terminado — listo para la próxima sesión");
             return 0;
           }
           return s - 1;
@@ -99,7 +99,7 @@ export function FocusTimer({ goals, tasks }: Props) {
         setTimerState("running");
         setElapsedSeconds(0);
       } catch {
-        toast.error("Failed to start session");
+        toast.error("No se pudo iniciar la sesión");
       }
     });
   }
@@ -135,10 +135,10 @@ export function FocusTimer({ goals, tasks }: Props) {
     startTransition(async () => {
       try {
         await endSession(fd);
-        if (completed) toast.success("Session complete — take a break");
-        else toast.success("Session saved");
+        if (completed) toast.success("Sesión completada — tomá un descanso");
+        else toast.success("Sesión guardada");
       } catch {
-        toast.error("Failed to save session");
+        toast.error("No se pudo guardar la sesión");
       }
     });
   }
@@ -164,7 +164,7 @@ export function FocusTimer({ goals, tasks }: Props) {
 
   return (
     <div className="rounded-xl border border-border bg-card p-6">
-      <h2 className="text-sm font-semibold mb-4">Focus Timer</h2>
+      <h2 className="text-sm font-semibold mb-4">Temporizador de Enfoque</h2>
 
       {/* Preset selector */}
       <div className="flex gap-2 mb-6">
@@ -221,7 +221,7 @@ export function FocusTimer({ goals, tasks }: Props) {
               onClick={handleStart}
               className="flex items-center gap-2 px-6 py-2 bg-foreground/10 text-foreground border border-border/60 rounded-lg text-sm font-medium hover:bg-foreground/15 transition-colors"
             >
-              <Play className="w-3.5 h-3.5" /> Start
+              <Play className="w-3.5 h-3.5" /> Iniciar
             </button>
           )}
           {timerState === "running" && (
@@ -230,13 +230,13 @@ export function FocusTimer({ goals, tasks }: Props) {
                 onClick={handlePause}
                 className="flex items-center gap-2 px-4 py-2 bg-foreground/8 text-foreground rounded-lg text-sm font-medium hover:bg-foreground/12 transition-colors"
               >
-                <Pause className="w-3.5 h-3.5" /> Pause
+                <Pause className="w-3.5 h-3.5" /> Pausar
               </button>
               <button
                 onClick={() => handleStop(false)}
                 className="flex items-center gap-2 px-4 py-2 bg-foreground/5 text-muted-foreground rounded-lg text-sm font-medium hover:bg-destructive/10 hover:text-destructive transition-colors"
               >
-                <Square className="w-3.5 h-3.5" /> Stop
+                <Square className="w-3.5 h-3.5" /> Detener
               </button>
             </>
           )}
@@ -246,13 +246,13 @@ export function FocusTimer({ goals, tasks }: Props) {
                 onClick={handleResume}
                 className="flex items-center gap-2 px-4 py-2 bg-foreground/10 text-foreground border border-border/60 rounded-lg text-sm font-medium hover:bg-foreground/15 transition-colors"
               >
-                <Play className="w-3.5 h-3.5" /> Resume
+                <Play className="w-3.5 h-3.5" /> Reanudar
               </button>
               <button
                 onClick={() => handleStop(false)}
                 className="flex items-center gap-2 px-4 py-2 bg-foreground/5 text-muted-foreground rounded-lg text-sm font-medium hover:bg-destructive/10 hover:text-destructive transition-colors"
               >
-                <Square className="w-3.5 h-3.5" /> Stop
+                <Square className="w-3.5 h-3.5" /> Detener
               </button>
             </>
           )}
@@ -261,7 +261,7 @@ export function FocusTimer({ goals, tasks }: Props) {
               onClick={() => handleStop(true)}
               className="flex items-center gap-2 px-6 py-2 bg-foreground/10 text-foreground border border-border/60 rounded-lg text-sm font-medium hover:bg-foreground/15 transition-colors"
             >
-              <CheckCircle2 className="w-3.5 h-3.5" /> Complete session
+              <CheckCircle2 className="w-3.5 h-3.5" /> Completar sesión
             </button>
           )}
           {timerState === "break" && (
@@ -269,14 +269,14 @@ export function FocusTimer({ goals, tasks }: Props) {
               onClick={handleSkipBreak}
               className="flex items-center gap-2 px-4 py-2 bg-foreground/5 text-muted-foreground rounded-lg text-sm font-medium hover:bg-foreground/10 transition-colors"
             >
-              <Coffee className="w-3.5 h-3.5" /> Skip break
+              <Coffee className="w-3.5 h-3.5" /> Saltar descanso
             </button>
           )}
         </div>
 
         {isBreak && (
           <p className="text-[11px] text-muted-foreground/50 text-center">
-            Rest up — {preset.breakMinutes}min break in progress
+            Descansá — {preset.breakMinutes}min de descanso en curso
           </p>
         )}
       </div>
@@ -289,7 +289,7 @@ export function FocusTimer({ goals, tasks }: Props) {
             onChange={(e) => { setSelectedGoalId(e.target.value); setSelectedTaskId(""); }}
             className="w-full text-sm bg-background rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-foreground/20 border border-border/60 text-foreground"
           >
-            <option value="">No linked goal</option>
+            <option value="">Sin meta vinculada</option>
             {goals.map((g) => (
               <option key={g.id} value={String(g.id)}>{g.title}</option>
             ))}
@@ -301,7 +301,7 @@ export function FocusTimer({ goals, tasks }: Props) {
               onChange={(e) => setSelectedTaskId(e.target.value)}
               className="w-full text-sm bg-background rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-foreground/20 border border-border/60 text-foreground"
             >
-              <option value="">No specific task</option>
+              <option value="">Sin tarea específica</option>
               {goalTasks.map((t) => (
                 <option key={t.id} value={String(t.id)}>{t.title}</option>
               ))}

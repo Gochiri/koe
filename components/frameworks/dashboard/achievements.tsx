@@ -18,7 +18,7 @@ export function Achievements({ achievements }: Props) {
     <div className="rounded-xl border border-border bg-card px-4 py-4">
       <div className="flex items-baseline justify-between mb-4">
         <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-muted-foreground/35">
-          Achievements
+          Logros
         </p>
         <span className="text-[11px] tabular-nums text-muted-foreground/50">
           {unlockedCount}/{achievements.length}

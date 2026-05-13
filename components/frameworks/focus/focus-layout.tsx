@@ -37,34 +37,34 @@ export function FocusLayout({ goals, tasks, sessions, weeklyFocusMinutes, weekly
 
         {/* Today */}
         <div className="rounded-xl border border-border bg-card px-4 py-3">
-          <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-muted-foreground/35 mb-2">Today</p>
+          <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-muted-foreground/35 mb-2">Hoy</p>
           <p className="text-2xl font-bold tabular-nums leading-none">
             {Math.floor(todayMinutes / 60)}h {todayMinutes % 60}m
           </p>
           <p className="text-[11px] text-muted-foreground/45 mt-2">
-            {todaySessions.filter((s) => s.completed).length} sessions
+            {todaySessions.filter((s) => s.completed).length} sesiones
           </p>
         </div>
 
         {/* Best streak */}
         <div className="rounded-xl border border-border bg-card px-4 py-3">
-          <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-muted-foreground/35 mb-2">Best streak</p>
+          <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-muted-foreground/35 mb-2">Mejor racha</p>
           <p className="text-2xl font-bold tabular-nums leading-none">{bestStreak}d</p>
-          <p className="text-[11px] text-muted-foreground/45 mt-2">consecutive days</p>
+          <p className="text-[11px] text-muted-foreground/45 mt-2">días consecutivos</p>
         </div>
 
         {/* Avg session */}
         <div className="rounded-xl border border-border bg-card px-4 py-3">
-          <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-muted-foreground/35 mb-2">Avg session</p>
+          <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-muted-foreground/35 mb-2">Promedio</p>
           <p className="text-2xl font-bold tabular-nums leading-none">{avgSessionMinutes}m</p>
-          <p className="text-[11px] text-muted-foreground/45 mt-2">per session</p>
+          <p className="text-[11px] text-muted-foreground/45 mt-2">por sesión</p>
         </div>
       </div>
 
       {/* Weekly goal progress */}
       <div className="rounded-xl border border-border bg-card px-4 py-3">
         <div className="flex items-baseline justify-between mb-2">
-          <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-muted-foreground/35">Weekly goal</p>
+          <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-muted-foreground/35">Meta semanal</p>
           <p className="text-[11px] tabular-nums text-muted-foreground/60">
             {weeklyFocusMinutes}m / {weeklyGoalMinutes}m
           </p>
@@ -75,7 +75,7 @@ export function FocusLayout({ goals, tasks, sessions, weeklyFocusMinutes, weekly
             style={{ width: `${weeklyProgressPct}%` }}
           />
         </div>
-        <p className="text-[11px] text-muted-foreground/45 mt-1.5">{weeklyProgressPct}% of 5h weekly goal</p>
+        <p className="text-[11px] text-muted-foreground/45 mt-1.5">{weeklyProgressPct}% de la meta semanal de 5h</p>
       </div>
 
       {/* Timer */}
