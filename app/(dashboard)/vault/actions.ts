@@ -123,6 +123,14 @@ export async function deleteItem(formData: FormData) {
   revalidatePath("/vault");
 }
 
+// ── Vault file reader (legacy stub) ──────────────────────────────────────────
+
+export async function fetchVaultFile(
+  _relPath: string
+): Promise<{ content: string; mtime: number; size: number } | null> {
+  return null; // Obsidian vault integration not active
+}
+
 // ── Link resolver ─────────────────────────────────────────────────────────────
 
 export async function resolveLink(url: string): Promise<{ title: string | null; isVideo: boolean }> {
