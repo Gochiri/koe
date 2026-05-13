@@ -8,9 +8,9 @@ interface Props {
 }
 
 const HORIZON_LABELS: Record<string, string> = {
-  "90days": "90 días",
-  "1year":  "1 año",
-  "3year":  "3 años",
+  "90days": "90 days",
+  "1year":  "1 year",
+  "3year":  "3 years",
   "lifetime": "Lifetime",
 };
 
@@ -37,13 +37,13 @@ export function GoalProgressList({ goals, tasks }: Props) {
             <Target className="w-3.5 h-3.5 text-violet-400" />
           </div>
           <div>
-            <h3 className="text-sm font-semibold">Goals activos</h3>
-            <p className="text-[10px] text-muted-foreground/50">Tu progreso actual</p>
+            <h3 className="text-sm font-semibold">Active goals</h3>
+            <p className="text-[10px] text-muted-foreground/50">Your current progress</p>
           </div>
         </div>
         <div className="flex flex-col items-center justify-center py-8 gap-2">
-          <p className="text-sm text-muted-foreground">Sin goals activos todavía</p>
-          <p className="text-xs text-muted-foreground/50">Creá tu primer goal en la sección Goals</p>
+          <p className="text-sm text-muted-foreground">No active goals yet</p>
+          <p className="text-xs text-muted-foreground/50">Create your first goal in the Goals section</p>
         </div>
       </div>
     );
@@ -56,8 +56,8 @@ export function GoalProgressList({ goals, tasks }: Props) {
           <Target className="w-3.5 h-3.5 text-violet-400" />
         </div>
         <div>
-          <h3 className="text-sm font-semibold">Goals activos</h3>
-          <p className="text-[10px] text-muted-foreground/50">{goals.length} en progreso</p>
+          <h3 className="text-sm font-semibold">Active goals</h3>
+          <p className="text-[10px] text-muted-foreground/50">{goals.length} in progress</p>
         </div>
       </div>
 
@@ -94,7 +94,7 @@ export function GoalProgressList({ goals, tasks }: Props) {
               </div>
 
               <p className="text-[10px] text-muted-foreground/40 mt-1">
-                {done}/{total} tareas completadas
+                {done}/{total} tasks completed
               </p>
             </div>
           );

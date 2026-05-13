@@ -13,9 +13,9 @@ interface Props {
 }
 
 const STATUS_LABELS: Record<string, string> = {
-  active: "Activo",
-  completed: "Completado",
-  paused: "Pausado",
+  active: "Active",
+  completed: "Completed",
+  paused: "Paused",
 };
 
 const STATUS_COLORS: Record<string, string> = {
@@ -39,7 +39,7 @@ export function GoalCard({ goal, tasks }: Props) {
     fd.set("id", String(goal.id));
     startTransition(async () => {
       try { await deleteGoal(fd); }
-      catch { toast.error("Error al eliminar"); }
+      catch { toast.error("Failed to delete goal"); }
     });
   }
 
@@ -49,7 +49,7 @@ export function GoalCard({ goal, tasks }: Props) {
     fd.set("status", goal.status === "active" ? "completed" : "active");
     startTransition(async () => {
       try { await updateGoal(fd); }
-      catch { toast.error("Error al actualizar"); }
+      catch { toast.error("Failed to update goal"); }
     });
   }
 
@@ -65,7 +65,7 @@ export function GoalCard({ goal, tasks }: Props) {
         setTaskTitle("");
         setAddingTask(false);
       } catch {
-        toast.error("Error al crear tarea");
+        toast.error("Failed to create task");
       }
     });
   }
@@ -132,13 +132,13 @@ export function GoalCard({ goal, tasks }: Props) {
             <div className="space-y-2 text-sm text-muted-foreground">
               {goal.result && (
                 <div>
-                  <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/50 block mb-0.5">Resultado</span>
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/50 block mb-0.5">Result</span>
                   <p className="leading-relaxed">{goal.result}</p>
                 </div>
               )}
               {goal.purpose && (
                 <div>
-                  <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/50 block mb-0.5">Por qué</span>
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/50 block mb-0.5">Why it matters</span>
                   <p className="leading-relaxed">{goal.purpose}</p>
                 </div>
               )}
@@ -148,7 +148,7 @@ export function GoalCard({ goal, tasks }: Props) {
           {/* Tasks */}
           <div className="space-y-1">
             {tasks.length > 0 && (
-              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/50 mb-2">Tareas</p>
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/50 mb-2">Tasks</p>
             )}
             {tasks.map((task) => (
               <TaskItem key={task.id} task={task} />
@@ -159,7 +159,7 @@ export function GoalCard({ goal, tasks }: Props) {
                   autoFocus
                   value={taskTitle}
                   onChange={(e) => setTaskTitle(e.target.value)}
-                  placeholder="Nueva tarea..."
+                  placeholder="New task..."
                   className="w-full text-sm rounded-lg border border-border bg-background px-3 py-1.5 focus:outline-none focus:border-ring/60"
                   onBlur={() => { if (!taskTitle.trim()) setAddingTask(false); }}
                   onKeyDown={(e) => { if (e.key === "Escape") { setAddingTask(false); setTaskTitle(""); } }}
@@ -170,7 +170,7 @@ export function GoalCard({ goal, tasks }: Props) {
                 onClick={() => setAddingTask(true)}
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1 py-1"
               >
-                <span className="text-base leading-none">+</span> Agregar tarea
+                <span className="text-base leading-none">+</span> Add task
               </button>
             )}
           </div>

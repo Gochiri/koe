@@ -64,7 +64,7 @@ export function BoardList({ spaces, boards }: Props) {
       try {
         await deleteBoard(fd);
         if (activeBoardId === id) router.push("/eden");
-      } catch { toast.error("Error al eliminar board"); }
+      } catch { toast.error("Failed to delete board"); }
     });
   }
 
@@ -75,7 +75,7 @@ export function BoardList({ spaces, boards }: Props) {
       try {
         await deleteSpace(fd);
         toast.success("Space eliminado");
-      } catch { toast.error("Error al eliminar space"); }
+      } catch { toast.error("Failed to delete space"); }
     });
   }
 
@@ -102,7 +102,7 @@ export function BoardList({ spaces, boards }: Props) {
           toast.success("Board creado");
         }
         setAddingType(null);
-      } catch { toast.error("Error al crear"); }
+      } catch { toast.error("Failed to create"); }
     });
   }
 
@@ -194,7 +194,7 @@ export function BoardList({ spaces, boards }: Props) {
                     setTimeout(() => inputRef.current?.focus(), 50);
                   }}
                   className="text-muted-foreground hover:text-foreground text-xs w-4 h-4 flex items-center justify-center rounded hover:bg-muted/60"
-                  title="Agregar board"
+                  title="Add board"
                 >
                   +
                 </button>
@@ -219,7 +219,7 @@ export function BoardList({ spaces, boards }: Props) {
                   />
                 ))}
                 {spaceBoards.length === 0 && (
-                  <p className="text-[10px] text-muted-foreground/40 px-2 py-1">Sin boards</p>
+                  <p className="text-[10px] text-muted-foreground/40 px-2 py-1">No boards</p>
                 )}
               </div>
             )}

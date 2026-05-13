@@ -36,10 +36,10 @@ export function StreakCounter({ sessions }: Props) {
 
   return (
     <div className="rounded-xl border border-border bg-card px-4 py-3 flex flex-col items-center justify-center min-w-[100px]">
-      <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/50 mb-1">Racha</p>
+      <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/50 mb-1">Streak</p>
       <div className="flex items-baseline gap-1">
         <span className="text-2xl font-bold">{streak}</span>
-        <span className="text-sm text-muted-foreground">días</span>
+        <span className="text-sm text-muted-foreground">days</span>
       </div>
       {streak > 0 && <span className="text-lg mt-0.5">🔥</span>}
     </div>

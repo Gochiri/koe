@@ -27,7 +27,7 @@ export function QuickCapture({ boardId, sectionId }: Props) {
         if (ref.current) ref.current.value = "";
         ref.current?.focus();
       } catch {
-        toast.error("Error al guardar");
+        toast.error("Failed to save");
       }
     });
   }

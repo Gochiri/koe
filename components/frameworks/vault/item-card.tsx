@@ -119,7 +119,7 @@ function IdeaView({ item, onEdit, onDelete }: { item: VaultItem; onEdit: () => v
       {/* Header */}
       <div className="mb-2 pr-14">
         <span className="text-[9px] font-semibold uppercase tracking-widest text-primary/50 block mb-1">idea</span>
-        <p className="text-sm font-semibold leading-snug">{item.title || "Sin título"}</p>
+        <p className="text-sm font-semibold leading-snug">{item.title || "Untitled"}</p>
       </div>
 
       {/* Problem preview (collapsed) */}
@@ -309,7 +309,7 @@ export function ItemCard({ item }: Props) {
         await updateItem(formData);
         setEditing(false);
       } catch {
-        toast.error("Error al guardar");
+        toast.error("Failed to save");
       }
     });
   }
@@ -321,7 +321,7 @@ export function ItemCard({ item }: Props) {
       try {
         await deleteItem(fd);
       } catch {
-        toast.error("Error al eliminar");
+        toast.error("Failed to delete");
       }
     });
   }
@@ -430,7 +430,7 @@ export function ItemCard({ item }: Props) {
                 <p className="text-xs font-semibold mb-1.5 text-foreground tracking-tight">{item.title}</p>
               )}
               <p className="text-sm text-foreground/85 whitespace-pre-wrap leading-relaxed">
-                {item.body || <span className="text-muted-foreground/60 italic text-xs">Sin contenido</span>}
+                {item.body || <span className="text-muted-foreground/60 italic text-xs">No content</span>}
               </p>
             </>
           )}

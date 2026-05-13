@@ -36,7 +36,7 @@ export function SectionCol({ section, items, boardId }: Props) {
       try {
         await deleteSection(fd);
       } catch {
-        toast.error("Error al eliminar sección");
+        toast.error("Failed to delete section");
       }
     });
   }
@@ -55,7 +55,7 @@ export function SectionCol({ section, items, boardId }: Props) {
         setAddingDoc(false);
         toast.success("Doc creado");
       } catch {
-        toast.error("Error al crear doc");
+        toast.error("Failed to create doc");
       }
     });
   }

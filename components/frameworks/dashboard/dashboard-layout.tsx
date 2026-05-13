@@ -20,9 +20,9 @@ interface Props {
 
 function getGreeting() {
   const h = new Date().getHours();
-  if (h < 12) return "Buenos días";
-  if (h < 18) return "Buenas tardes";
-  return "Buenas noches";
+  if (h < 12) return "Good morning";
+  if (h < 18) return "Good afternoon";
+  return "Good evening";
 }
 
 export function DashboardLayout({
@@ -47,7 +47,7 @@ export function DashboardLayout({
         </div>
         <div className="text-right">
           <p className="text-xs text-muted-foreground">
-            {new Date().toLocaleDateString("es-AR", {
+            {new Date().toLocaleDateString("en-US", {
               weekday: "long",
               day: "numeric",
               month: "long",
@@ -59,30 +59,30 @@ export function DashboardLayout({
       {/* Metric cards */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <MetricCard
-          label="Goals activos"
+          label="Active goals"
           value={String(activeGoals.length)}
-          sub={`${completedGoalsThisMonth} completados este mes`}
+          sub={`${completedGoalsThisMonth} completed this month`}
           icon={Target}
           accent="violet"
         />
         <MetricCard
-          label="Tasks hoy"
+          label="Tasks today"
           value={String(tasksCompletedToday)}
-          sub={`${tasksCompletedThisWeek} esta semana`}
+          sub={`${tasksCompletedThisWeek} this week`}
           icon={CheckSquare}
           accent="emerald"
         />
         <MetricCard
-          label="Focus semanal"
+          label="Weekly focus"
           value={`${weeklyFocusHours}h`}
-          sub={`${weeklyFocusMinutes} minutos`}
+          sub={`${weeklyFocusMinutes} minutes`}
           icon={Clock}
           accent="blue"
         />
         <MetricCard
-          label="Pendientes"
+          label="Pending"
           value={String(pendingTasks)}
-          sub="tareas sin completar"
+          sub="tasks remaining"
           icon={ListTodo}
           accent="amber"
         />

@@ -14,5 +14,9 @@ export default async function GoalsPage() {
     db.select().from(tasks).where(eq(tasks.userId, userId)).orderBy(asc(tasks.position), asc(tasks.createdAt)),
   ]);
 
-  return <GoalsLayout goals={userGoals} tasks={userTasks} />;
+  return (
+    <div className="p-4 h-full">
+      <GoalsLayout goals={userGoals} tasks={userTasks} />
+    </div>
+  );
 }

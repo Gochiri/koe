@@ -29,9 +29,9 @@ export function FocusLayout({ goals, tasks, sessions }: Props) {
         <StreakCounter sessions={sessions} />
 
         <div className="flex-1 rounded-xl border border-border bg-card px-4 py-3">
-          <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/50 mb-1">Hoy</p>
+          <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/50 mb-1">Today</p>
           <p className="text-2xl font-bold">{Math.floor(todayMinutes / 60)}h {todayMinutes % 60}m</p>
-          <p className="text-xs text-muted-foreground">{todaySessions.filter((s) => s.completed).length} sesiones completadas</p>
+          <p className="text-xs text-muted-foreground">{todaySessions.filter((s) => s.completed).length} sessions completed</p>
         </div>
       </div>
 

@@ -96,7 +96,7 @@ export function BoardView({ board, sections, items }: Props) {
         setAddingSection(false);
         setAddingMode(null);
         toast.success("Sección creada");
-      } catch { toast.error("Error al crear sección"); }
+      } catch { toast.error("Failed to create section"); }
     });
   }
 
@@ -107,7 +107,7 @@ export function BoardView({ board, sections, items }: Props) {
       try {
         await deleteSection(fd);
         if (activeTab === sectionId) setActiveTab("all");
-      } catch { toast.error("Error al eliminar sección"); }
+      } catch { toast.error("Failed to delete section"); }
     });
   }
 
@@ -191,7 +191,7 @@ export function BoardView({ board, sections, items }: Props) {
       setAddingMode(null);
       toast.success("Link guardado");
     } catch {
-      toast.error("Error al guardar link");
+      toast.error("Failed to save link");
     } finally {
       setLinkResolving(false);
     }
@@ -383,7 +383,7 @@ export function BoardView({ board, sections, items }: Props) {
                   />
                   <div className="flex gap-2 justify-end">
                     <button type="button" onClick={() => setAddingMode(null)} className="text-xs text-muted-foreground hover:text-foreground">Cancelar</button>
-                    <button type="submit" disabled={pending} className="text-xs font-medium text-primary hover:opacity-80 disabled:opacity-50">Crear</button>
+                    <button type="submit" disabled={pending} className="text-xs font-medium text-primary hover:opacity-80 disabled:opacity-50">Create</button>
                   </div>
                 </motion.form>
               )}
@@ -406,7 +406,7 @@ export function BoardView({ board, sections, items }: Props) {
                   <textarea ref={docBodyRef} rows={5} placeholder="Contenido..." className="w-full resize-none text-sm bg-transparent focus:outline-none leading-relaxed" />
                   <div className="flex gap-2 justify-end">
                     <button type="button" onClick={() => setAddingMode(null)} className="text-xs text-muted-foreground hover:text-foreground">Cancelar</button>
-                    <button type="submit" disabled={pending} className="text-xs font-medium text-primary hover:opacity-80 disabled:opacity-50">Crear doc</button>
+                    <button type="submit" disabled={pending} className="text-xs font-medium text-primary hover:opacity-80 disabled:opacity-50">Create doc</button>
                   </div>
                 </motion.form>
               )}
@@ -478,7 +478,7 @@ export function BoardView({ board, sections, items }: Props) {
                 {visibleItems.length === 0 ? (
                   <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center justify-center py-16 text-muted-foreground/50">
                     <span className="text-2xl mb-2">✦</span>
-                    <p className="text-sm">Sin contenido</p>
+                    <p className="text-sm">No content</p>
                     <p className="text-xs mt-1 opacity-60">Usá el "+" del header para añadir</p>
                   </motion.div>
                 ) : (

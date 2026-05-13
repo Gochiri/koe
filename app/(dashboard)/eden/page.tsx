@@ -25,12 +25,14 @@ export default async function EdenPage({ searchParams }: Props) {
   const activeBoard = boards.find((b) => b.id === boardId) ?? null;
 
   return (
-    <VaultLayout
-      spaces={spaces}
-      boards={boards}
-      activeBoard={activeBoard}
-      sections={sections}
-      items={items}
-    />
+    <div className="p-4 h-full">
+      <VaultLayout
+        spaces={spaces}
+        boards={boards}
+        activeBoard={activeBoard}
+        sections={sections}
+        items={items}
+      />
+    </div>
   );
 }

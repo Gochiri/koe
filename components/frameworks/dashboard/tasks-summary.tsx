@@ -7,25 +7,25 @@ interface Props {
 }
 
 const STATUS_CONFIG: Record<string, { label: string; dot: string; bar: string }> = {
-  todo:        { label: "Por hacer",   dot: "bg-slate-400",   bar: "bg-slate-400" },
-  in_progress: { label: "En progreso", dot: "bg-blue-400",    bar: "bg-blue-400" },
-  done:        { label: "Completadas", dot: "bg-emerald-500", bar: "bg-emerald-500" },
-  blocked:     { label: "Bloqueadas",  dot: "bg-red-400",     bar: "bg-red-400" },
+  todo:        { label: "To do",       dot: "bg-slate-400",   bar: "bg-slate-400" },
+  in_progress: { label: "In progress", dot: "bg-blue-400",    bar: "bg-blue-400" },
+  done:        { label: "Completed",   dot: "bg-emerald-500", bar: "bg-emerald-500" },
+  blocked:     { label: "Blocked",     dot: "bg-red-400",     bar: "bg-red-400" },
 };
 
 const PRIORITY_CONFIG: Record<string, { label: string; style: string; valueStyle: string }> = {
   high:   {
-    label: "Alta",
+    label: "High",
     style: "bg-red-500/8 border border-red-500/15",
     valueStyle: "text-red-400",
   },
   medium: {
-    label: "Media",
+    label: "Medium",
     style: "bg-amber-500/8 border border-amber-500/15",
     valueStyle: "text-amber-400",
   },
   low: {
-    label: "Baja",
+    label: "Low",
     style: "bg-slate-500/8 border border-slate-500/15",
     valueStyle: "text-slate-400",
   },
@@ -54,8 +54,8 @@ export function TasksSummary({ tasks }: Props) {
           <ListTodo className="w-3.5 h-3.5 text-amber-400" />
         </div>
         <div>
-          <h3 className="text-sm font-semibold">Tareas</h3>
-          <p className="text-[10px] text-muted-foreground/50">{completionPct}% completadas</p>
+          <h3 className="text-sm font-semibold">Tasks</h3>
+          <p className="text-[10px] text-muted-foreground/50">{completionPct}% completed</p>
         </div>
       </div>
 
@@ -86,7 +86,7 @@ export function TasksSummary({ tasks }: Props) {
 
       {/* Priority */}
       <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/40 mb-2.5">
-        Pendientes por prioridad
+        Pending by priority
       </p>
       <div className="grid grid-cols-3 gap-2">
         {byPriority.map(({ key, count }) => {

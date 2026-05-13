@@ -11,18 +11,18 @@ interface Props {
 }
 
 function buildGoalContext(goals: Goal[], tasks: Task[]): string {
-  if (goals.length === 0) return "No hay goals activos todavía.";
+  if (goals.length === 0) return "No active goals yet.";
   return goals
     .map((g) => {
       const goalTasks = tasks.filter((t) => t.goalId === g.id);
       const done = goalTasks.filter((t) => t.status === "done").length;
-      const lines = [`**${g.title}** (${g.horizon}) — ${done}/${goalTasks.length} tareas`];
-      if (g.result) lines.push(`Resultado: ${g.result}`);
-      if (g.purpose) lines.push(`Por qué: ${g.purpose}`);
+      const lines = [`**${g.title}** (${g.horizon}) — ${done}/${goalTasks.length} tasks`];
+      if (g.result) lines.push(`Result: ${g.result}`);
+      if (g.purpose) lines.push(`Why: ${g.purpose}`);
       if (goalTasks.length > 0) {
         const pending = goalTasks.filter((t) => t.status !== "done");
         if (pending.length > 0) {
-          lines.push(`Pendiente: ${pending.map((t) => `${t.title} [${t.priority}]`).join(", ")}`);
+          lines.push(`Pending: ${pending.map((t) => `${t.title} [${t.priority}]`).join(", ")}`);
         }
       }
       return lines.join("\n");
@@ -82,7 +82,7 @@ export function GoalChat({ goals, tasks }: Props) {
         <button
           onClick={() => setOpen((v) => !v)}
           className="text-muted-foreground hover:text-foreground transition-colors text-xs w-6 h-6 flex items-center justify-center rounded hover:bg-muted/50 shrink-0 ml-auto"
-          title={open ? "Cerrar coach" : "Abrir coach"}
+          title={open ? "Close coach" : "Open coach"}
         >
           {open ? "✕" : "🤖"}
         </button>
@@ -96,7 +96,7 @@ export function GoalChat({ goals, tasks }: Props) {
               <div className="text-center py-8">
                 <p className="text-2xl mb-2">🤖</p>
                 <p className="text-xs text-muted-foreground leading-relaxed">
-                  Soy tu AI Coach. Conozco todos tus goals y tareas. Preguntame qué hacer hoy, cómo priorizar, o pedime que te ayude a definir mejor un goal.
+                  I&apos;m your AI Coach. I know all your goals and tasks. Ask me what to do today, how to prioritize, or ask me to help you define a goal better.
                 </p>
               </div>
             )}
@@ -118,7 +118,7 @@ export function GoalChat({ goals, tasks }: Props) {
             })}
             {isLoading && (
               <div className="bg-muted rounded-xl px-3 py-2 mr-2">
-                <span className="text-xs text-muted-foreground animate-pulse">Pensando...</span>
+                <span className="text-xs text-muted-foreground animate-pulse">Thinking...</span>
               </div>
             )}
             <div ref={messagesEndRef} />
@@ -132,7 +132,7 @@ export function GoalChat({ goals, tasks }: Props) {
             <input
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              placeholder="¿Qué hago hoy?"
+              placeholder="Ask your coach..."
               className="flex-1 text-sm bg-muted/30 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-primary/20 placeholder:text-muted-foreground/40"
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {

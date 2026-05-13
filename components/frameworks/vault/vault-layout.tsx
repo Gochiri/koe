@@ -14,10 +14,7 @@ interface Props {
 
 export function VaultLayout({ spaces, boards, activeBoard, sections, items }: Props) {
   return (
-    <div
-      className="flex overflow-hidden rounded-xl border border-border/60"
-      style={{ minHeight: "calc(100vh - 200px)" }}
-    >
+    <div className="flex overflow-hidden rounded-xl border border-border/60 h-full">
       <div className="w-52 flex-shrink-0 border-r border-border/60 bg-sidebar p-3 overflow-y-auto">
         <BoardList spaces={spaces} boards={boards} />
       </div>
@@ -28,7 +25,7 @@ export function VaultLayout({ spaces, boards, activeBoard, sections, items }: Pr
         ) : (
           <div className="flex flex-1 flex-col items-center justify-center gap-2 text-muted-foreground">
             <span className="text-2xl">🗃️</span>
-            <p className="text-sm">Seleccioná un board para empezar</p>
+            <p className="text-sm">Select a board to get started</p>
           </div>
         )}
       </div>

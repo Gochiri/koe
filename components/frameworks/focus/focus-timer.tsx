@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import { startSession, endSession } from "@/app/(dashboard)/focus/actions";
 import { toast } from "sonner";
+import { Play, Pause, Square, CheckCircle2 } from "lucide-react";
 import type { Goal, Task } from "@/lib/db/goals-schema";
 
 const PRESETS = [
@@ -73,7 +74,7 @@ export function FocusTimer({ goals, tasks }: Props) {
         setTimerState("running");
         setElapsedSeconds(0);
       } catch {
-        toast.error("Error al iniciar sesión");
+        toast.error("Failed to start session");
       }
     });
   }
@@ -99,7 +100,7 @@ export function FocusTimer({ goals, tasks }: Props) {
         await endSession(fd);
         toast.success(completed ? "¡Sesión completada! 🎉" : "Sesión guardada");
       } catch {
-        toast.error("Error al guardar sesión");
+        toast.error("Failed to save session");
       } finally {
         setSessionId(null);
         setSecondsLeft(preset * 60);
@@ -159,7 +160,7 @@ export function FocusTimer({ goals, tasks }: Props) {
               {String(minutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}
             </span>
             {timerState === "finished" && (
-              <span className="text-xs text-primary font-medium mt-0.5">¡Listo!</span>
+              <span className="text-xs text-emerald-400 font-medium mt-0.5">Done!</span>
             )}
           </div>
         </div>
@@ -169,24 +170,24 @@ export function FocusTimer({ goals, tasks }: Props) {
           {timerState === "idle" && (
             <button
               onClick={handleStart}
-              className="px-6 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors"
+              className="flex items-center gap-2 px-6 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors"
             >
-              ▶ Empezar
+              <Play className="w-3.5 h-3.5" /> Start
             </button>
           )}
           {timerState === "running" && (
             <>
               <button
                 onClick={handlePause}
-                className="px-4 py-2 bg-muted text-foreground rounded-lg text-sm font-medium hover:bg-accent transition-colors"
+                className="flex items-center gap-2 px-4 py-2 bg-muted text-foreground rounded-lg text-sm font-medium hover:bg-accent transition-colors"
               >
-                ⏸ Pausa
+                <Pause className="w-3.5 h-3.5" /> Pause
               </button>
               <button
                 onClick={() => handleStop(false)}
-                className="px-4 py-2 bg-muted text-muted-foreground rounded-lg text-sm font-medium hover:bg-destructive/10 hover:text-destructive transition-colors"
+                className="flex items-center gap-2 px-4 py-2 bg-muted text-muted-foreground rounded-lg text-sm font-medium hover:bg-destructive/10 hover:text-destructive transition-colors"
               >
-                ⏹ Detener
+                <Square className="w-3.5 h-3.5" /> Stop
               </button>
             </>
           )}
@@ -194,24 +195,24 @@ export function FocusTimer({ goals, tasks }: Props) {
             <>
               <button
                 onClick={handleResume}
-                className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors"
+                className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors"
               >
-                ▶ Continuar
+                <Play className="w-3.5 h-3.5" /> Resume
               </button>
               <button
                 onClick={() => handleStop(false)}
-                className="px-4 py-2 bg-muted text-muted-foreground rounded-lg text-sm font-medium hover:bg-destructive/10 hover:text-destructive transition-colors"
+                className="flex items-center gap-2 px-4 py-2 bg-muted text-muted-foreground rounded-lg text-sm font-medium hover:bg-destructive/10 hover:text-destructive transition-colors"
               >
-                ⏹ Detener
+                <Square className="w-3.5 h-3.5" /> Stop
               </button>
             </>
           )}
           {timerState === "finished" && (
             <button
               onClick={() => handleStop(true)}
-              className="px-6 py-2 bg-emerald-500 text-white rounded-lg text-sm font-medium hover:bg-emerald-600 transition-colors"
+              className="flex items-center gap-2 px-6 py-2 bg-emerald-500 text-white rounded-lg text-sm font-medium hover:bg-emerald-600 transition-colors"
             >
-              ✓ Completar sesión
+              <CheckCircle2 className="w-3.5 h-3.5" /> Complete session
             </button>
           )}
         </div>
@@ -223,9 +224,9 @@ export function FocusTimer({ goals, tasks }: Props) {
           <select
             value={selectedGoalId}
             onChange={(e) => { setSelectedGoalId(e.target.value); setSelectedTaskId(""); }}
-            className="w-full text-sm bg-muted/30 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-primary/20 border border-border/40"
+            className="w-full text-sm bg-background rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-primary/30 border border-border/60 text-foreground"
           >
-            <option value="">Sin goal asociado</option>
+            <option value="">No linked goal</option>
             {goals.map((g) => (
               <option key={g.id} value={String(g.id)}>{g.title}</option>
             ))}
@@ -235,9 +236,9 @@ export function FocusTimer({ goals, tasks }: Props) {
             <select
               value={selectedTaskId}
               onChange={(e) => setSelectedTaskId(e.target.value)}
-              className="w-full text-sm bg-muted/30 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-primary/20 border border-border/40"
+              className="w-full text-sm bg-background rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-primary/30 border border-border/60 text-foreground"
             >
-              <option value="">Sin tarea específica</option>
+              <option value="">No specific task</option>
               {goalTasks.map((t) => (
                 <option key={t.id} value={String(t.id)}>{t.title}</option>
               ))}

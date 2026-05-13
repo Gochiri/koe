@@ -80,7 +80,7 @@ export function BoardChat({ items, boardId, activeSectionId }: Props) {
         await createItem(fd);
         toast.success("Guardado como doc en el board");
       } catch {
-        toast.error("Error al guardar");
+        toast.error("Failed to save");
       } finally {
         setSavingId(null);
       }

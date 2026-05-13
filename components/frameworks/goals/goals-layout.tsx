@@ -11,9 +11,9 @@ interface Props {
 }
 
 const HORIZONS = [
-  { key: "90days", label: "90 Días" },
-  { key: "1year", label: "1 Año" },
-  { key: "3year", label: "3 Años" },
+  { key: "90days", label: "90 Days" },
+  { key: "1year", label: "1 Year" },
+  { key: "3year", label: "3 Years" },
   { key: "lifetime", label: "Lifetime" },
 ] as const;
 
@@ -24,10 +24,7 @@ export function GoalsLayout({ goals, tasks }: Props) {
   const activeGoals = goals.filter((g) => g.status === "active");
 
   return (
-    <div
-      className="flex overflow-hidden rounded-xl border border-border/60"
-      style={{ minHeight: "calc(100vh - 200px)" }}
-    >
+    <div className="flex overflow-hidden rounded-xl border border-border/60 h-full">
       {/* Main content */}
       <div className="flex flex-col flex-1 min-w-0 bg-background">
         {/* Horizon tabs */}

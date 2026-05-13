@@ -24,7 +24,7 @@ export function TaskItem({ task }: Props) {
     fd.set("status", task.status === "done" ? "todo" : "done");
     startTransition(async () => {
       try { await updateTask(fd); }
-      catch { toast.error("Error al actualizar tarea"); }
+      catch { toast.error("Failed to update task"); }
     });
   }
 
@@ -33,7 +33,7 @@ export function TaskItem({ task }: Props) {
     fd.set("id", String(task.id));
     startTransition(async () => {
       try { await deleteTask(fd); }
-      catch { toast.error("Error al eliminar tarea"); }
+      catch { toast.error("Failed to delete task"); }
     });
   }
 
