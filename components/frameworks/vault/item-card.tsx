@@ -4,10 +4,14 @@ import { useRef, useState, useTransition } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { updateItem, deleteItem } from "@/app/(dashboard)/eden/actions";
 import { toast } from "sonner";
-import type { VaultItem } from "@/lib/db/vault-schema";
+import type { VaultItem, VaultSection } from "@/lib/db/vault-schema";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { GripVertical } from "lucide-react";
 
 interface Props {
   item: VaultItem;
+  sections?: VaultSection[];
 }
 
 type CorBody = {
@@ -83,7 +87,12 @@ function VideoPreview({ url }: { url: string }) {
   );
 }
 
-function IdeaView({ item, onEdit, onDelete }: { item: VaultItem; onEdit: () => void; onDelete: () => void }) {
+function IdeaView({ item, onEdit, onDelete, dragListeners }: {
+  item: VaultItem;
+  onEdit: () => void;
+  onDelete: () => void;
+  dragListeners?: React.HTMLAttributes<HTMLElement>;
+}) {
   const [expanded, setExpanded] = useState(false);
   const cor = parseCorBody(item.body);
   const filledFields = corFieldLabels.filter(({ key }) => !!cor[key]);
@@ -98,6 +107,15 @@ function IdeaView({ item, onEdit, onDelete }: { item: VaultItem; onEdit: () => v
       onClick={() => setExpanded((v) => !v)}
       className="group relative rounded-xl border border-border border-l-2 border-l-primary/50 bg-card p-4 cursor-pointer transition-colors hover:border-border/80"
     >
+      {/* Drag handle */}
+      <div
+        {...dragListeners}
+        onClick={(e) => e.stopPropagation()}
+        className="absolute top-2.5 left-2.5 opacity-0 group-hover:opacity-100 transition-opacity cursor-grab active:cursor-grabbing"
+      >
+        <GripVertical className="w-3 h-3 text-foreground/20" />
+      </div>
+
       {/* Action buttons */}
       <div className="absolute top-2.5 right-2.5 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
         <button
@@ -287,11 +305,21 @@ function IdeaEditForm({ item, onCancel, onSave, pending }: {
   );
 }
 
-export function ItemCard({ item }: Props) {
+export function ItemCard({ item, sections: _sections }: Props) {
   const [editing, setEditing] = useState(false);
   const [pending, startTransition] = useTransition();
   const bodyRef = useRef<HTMLTextAreaElement>(null);
   const titleRef = useRef<HTMLInputElement>(null);
+
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: item.id,
+  });
+
+  const style: React.CSSProperties = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
 
   const bodyIsVideo = (item.kind === "link" || item.kind === "card") && item.body ? getYouTubeId(item.body.trim()) !== null : false;
   const isGenericLink = item.kind === "link" && !bodyIsVideo;
@@ -328,128 +356,142 @@ export function ItemCard({ item }: Props) {
 
   if (item.kind === "idea") {
     return (
-      <AnimatePresence mode="wait">
-        {editing ? (
-          <IdeaEditForm
-            key="editing"
-            item={item}
-            onCancel={() => setEditing(false)}
-            onSave={handleSave}
-            pending={pending}
-          />
-        ) : (
-          <IdeaView
-            key="viewing"
-            item={item}
-            onEdit={() => setEditing(true)}
-            onDelete={handleDelete}
-          />
-        )}
-      </AnimatePresence>
+      <div ref={setNodeRef} style={style} {...attributes}>
+        <AnimatePresence mode="wait">
+          {editing ? (
+            <IdeaEditForm
+              key="editing"
+              item={item}
+              onCancel={() => setEditing(false)}
+              onSave={handleSave}
+              pending={pending}
+            />
+          ) : (
+            <IdeaView
+              key="viewing"
+              item={item}
+              onEdit={() => setEditing(true)}
+              onDelete={handleDelete}
+              dragListeners={listeners}
+            />
+          )}
+        </AnimatePresence>
+      </div>
     );
   }
 
   return (
-    <AnimatePresence mode="wait">
-      {editing ? (
-        <motion.div
-          key="editing"
-          initial={{ opacity: 0, scale: 0.98 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.97 }}
-          transition={{ type: "spring", stiffness: 500, damping: 35 }}
-          className="rounded-xl border border-ring/60 bg-card shadow-sm p-4 space-y-2"
-        >
-          {item.kind === "doc" && (
-            <input
-              ref={titleRef}
-              defaultValue={item.title ?? ""}
-              placeholder="Título"
-              className="w-full text-sm font-semibold bg-transparent border-b border-border focus:outline-none focus:border-primary/50 pb-1.5 mb-1"
+    <div ref={setNodeRef} style={style} {...attributes} className="group">
+      <AnimatePresence mode="wait">
+        {editing ? (
+          <motion.div
+            key="editing"
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.97 }}
+            transition={{ type: "spring", stiffness: 500, damping: 35 }}
+            className="rounded-xl border border-ring/60 bg-card shadow-sm p-4 space-y-2"
+          >
+            {item.kind === "doc" && (
+              <input
+                ref={titleRef}
+                defaultValue={item.title ?? ""}
+                placeholder="Título"
+                className="w-full text-sm font-semibold bg-transparent border-b border-border focus:outline-none focus:border-primary/50 pb-1.5 mb-1"
+              />
+            )}
+            <textarea
+              ref={bodyRef}
+              defaultValue={item.body ?? ""}
+              rows={item.kind === "doc" ? 8 : 4}
+              autoFocus
+              className="w-full resize-none text-sm bg-transparent focus:outline-none leading-relaxed"
             />
-          )}
-          <textarea
-            ref={bodyRef}
-            defaultValue={item.body ?? ""}
-            rows={item.kind === "doc" ? 8 : 4}
-            autoFocus
-            className="w-full resize-none text-sm bg-transparent focus:outline-none leading-relaxed"
-          />
-          <div className="flex gap-2 justify-end pt-1">
-            <button onClick={() => setEditing(false)} className="text-xs text-muted-foreground hover:text-foreground transition-colors">
-              Cancelar
-            </button>
-            <button onClick={() => handleSave()} disabled={pending} className="text-xs font-medium text-primary hover:opacity-80 transition-opacity">
-              Guardar
-            </button>
-          </div>
-        </motion.div>
-      ) : (
-        <motion.div
-          key="viewing"
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -4 }}
-          transition={{ type: "spring", stiffness: 400, damping: 30 }}
-          whileHover={bodyIsVideo ? {} : { y: -2, boxShadow: "0 4px 20px oklch(0 0 0 / 10%)" }}
-          className={`group relative rounded-xl border border-border bg-card overflow-hidden transition-colors hover:border-border/80 ${
-            item.kind === "doc" ? "border-l-2 border-l-primary/40" : ""
-          } ${bodyIsVideo || isGenericLink ? "cursor-default" : "cursor-pointer p-4"}`}
-          onClick={bodyIsVideo || isGenericLink ? undefined : () => setEditing(true)}
-        >
-          {bodyIsVideo ? (
-            <div>
-              <VideoPreview url={item.body!} />
-              {item.title && (
-                <div className="px-3 py-2">
-                  <p className="text-xs font-semibold text-foreground tracking-tight">{item.title}</p>
-                </div>
-              )}
+            <div className="flex gap-2 justify-end pt-1">
+              <button onClick={() => setEditing(false)} className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+                Cancelar
+              </button>
+              <button onClick={() => handleSave()} disabled={pending} className="text-xs font-medium text-primary hover:opacity-80 transition-opacity">
+                Guardar
+              </button>
             </div>
-          ) : isGenericLink ? (
-            <a
-              href={item.body ?? "#"}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-start gap-3 p-4 hover:bg-muted/30 transition-colors"
+          </motion.div>
+        ) : (
+          <motion.div
+            key="viewing"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ type: "spring", stiffness: 400, damping: 30 }}
+            whileHover={bodyIsVideo ? {} : { y: -2, boxShadow: "0 4px 20px oklch(0 0 0 / 10%)" }}
+            className={`group relative rounded-xl border border-border bg-card overflow-hidden transition-colors hover:border-border/80 ${
+              item.kind === "doc" ? "border-l-2 border-l-primary/40" : ""
+            } ${bodyIsVideo || isGenericLink ? "cursor-default" : "cursor-pointer p-4"}`}
+            onClick={bodyIsVideo || isGenericLink ? undefined : () => setEditing(true)}
+          >
+            {/* Drag handle */}
+            <div
+              {...listeners}
               onClick={(e) => e.stopPropagation()}
+              className="absolute top-2.5 left-2.5 opacity-0 group-hover:opacity-100 transition-opacity cursor-grab active:cursor-grabbing z-10"
             >
-              <span className="text-base mt-0.5 shrink-0">🔗</span>
-              <div className="min-w-0">
-                <p className="text-sm font-medium text-foreground truncate">{item.title || item.body}</p>
-                {item.title && item.body && (
-                  <p className="text-[10px] text-muted-foreground/60 truncate mt-0.5">
-                    {(() => { try { return new URL(item.body).hostname; } catch { return item.body; } })()}
-                  </p>
+              <GripVertical className="w-3 h-3 text-foreground/20" />
+            </div>
+
+            {bodyIsVideo ? (
+              <div>
+                <VideoPreview url={item.body!} />
+                {item.title && (
+                  <div className="px-3 py-2">
+                    <p className="text-xs font-semibold text-foreground tracking-tight">{item.title}</p>
+                  </div>
                 )}
               </div>
-            </a>
-          ) : (
-            <>
-              {item.kind === "doc" && item.title && (
-                <p className="text-xs font-semibold mb-1.5 text-foreground tracking-tight">{item.title}</p>
-              )}
-              <p className="text-sm text-foreground/85 whitespace-pre-wrap leading-relaxed">
-                {item.body || <span className="text-muted-foreground/60 italic text-xs">No content</span>}
-              </p>
-            </>
-          )}
-
-          <div className="absolute top-2.5 right-2.5 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 items-center">
-            {!bodyIsVideo && !isGenericLink && (
-              <span className="text-[10px] text-muted-foreground bg-muted/80 rounded px-1.5 py-0.5 font-medium">
-                {item.kind}
-              </span>
+            ) : isGenericLink ? (
+              <a
+                href={item.body ?? "#"}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-start gap-3 p-4 hover:bg-muted/30 transition-colors"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <span className="text-base mt-0.5 shrink-0">🔗</span>
+                <div className="min-w-0">
+                  <p className="text-sm font-medium text-foreground truncate">{item.title || item.body}</p>
+                  {item.title && item.body && (
+                    <p className="text-[10px] text-muted-foreground/60 truncate mt-0.5">
+                      {(() => { try { return new URL(item.body).hostname; } catch { return item.body; } })()}
+                    </p>
+                  )}
+                </div>
+              </a>
+            ) : (
+              <>
+                {item.kind === "doc" && item.title && (
+                  <p className="text-xs font-semibold mb-1.5 text-foreground tracking-tight">{item.title}</p>
+                )}
+                <p className="text-sm text-foreground/85 whitespace-pre-wrap leading-relaxed">
+                  {item.body || <span className="text-muted-foreground/60 italic text-xs">No content</span>}
+                </p>
+              </>
             )}
-            <button
-              onClick={(e) => { e.stopPropagation(); handleDelete(); }}
-              className="text-muted-foreground hover:text-destructive text-sm leading-none w-5 h-5 flex items-center justify-center rounded hover:bg-destructive/10 transition-colors"
-            >
-              ×
-            </button>
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+
+            <div className="absolute top-2.5 right-2.5 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 items-center">
+              {!bodyIsVideo && !isGenericLink && (
+                <span className="text-[10px] text-muted-foreground bg-muted/80 rounded px-1.5 py-0.5 font-medium">
+                  {item.kind}
+                </span>
+              )}
+              <button
+                onClick={(e) => { e.stopPropagation(); handleDelete(); }}
+                className="text-muted-foreground hover:text-destructive text-sm leading-none w-5 h-5 flex items-center justify-center rounded hover:bg-destructive/10 transition-colors"
+              >
+                ×
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 }

@@ -2,21 +2,21 @@
 
 import { useEffect, useRef, useState, useTransition } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { createSection, deleteSection, createItem, resolveLink } from "@/app/(dashboard)/eden/actions";
+import { createSection, deleteSection, createItem, resolveLink, reorderItems } from "@/app/(dashboard)/eden/actions";
 import { BoardChat } from "./board-chat";
 import { QuickCapture } from "./quick-capture";
 import { ItemCard } from "./item-card";
 import { toast } from "sonner";
 import type { VaultBoard, VaultSection, VaultItem } from "@/lib/db/vault-schema";
-
-const listVariants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.03 } },
-};
-const itemVariants = {
-  hidden: { opacity: 0, y: 6 },
-  visible: { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 400, damping: 30 } },
-};
+import {
+  DndContext,
+  closestCenter,
+  DragEndEvent,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import { SortableContext, rectSortingStrategy, arrayMove } from "@dnd-kit/sortable";
 
 const corFields = [
   { name: "problem", label: "Problem", placeholder: "Qué dolor / limitación resuelve" },
@@ -42,6 +42,7 @@ export function BoardView({ board, sections, items }: Props) {
   const [addingSection, setAddingSection] = useState(false);
   const [linkResolving, setLinkResolving] = useState(false);
   const [pending, startTransition] = useTransition();
+  const [localItems, setLocalItems] = useState(items);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const sectionNameRef = useRef<HTMLInputElement>(null);
   const docTitleRef = useRef<HTMLInputElement>(null);
@@ -59,8 +60,32 @@ export function BoardView({ board, sections, items }: Props) {
   const linkUrlRef = useRef<HTMLInputElement>(null);
   const cardBodyRef = useRef<HTMLTextAreaElement>(null);
 
-  const visibleItems = activeTab === "all" ? items : items.filter((i) => i.sectionId === activeTab);
+  // Sync local items when server revalidates
+  useEffect(() => setLocalItems(items), [items]);
+
   const activeSectionId = activeTab === "all" ? undefined : activeTab;
+  const visibleLocalItems =
+    activeTab === "all" ? localItems : localItems.filter((i) => i.sectionId === activeTab);
+
+  // DnD sensors
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
+  );
+
+  function handleDragEnd({ active, over }: DragEndEvent) {
+    if (!over || active.id === over.id) return;
+    const oldIdx = localItems.findIndex((i) => i.id === active.id);
+    const newIdx = localItems.findIndex((i) => i.id === over.id);
+    if (oldIdx === -1 || newIdx === -1) return;
+    const reordered = arrayMove(localItems, oldIdx, newIdx).map((item, idx) => ({
+      ...item,
+      position: idx,
+    }));
+    setLocalItems(reordered);
+    const fd = new FormData();
+    fd.set("items", JSON.stringify(reordered.map(({ id, position }) => ({ id, position }))));
+    startTransition(() => reorderItems(fd));
+  }
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -328,8 +353,9 @@ export function BoardView({ board, sections, items }: Props) {
         </div>
 
         {/* Content area */}
-        <div className="flex-1 overflow-y-auto px-6 py-5">
-          <div className="max-w-2xl space-y-3">
+        <div className="flex-1 overflow-y-auto">
+          {/* Add-item forms (constrained width) */}
+          <div className="max-w-2xl px-6 pt-5 space-y-3">
 
             {/* Paste link form */}
             <AnimatePresence>
@@ -464,37 +490,42 @@ export function BoardView({ board, sections, items }: Props) {
                 </motion.form>
               )}
             </AnimatePresence>
+          </div>
 
-            {/* Items list */}
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={String(activeTab)}
-                variants={listVariants}
-                initial="hidden"
-                animate="visible"
-                exit={{ opacity: 0, transition: { duration: 0.1 } }}
-                className="space-y-2"
-              >
-                {visibleItems.length === 0 ? (
-                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center justify-center py-16 text-muted-foreground/50">
-                    <span className="text-2xl mb-2">✦</span>
-                    <p className="text-sm">No content</p>
-                    <p className="text-xs mt-1 opacity-60">Usá el "+" del header para añadir</p>
-                  </motion.div>
-                ) : (
-                  visibleItems.map((item) => (
-                    <motion.div key={item.id} variants={itemVariants}>
-                      <ItemCard item={item} />
-                    </motion.div>
-                  ))
-                )}
-              </motion.div>
-            </AnimatePresence>
-
-            {/* Quick Capture */}
-            <div className="pt-2">
-              <QuickCapture boardId={board.id} sectionId={activeSectionId} />
+          {/* Masonry DnD items grid */}
+          {visibleLocalItems.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-16 text-muted-foreground/50">
+              <span className="text-2xl mb-2">✦</span>
+              <p className="text-sm">No content</p>
+              <p className="text-xs mt-1 opacity-60">Usá el "+" del header para añadir</p>
             </div>
+          ) : (
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={handleDragEnd}
+            >
+              <SortableContext
+                items={visibleLocalItems.map((i) => i.id)}
+                strategy={rectSortingStrategy}
+              >
+                <div
+                  style={{ columns: "3 280px", columnGap: "1rem" }}
+                  className="p-4"
+                >
+                  {visibleLocalItems.map((item) => (
+                    <div key={item.id} className="break-inside-avoid mb-4">
+                      <ItemCard item={item} sections={sections} />
+                    </div>
+                  ))}
+                </div>
+              </SortableContext>
+            </DndContext>
+          )}
+
+          {/* Quick Capture */}
+          <div className="px-4 pb-4 pt-2">
+            <QuickCapture boardId={board.id} sectionId={activeSectionId} />
           </div>
         </div>
       </div>

@@ -123,6 +123,21 @@ export async function deleteItem(formData: FormData) {
   revalidatePath("/eden");
 }
 
+// ── Reorder Items ─────────────────────────────────────────────────────────────
+
+export async function reorderItems(formData: FormData) {
+  await requireSession();
+  const raw = formData.get("items") as string;
+  const updates = JSON.parse(raw) as { id: number; position: number }[];
+  if (!updates?.length) return;
+  await Promise.all(
+    updates.map(({ id, position }) =>
+      db.update(vaultItems).set({ position }).where(eq(vaultItems.id, id))
+    )
+  );
+  revalidatePath("/eden");
+}
+
 // ── Link resolver ─────────────────────────────────────────────────────────────
 
 export async function resolveLink(url: string): Promise<{ title: string | null; isVideo: boolean }> {
