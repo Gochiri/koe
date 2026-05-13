@@ -35,7 +35,7 @@ function getMessageText(parts: UIMessagePart<UIDataTypes, UITools>[]): string {
 }
 
 export function GoalChat({ goals, tasks }: Props) {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const goalContext = buildGoalContext(goals, tasks);

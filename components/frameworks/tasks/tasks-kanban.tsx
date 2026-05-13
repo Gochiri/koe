@@ -8,6 +8,7 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
+  useDroppable,
   type DragEndEvent,
   type DragStartEvent,
 } from "@dnd-kit/core";
@@ -38,6 +39,23 @@ const PRIORITY_LABELS: Record<string, string> = {
 
 interface Props {
   tasks: Task[];
+}
+
+// Registered drop target for each column
+function DroppableColumn({ id, children }: { id: string; children: React.ReactNode }) {
+  const { setNodeRef, isOver } = useDroppable({ id });
+  return (
+    <div
+      ref={setNodeRef}
+      className={`flex-1 min-h-24 rounded-xl border p-2 space-y-2 transition-colors ${
+        isOver
+          ? "border-foreground/30 bg-foreground/[0.04]"
+          : "border-border/40 bg-background/50"
+      }`}
+    >
+      {children}
+    </div>
+  );
 }
 
 function KanbanCard({ task }: { task: Task }) {
@@ -86,7 +104,8 @@ export function TasksKanban({ tasks }: Props) {
     const { active, over } = e;
     if (!over) return;
 
-    const colKey = COLUMNS.find((c) => c.key === over.id)?.key as TaskStatus | undefined;
+    // over.id is either a column key (from useDroppable) or a task id (from useSortable)
+    const colKey = COLUMNS.find((c) => c.key === String(over.id))?.key as TaskStatus | undefined;
     const targetStatus: TaskStatus | undefined = colKey ?? (() => {
       const targetTask = localTasks.find((t) => t.id === Number(over.id));
       return targetTask?.status as TaskStatus | undefined;
@@ -121,11 +140,11 @@ export function TasksKanban({ tasks }: Props) {
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
-      <div className="flex gap-4 h-full overflow-x-auto pb-4">
+      <div className="flex gap-4 overflow-x-auto pb-4">
         {COLUMNS.map((col) => {
           const colTasks = localTasks.filter((t) => t.status === col.key);
           return (
-            <div key={col.key} className="flex-shrink-0 w-64 flex flex-col gap-2">
+            <div key={col.key} className="flex-shrink-0 w-60 flex flex-col gap-2">
               {/* Column header */}
               <div className="flex items-center gap-2 px-1">
                 <span className="text-[10px] font-semibold uppercase tracking-[0.1em] text-muted-foreground/50">
@@ -134,16 +153,13 @@ export function TasksKanban({ tasks }: Props) {
                 <span className="text-[10px] font-mono text-muted-foreground/35">{colTasks.length}</span>
               </div>
 
-              {/* Drop zone */}
+              {/* Droppable column */}
               <SortableContext
                 id={col.key}
                 items={colTasks.map((t) => t.id)}
                 strategy={verticalListSortingStrategy}
               >
-                <div
-                  data-droppable-id={col.key}
-                  className="flex-1 min-h-24 rounded-xl border border-border/40 bg-background/50 p-2 space-y-2"
-                >
+                <DroppableColumn id={col.key}>
                   {colTasks.map((task) => (
                     <KanbanCard key={task.id} task={task} />
                   ))}
@@ -152,7 +168,7 @@ export function TasksKanban({ tasks }: Props) {
                       <span className="text-[11px] text-muted-foreground/30">Soltá aquí</span>
                     </div>
                   )}
-                </div>
+                </DroppableColumn>
               </SortableContext>
             </div>
           );
@@ -161,7 +177,7 @@ export function TasksKanban({ tasks }: Props) {
 
       <DragOverlay>
         {activeTask && (
-          <div className="rounded-lg border border-border bg-card px-3 py-2.5 shadow-lg opacity-90 w-64">
+          <div className="rounded-lg border border-border bg-card px-3 py-2.5 shadow-lg opacity-90 w-60">
             <p className="text-sm font-medium">{activeTask.title}</p>
           </div>
         )}
