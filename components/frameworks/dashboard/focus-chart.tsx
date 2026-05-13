@@ -16,7 +16,7 @@ export function FocusChart({ focusByDay }: Props) {
 
   function dayLabel(dateStr: string): string {
     const d = new Date(dateStr);
-    return d.toLocaleDateString("en-US", { weekday: "short" });
+    return d.toLocaleDateString("en-US", { weekday: "short" }).toUpperCase().slice(0, 2);
   }
 
   function formatMinutes(m: number): string {
@@ -33,24 +33,22 @@ export function FocusChart({ focusByDay }: Props) {
   return (
     <div className="rounded-xl border border-border bg-card px-5 py-5">
       {/* Header */}
-      <div className="flex items-center justify-between mb-5">
+      <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
-            <Clock className="w-3.5 h-3.5 text-blue-400" />
-          </div>
+          <Clock className="w-3.5 h-3.5 text-muted-foreground/40" />
           <div>
             <h3 className="text-sm font-semibold">Focus — last 7 days</h3>
-            <p className="text-[10px] text-muted-foreground/50">Completed session time</p>
+            <p className="text-[10px] text-muted-foreground/40 mt-0.5">Completed session time</p>
           </div>
         </div>
         <div className="text-right">
-          <p className="text-xl font-bold">{totalHours}h</p>
-          <p className="text-[10px] text-muted-foreground/50">this week</p>
+          <p className="text-xl font-bold tabular-nums">{totalHours}h</p>
+          <p className="text-[10px] text-muted-foreground/40 mt-0.5">this week</p>
         </div>
       </div>
 
       {/* Chart */}
-      <div className="flex items-end gap-2 h-28 px-1">
+      <div className="flex items-end gap-2 h-24 px-1">
         {entries.map(([dateStr, minutes]) => {
           const pct = (minutes / maxMinutes) * 100;
           const isToday = new Date(dateStr).toDateString() === new Date().toDateString();
@@ -58,39 +56,39 @@ export function FocusChart({ focusByDay }: Props) {
           return (
             <div
               key={dateStr}
-              className="flex flex-col items-center gap-1.5 flex-1 cursor-pointer"
+              className="flex flex-col items-center gap-1.5 flex-1 cursor-default"
               onMouseEnter={() => setHovered(dateStr)}
               onMouseLeave={() => setHovered(null)}
             >
               {/* Tooltip */}
               <div className={`
-                text-[10px] font-medium transition-all duration-150
+                text-[10px] font-medium tabular-nums transition-all duration-100
                 ${isHovered || isToday ? "opacity-100" : "opacity-0"}
-                ${isToday ? "text-blue-400" : "text-muted-foreground"}
+                ${isToday ? "text-foreground/70" : "text-muted-foreground/60"}
               `}>
                 {formatMinutes(minutes)}
               </div>
 
               {/* Bar container */}
-              <div className="w-full flex items-end flex-1" style={{ height: "72px" }}>
+              <div className="w-full flex items-end flex-1" style={{ height: "60px" }}>
                 <div
                   className={`
-                    w-full rounded-t-md transition-all duration-200
+                    w-full rounded-t transition-all duration-200
                     ${isToday
-                      ? "bg-blue-500 shadow-[0_0_12px_2px_rgba(59,130,246,0.25)]"
+                      ? "bg-foreground/70"
                       : isHovered
-                        ? "bg-blue-400/60"
-                        : "bg-blue-500/25"
+                        ? "bg-foreground/35"
+                        : "bg-foreground/18"
                     }
                   `}
-                  style={{ height: `${Math.max(pct, minutes > 0 ? 6 : 2)}%` }}
+                  style={{ height: `${Math.max(pct, minutes > 0 ? 8 : 3)}%` }}
                 />
               </div>
 
               {/* Day label */}
               <span className={`
-                text-[10px] font-medium transition-colors
-                ${isToday ? "text-blue-400 font-semibold" : "text-muted-foreground/50"}
+                text-[9px] font-semibold tracking-widest transition-colors
+                ${isToday ? "text-foreground/60" : "text-muted-foreground/30"}
               `}>
                 {dayLabel(dateStr)}
               </span>
@@ -100,8 +98,8 @@ export function FocusChart({ focusByDay }: Props) {
       </div>
 
       {allZero && (
-        <p className="text-xs text-muted-foreground/40 text-center mt-3">
-          No focus sessions this week — start one in Focus
+        <p className="text-[11px] text-muted-foreground/30 text-center mt-4">
+          No sessions this week — start one in Focus
         </p>
       )}
     </div>

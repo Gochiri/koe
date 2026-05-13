@@ -38,22 +38,20 @@ export function DashboardLayout({
   const pendingTasks = allTasks.filter((t) => t.status !== "done").length;
 
   return (
-    <div className="max-w-5xl mx-auto py-8 px-4 space-y-8">
+    <div className="max-w-5xl mx-auto py-8 px-6 space-y-7">
       {/* Header */}
-      <div className="flex items-end justify-between">
+      <div className="flex items-baseline justify-between">
         <div>
-          <p className="text-sm text-muted-foreground mb-0.5">{getGreeting()}</p>
-          <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
+          <p className="text-[11px] font-medium text-muted-foreground/45 uppercase tracking-[0.1em] mb-1">{getGreeting()}</p>
+          <h1 className="text-xl font-semibold tracking-tight">Dashboard</h1>
         </div>
-        <div className="text-right">
-          <p className="text-xs text-muted-foreground">
-            {new Date().toLocaleDateString("en-US", {
-              weekday: "long",
-              day: "numeric",
-              month: "long",
-            })}
-          </p>
-        </div>
+        <p className="text-[11px] text-muted-foreground/40 tabular-nums">
+          {new Date().toLocaleDateString("en-US", {
+            weekday: "long",
+            day: "numeric",
+            month: "long",
+          })}
+        </p>
       </div>
 
       {/* Metric cards */}

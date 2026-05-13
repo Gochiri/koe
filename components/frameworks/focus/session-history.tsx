@@ -76,8 +76,8 @@ export function SessionHistory({ sessions, goals, tasks }: Props) {
                 const task = tasks.find((t) => t.id === session.taskId);
                 return (
                   <div key={session.id} className="group flex items-center gap-3 px-4 py-2.5 hover:bg-accent/20 transition-colors">
-                    <span className={`text-sm ${session.completed ? "text-emerald-500" : "text-muted-foreground"}`}>
-                      {session.completed ? "✓" : "○"}
+                    <span className={`text-sm font-mono ${session.completed ? "text-foreground/60" : "text-muted-foreground/25"}`}>
+                      {session.completed ? "·" : "○"}
                     </span>
                     <div className="flex-1 min-w-0">
                       <span className="text-sm font-medium">{formatDuration(session.durationMinutes)}</span>

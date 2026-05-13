@@ -23,15 +23,19 @@ export function FocusLayout({ goals, tasks, sessions }: Props) {
     .reduce((sum, s) => sum + s.durationMinutes, 0);
 
   return (
-    <div className="flex flex-col gap-6 max-w-3xl mx-auto py-6 px-4">
+    <div className="flex flex-col gap-5 max-w-2xl mx-auto py-8 px-6">
       {/* Top row: streak + today stats */}
-      <div className="flex gap-4">
+      <div className="flex gap-3">
         <StreakCounter sessions={sessions} />
 
         <div className="flex-1 rounded-xl border border-border bg-card px-4 py-3">
-          <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/50 mb-1">Today</p>
-          <p className="text-2xl font-bold">{Math.floor(todayMinutes / 60)}h {todayMinutes % 60}m</p>
-          <p className="text-xs text-muted-foreground">{todaySessions.filter((s) => s.completed).length} sessions completed</p>
+          <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-muted-foreground/35 mb-2">Today</p>
+          <p className="text-2xl font-bold tabular-nums leading-none">
+            {Math.floor(todayMinutes / 60)}h {todayMinutes % 60}m
+          </p>
+          <p className="text-[11px] text-muted-foreground/45 mt-2">
+            {todaySessions.filter((s) => s.completed).length} sessions complete
+          </p>
         </div>
       </div>
 

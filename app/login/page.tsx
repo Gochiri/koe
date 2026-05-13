@@ -1,8 +1,6 @@
 import { signIn, auth } from "@/auth";
 import { redirect } from "next/navigation";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Zap } from "lucide-react";
 
@@ -11,55 +9,50 @@ export default async function LoginPage() {
   if (session?.user) redirect("/");
 
   return (
-    <main className="min-h-dvh flex items-center justify-center p-6 bg-background">
-      <div className="w-full max-w-sm space-y-6">
-        {/* Logo */}
-        <div className="flex flex-col items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center">
-            <Zap className="w-5 h-5 text-primary" />
+    <main className="min-h-dvh flex items-center justify-center bg-background">
+      <div className="w-full max-w-[320px] px-6">
+        {/* Mark */}
+        <div className="flex flex-col items-center gap-6 mb-10">
+          <div className="w-9 h-9 rounded-lg bg-foreground/8 border border-white/[0.08] flex items-center justify-center">
+            <Zap className="w-4 h-4 text-foreground/60" />
           </div>
           <div className="text-center">
-            <h1 className="text-lg font-semibold tracking-tight">Focus OS</h1>
-            <p className="text-xs text-muted-foreground mt-0.5">Your personal productivity system</p>
+            <h1 className="text-[22px] font-semibold tracking-tight">Focus OS</h1>
+            <p className="text-[13px] text-muted-foreground mt-1">Sign in to your workspace</p>
           </div>
         </div>
 
-        <Card className="border-border/60">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base font-medium">Sign in</CardTitle>
-            <CardDescription className="text-sm">
-              Enter your email to receive a magic link.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form
-              action={async (formData) => {
-                "use server";
-                await signIn("resend", {
-                  email: formData.get("email"),
-                  redirectTo: "/",
-                });
-              }}
-              className="space-y-4"
-            >
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-sm">Email</Label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  required
-                  autoComplete="email"
-                  placeholder="you@example.com"
-                  className="bg-muted/30"
-                />
-              </div>
-              <Button type="submit" className="w-full">
-                Send magic link
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
+        {/* Form */}
+        <form
+          action={async (formData) => {
+            "use server";
+            await signIn("resend", {
+              email: formData.get("email"),
+              redirectTo: "/",
+            });
+          }}
+          className="space-y-3"
+        >
+          <Input
+            id="email"
+            name="email"
+            type="email"
+            required
+            autoComplete="email"
+            placeholder="your@email.com"
+            className="bg-foreground/[0.04] border-white/[0.08] placeholder:text-foreground/25 h-10 text-sm"
+          />
+          <Button
+            type="submit"
+            className="w-full h-10 text-sm font-medium bg-foreground text-background hover:bg-foreground/90 transition-colors"
+          >
+            Send magic link
+          </Button>
+        </form>
+
+        <p className="text-center text-[11px] text-muted-foreground/40 mt-6">
+          Check your inbox for the sign-in link.
+        </p>
       </div>
     </main>
   );

@@ -98,7 +98,7 @@ export function FocusTimer({ goals, tasks }: Props) {
     startTransition(async () => {
       try {
         await endSession(fd);
-        toast.success(completed ? "¡Sesión completada! 🎉" : "Sesión guardada");
+        toast.success(completed ? "Session complete" : "Session saved");
       } catch {
         toast.error("Failed to save session");
       } finally {
@@ -160,7 +160,7 @@ export function FocusTimer({ goals, tasks }: Props) {
               {String(minutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}
             </span>
             {timerState === "finished" && (
-              <span className="text-xs text-emerald-400 font-medium mt-0.5">Done!</span>
+              <span className="text-[10px] text-foreground/50 font-medium mt-0.5 tracking-wide uppercase">Done</span>
             )}
           </div>
         </div>
@@ -210,7 +210,7 @@ export function FocusTimer({ goals, tasks }: Props) {
           {timerState === "finished" && (
             <button
               onClick={() => handleStop(true)}
-              className="flex items-center gap-2 px-6 py-2 bg-emerald-500 text-white rounded-lg text-sm font-medium hover:bg-emerald-600 transition-colors"
+              className="flex items-center gap-2 px-6 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors"
             >
               <CheckCircle2 className="w-3.5 h-3.5" /> Complete session
             </button>

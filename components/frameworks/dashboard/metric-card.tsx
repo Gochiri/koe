@@ -1,40 +1,25 @@
 import { type LucideIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
 
 interface Props {
   label: string;
   value: string;
   sub?: string;
   icon: LucideIcon;
-  accent?: "blue" | "emerald" | "violet" | "amber";
+  accent?: string; // kept for API compat, not used visually
 }
 
-const accentMap = {
-  blue:    { bg: "bg-blue-500/10",    icon: "text-blue-400",    border: "border-blue-500/20",    bar: "bg-blue-500" },
-  emerald: { bg: "bg-emerald-500/10", icon: "text-emerald-400", border: "border-emerald-500/20", bar: "bg-emerald-500" },
-  violet:  { bg: "bg-violet-500/10",  icon: "text-violet-400",  border: "border-violet-500/20",  bar: "bg-violet-500" },
-  amber:   { bg: "bg-amber-500/10",   icon: "text-amber-400",   border: "border-amber-500/20",   bar: "bg-amber-500" },
-};
-
-export function MetricCard({ label, value, sub, icon: Icon, accent = "blue" }: Props) {
-  const colors = accentMap[accent];
+export function MetricCard({ label, value, sub, icon: Icon }: Props) {
   return (
-    <div className="relative rounded-xl border border-border bg-card px-4 py-4 overflow-hidden group hover:border-white/10 transition-colors">
-      {/* Top accent bar */}
-      <div className={cn("absolute top-0 left-0 right-0 h-0.5", colors.bar, "opacity-60")} />
-
-      <div className="flex items-start justify-between mb-3">
-        <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/50">
+    <div className="rounded-xl border border-border bg-card px-4 py-4 hover:border-white/12 transition-colors">
+      <div className="flex items-center justify-between mb-3">
+        <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-muted-foreground/45">
           {label}
         </p>
-        <div className={cn("w-8 h-8 rounded-lg flex items-center justify-center", colors.bg, "border", colors.border)}>
-          <Icon className={cn("w-3.5 h-3.5", colors.icon)} />
-        </div>
+        <Icon className="w-3.5 h-3.5 text-muted-foreground/25" />
       </div>
-
-      <p className="text-3xl font-bold tracking-tight">{value}</p>
+      <p className="text-[2rem] font-bold tracking-tight tabular-nums leading-none">{value}</p>
       {sub && (
-        <p className="text-xs text-muted-foreground/60 mt-1">{sub}</p>
+        <p className="text-[11px] text-muted-foreground/45 mt-2">{sub}</p>
       )}
     </div>
   );
