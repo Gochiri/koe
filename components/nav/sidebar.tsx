@@ -8,8 +8,8 @@ import { LayoutDashboard, Target, BookOpen, Timer, Zap, ChevronLeft, ChevronRigh
 
 const navItems = [
   { href: "/dashboard", label: "Inicio",   icon: LayoutDashboard },
-  { href: "/tasks",     label: "Tareas",   icon: CheckSquare },
   { href: "/goals",     label: "Metas",    icon: Target },
+  { href: "/tasks",     label: "Tareas",   icon: CheckSquare },
   { href: "/eden",      label: "Eden",     icon: BookOpen },
   { href: "/focus",     label: "Enfoque",  icon: Timer },
 ];
