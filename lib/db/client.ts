@@ -3,6 +3,7 @@ import { Pool } from "pg";
 import { env } from "@/lib/env";
 import * as schema from "./schema";
 import * as vaultSchema from "./vault-schema";
+import * as goalsSchema from "./goals-schema";
 
 /**
  * Singleton Postgres pool — survives HMR in dev by stashing on globalThis.
@@ -21,5 +22,5 @@ const pool =
 
 if (env.NODE_ENV !== "production") globalThis.__pgPool = pool;
 
-export const db = drizzle(pool, { schema: { ...schema, ...vaultSchema } });
+export const db = drizzle(pool, { schema: { ...schema, ...vaultSchema, ...goalsSchema } });
 export type DB = typeof db;
