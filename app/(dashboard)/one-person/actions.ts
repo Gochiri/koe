@@ -1,9 +1,9 @@
-"use server";
+﻿"use server";
 
 import { z } from "zod";
 import { auth } from "@/auth";
 import { db } from "@/lib/db/client";
-import { onePerson as onePersonTable } from "@/lib/db/schema";
+import { onePersonVision as onePersonTable } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
