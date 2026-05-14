@@ -3,8 +3,18 @@
 import { useEffect, useRef, useState, useTransition } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { createSection, deleteSection, createItem, resolveLink, reorderItems } from "@/app/(dashboard)/eden/actions";
-import { BoardChat } from "./board-chat";
 import { QuickCapture } from "./quick-capture";
+
+const SECTION_COLORS = [
+  "oklch(0.65 0.22 25)",
+  "oklch(0.72 0.19 55)",
+  "oklch(0.78 0.17 95)",
+  "oklch(0.70 0.18 145)",
+  "oklch(0.68 0.16 195)",
+  "oklch(0.65 0.18 245)",
+  "oklch(0.65 0.20 290)",
+  "oklch(0.68 0.22 330)",
+];
 import { ItemCard } from "./item-card";
 import { toast } from "sonner";
 import type { VaultBoard, VaultSection, VaultItem } from "@/lib/db/vault-schema";
@@ -232,8 +242,7 @@ export function BoardView({ board, sections, items }: Props) {
   ];
 
   return (
-    <div className="flex flex-1 min-h-0 overflow-hidden">
-      <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
+    <div className="flex flex-col flex-1 min-w-0 min-h-0 overflow-hidden">
         {/* Board header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-border/60">
           <h2 className="font-semibold text-xl tracking-tight">{board.name}</h2>
@@ -288,11 +297,13 @@ export function BoardView({ board, sections, items }: Props) {
               activeTab === "all" ? "bg-accent text-accent-foreground font-medium" : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
             }`}
           >
-            All
+            Todas
           </button>
 
           <AnimatePresence>
-            {sections.map((section) => (
+            {sections.map((section) => {
+              const dotColor = SECTION_COLORS[section.id % SECTION_COLORS.length];
+              return (
               <motion.div
                 key={section.id}
                 initial={{ opacity: 0, scale: 0.9, x: -6 }}
@@ -303,10 +314,14 @@ export function BoardView({ board, sections, items }: Props) {
               >
                 <button
                   onClick={() => setActiveTab(section.id)}
-                  className={`text-sm px-3 py-1 rounded-md transition-colors pr-6 ${
+                  className={`text-sm px-3 py-1 rounded-md transition-colors pr-6 flex items-center gap-1.5 ${
                     activeTab === section.id ? "bg-accent text-accent-foreground font-medium" : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                   }`}
                 >
+                  <span
+                    className="w-2 h-2 rounded-full flex-shrink-0"
+                    style={{ background: dotColor }}
+                  />
                   {section.name}
                 </button>
                 <button
@@ -316,7 +331,8 @@ export function BoardView({ board, sections, items }: Props) {
                   ×
                 </button>
               </motion.div>
-            ))}
+              );
+            })}
           </AnimatePresence>
 
           {/* Add section inline input (in tab bar) */}
@@ -510,7 +526,7 @@ export function BoardView({ board, sections, items }: Props) {
                 strategy={rectSortingStrategy}
               >
                 <div
-                  style={{ columns: "3 280px", columnGap: "1rem" }}
+                  style={{ columns: "4 220px", columnGap: "0.875rem" }}
                   className="p-4"
                 >
                   {visibleLocalItems.map((item) => (
@@ -528,9 +544,6 @@ export function BoardView({ board, sections, items }: Props) {
             <QuickCapture boardId={board.id} sectionId={activeSectionId} />
           </div>
         </div>
-      </div>
-
-      <BoardChat items={items} boardId={board.id} activeSectionId={activeSectionId} />
     </div>
   );
 }

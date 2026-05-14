@@ -11,6 +11,7 @@ interface Props {
   items: VaultItem[];
   boardId: number;
   activeSectionId?: number;
+  variant?: "panel" | "tab";
 }
 
 function buildContext(items: VaultItem[]): string {
@@ -32,8 +33,8 @@ function getMessageText(parts: UIMessagePart<UIDataTypes, UITools>[]): string {
     .join("");
 }
 
-export function BoardChat({ items, boardId, activeSectionId }: Props) {
-  const [open, setOpen] = useState(true);
+export function BoardChat({ items, boardId, activeSectionId, variant = "panel" }: Props) {
+  const [open, setOpen] = useState(variant === "tab" ? true : true);
   const [inputValue, setInputValue] = useState("");
   const [savingId, setSavingId] = useState<string | null>(null);
   const [, startTransition] = useTransition();
@@ -85,6 +86,75 @@ export function BoardChat({ items, boardId, activeSectionId }: Props) {
         setSavingId(null);
       }
     });
+  }
+
+  if (variant === "tab") {
+    return (
+      <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
+        {/* Tab header */}
+        <div className="flex items-center gap-2 px-5 py-3 border-b border-border/60 shrink-0">
+          <span className="text-xs font-semibold text-foreground">Chat</span>
+          <span className="text-[10px] text-muted-foreground/50 bg-muted/40 rounded px-1.5 py-0.5">
+            {items.length} items
+          </span>
+        </div>
+        {/* Messages */}
+        <div className="flex-1 overflow-y-auto px-5 py-4 space-y-3 min-h-0 max-w-2xl w-full mx-auto">
+          {messages.length === 0 && (
+            <div className="text-center py-12">
+              <p className="text-3xl mb-3">💬</p>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Tengo acceso a todo el contenido de este board.<br />Preguntame lo que quieras.
+              </p>
+            </div>
+          )}
+          {messages.map((m) => {
+            const text = getMessageText(m.parts as UIMessagePart<UIDataTypes, UITools>[]);
+            return (
+              <div key={m.id} className={`space-y-1 ${m.role === "user" ? "items-end flex flex-col" : ""}`}>
+                <div className={`text-sm rounded-xl px-3 py-2 leading-relaxed ${m.role === "user" ? "bg-primary text-primary-foreground ml-12" : "bg-muted mr-12"}`}>
+                  <p className="whitespace-pre-wrap">{text}</p>
+                </div>
+                {m.role === "assistant" && text && (
+                  <button
+                    onClick={() => saveAsDoc(m.id, text)}
+                    disabled={savingId === m.id}
+                    className="text-[10px] text-muted-foreground/50 hover:text-muted-foreground transition-colors px-1 disabled:opacity-40"
+                  >
+                    {savingId === m.id ? "Guardando..." : "💾 Guardar como doc"}
+                  </button>
+                )}
+              </div>
+            );
+          })}
+          {isLoading && (
+            <div className="bg-muted rounded-xl px-3 py-2 mr-12">
+              <span className="text-xs text-muted-foreground animate-pulse">Escribiendo...</span>
+            </div>
+          )}
+          <div ref={messagesEndRef} />
+        </div>
+        {/* Input */}
+        <div className="max-w-2xl w-full mx-auto px-5 pb-5">
+          <form onSubmit={handleSubmit} className="border border-border rounded-xl px-3 py-2 flex gap-2 bg-muted/20">
+            <input
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              placeholder="Preguntá sobre el board..."
+              className="flex-1 text-sm bg-transparent focus:outline-none placeholder:text-muted-foreground/40"
+              onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSubmit(); } }}
+            />
+            <button
+              type="submit"
+              disabled={isLoading || !inputValue.trim()}
+              className="text-sm font-medium text-primary w-8 h-8 flex items-center justify-center rounded-lg hover:bg-primary/10 transition-colors disabled:opacity-30 shrink-0"
+            >
+              ↑
+            </button>
+          </form>
+        </div>
+      </div>
+    );
   }
 
   return (

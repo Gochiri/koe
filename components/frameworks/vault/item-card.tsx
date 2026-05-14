@@ -441,11 +441,17 @@ export function ItemCard({ item, sections: _sections }: Props) {
             {bodyIsVideo ? (
               <div>
                 <VideoPreview url={item.body!} />
-                {item.title && (
-                  <div className="px-3 py-2">
-                    <p className="text-xs font-semibold text-foreground tracking-tight">{item.title}</p>
+                <div className="px-3 pt-2.5 pb-3 space-y-1.5">
+                  <p className="text-xs font-semibold text-foreground leading-snug">
+                    {item.title || "Sin título"}
+                  </p>
+                  {/* Metrics bar — populated once YouTube API key is configured */}
+                  <div className="flex items-center gap-3 text-[10px] text-muted-foreground/35 font-medium tabular-nums">
+                    <span title="Vistas">👁 —</span>
+                    <span title="Duración">⏱ —</span>
+                    <span title="Engagement">📊 —%</span>
                   </div>
-                )}
+                </div>
               </div>
             ) : isGenericLink ? (
               <a

@@ -4,7 +4,7 @@ import { z } from "zod";
 import { auth } from "@/auth";
 import { db } from "@/lib/db/client";
 import { vaultSpaces, vaultBoards, vaultSections, vaultItems } from "@/lib/db/vault-schema";
-import { eq } from "drizzle-orm";
+import { eq, ilike, or } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 async function requireSession() {
@@ -136,6 +136,39 @@ export async function reorderItems(formData: FormData) {
     )
   );
   revalidatePath("/eden");
+}
+
+// ── Search ────────────────────────────────────────────────────────────────────
+
+export async function searchItems(query: string): Promise<Array<{
+  id: number;
+  title: string | null;
+  body: string | null;
+  kind: string;
+  boardId: number;
+  boardName: string;
+}>> {
+  await requireSession();
+  const q = query.trim();
+  if (!q) return [];
+  return db
+    .select({
+      id: vaultItems.id,
+      title: vaultItems.title,
+      body: vaultItems.body,
+      kind: vaultItems.kind,
+      boardId: vaultItems.boardId,
+      boardName: vaultBoards.name,
+    })
+    .from(vaultItems)
+    .innerJoin(vaultBoards, eq(vaultItems.boardId, vaultBoards.id))
+    .where(
+      or(
+        ilike(vaultItems.title, `%${q}%`),
+        ilike(vaultItems.body, `%${q}%`)
+      )
+    )
+    .limit(20);
 }
 
 // ── Link resolver ─────────────────────────────────────────────────────────────
