@@ -26,6 +26,72 @@ type CorBody = {
   tags?: string[];
 };
 
+const SECTION_COLORS = [
+  "oklch(0.65 0.22 25)",
+  "oklch(0.72 0.19 55)",
+  "oklch(0.78 0.17 95)",
+  "oklch(0.70 0.18 145)",
+  "oklch(0.68 0.16 195)",
+  "oklch(0.65 0.18 245)",
+  "oklch(0.65 0.20 290)",
+  "oklch(0.68 0.22 330)",
+];
+
+function getSectionColor(sectionId: number | null): string | null {
+  if (sectionId == null) return null;
+  return SECTION_COLORS[sectionId % SECTION_COLORS.length];
+}
+
+/** Renders doc body with auto-detected headings, bullets, and tag rows */
+function DocBody({ body }: { body: string }) {
+  const lines = body.split("\n");
+  return (
+    <div className="space-y-0.5">
+      {lines.map((line, i) => {
+        const trimmed = line.trim();
+        if (trimmed === "") return <div key={i} className="h-2" />;
+        if (trimmed.startsWith("• ") || trimmed.startsWith("- ")) {
+          return (
+            <div key={i} className="flex items-start gap-2">
+              <span className="text-muted-foreground/40 text-[10px] mt-[3px] shrink-0 leading-none">●</span>
+              <p className="text-xs text-foreground/70 leading-relaxed">{trimmed.slice(2)}</p>
+            </div>
+          );
+        }
+        // Short line heuristic → section heading
+        const isHeading =
+          trimmed.length < 48 &&
+          !trimmed.includes("·") &&
+          (i === 0 ||
+            lines[i - 1]?.trim() === "" ||
+            lines[i + 1]?.trim().startsWith("•") ||
+            lines[i + 1]?.trim().startsWith("-") ||
+            lines[i + 1]?.trim() === "");
+        if (isHeading) {
+          return (
+            <p key={i} className="text-sm font-semibold text-foreground/90 pt-2 first:pt-0 leading-snug">
+              {trimmed}
+            </p>
+          );
+        }
+        // Tag/vocab rows (· separated)
+        if (trimmed.includes(" · ")) {
+          return (
+            <p key={i} className="text-[11px] text-muted-foreground/55 leading-relaxed">
+              {trimmed}
+            </p>
+          );
+        }
+        return (
+          <p key={i} className="text-xs text-foreground/65 leading-relaxed">
+            {trimmed}
+          </p>
+        );
+      })}
+    </div>
+  );
+}
+
 const corFieldLabels: { key: keyof CorBody; label: string }[] = [
   { key: "problem", label: "Problem" },
   { key: "goal", label: "Goal" },
@@ -105,7 +171,7 @@ function IdeaView({ item, onEdit, onDelete, dragListeners }: {
       transition={{ type: "spring", stiffness: 400, damping: 30 }}
       whileHover={{ boxShadow: "0 4px 20px oklch(0 0 0 / 10%)" }}
       onClick={() => setExpanded((v) => !v)}
-      className="group relative rounded-xl border border-border border-l-2 border-l-primary/50 bg-card p-4 cursor-pointer transition-colors hover:border-border/80"
+      className="group relative rounded-xl border border-border/50 bg-card p-4 cursor-pointer transition-colors hover:border-border/80"
     >
       {/* Drag handle */}
       <div
@@ -305,7 +371,8 @@ function IdeaEditForm({ item, onCancel, onSave, pending }: {
   );
 }
 
-export function ItemCard({ item, sections: _sections }: Props) {
+export function ItemCard({ item, sections }: Props) {
+  const sectionColor = getSectionColor(item.sectionId ?? null);
   const [editing, setEditing] = useState(false);
   const [pending, startTransition] = useTransition();
   const bodyRef = useRef<HTMLTextAreaElement>(null);
@@ -367,13 +434,20 @@ export function ItemCard({ item, sections: _sections }: Props) {
               pending={pending}
             />
           ) : (
-            <IdeaView
-              key="viewing"
-              item={item}
-              onEdit={() => setEditing(true)}
-              onDelete={handleDelete}
-              dragListeners={listeners}
-            />
+            <div key="viewing" className="relative">
+              {sectionColor && (
+                <div
+                  className="absolute top-2.5 right-2.5 w-2 h-2 rounded-full z-10 opacity-70"
+                  style={{ background: sectionColor }}
+                />
+              )}
+              <IdeaView
+                item={item}
+                onEdit={() => setEditing(true)}
+                onDelete={handleDelete}
+                dragListeners={listeners}
+              />
+            </div>
           )}
         </AnimatePresence>
       </div>
@@ -423,12 +497,20 @@ export function ItemCard({ item, sections: _sections }: Props) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ type: "spring", stiffness: 400, damping: 30 }}
-            whileHover={bodyIsVideo ? {} : { y: -2, boxShadow: "0 4px 20px oklch(0 0 0 / 10%)" }}
-            className={`group relative rounded-xl border border-border bg-card overflow-hidden transition-colors hover:border-border/80 ${
-              item.kind === "doc" ? "border-l-2 border-l-primary/40" : ""
-            } ${bodyIsVideo || isGenericLink ? "cursor-default" : "cursor-pointer p-4"}`}
+            whileHover={bodyIsVideo ? {} : { y: -2, boxShadow: "0 4px 24px oklch(0 0 0 / 15%)" }}
+            className={`group relative rounded-xl border border-border/50 bg-card overflow-hidden transition-colors hover:border-border/80 ${
+              bodyIsVideo || isGenericLink ? "cursor-default" : "cursor-pointer"
+            } ${item.kind === "doc" ? "bg-card/90" : ""}`}
             onClick={bodyIsVideo || isGenericLink ? undefined : () => setEditing(true)}
           >
+            {/* Section color dot */}
+            {sectionColor && (
+              <div
+                className="absolute top-3 right-3 w-2 h-2 rounded-full z-10 opacity-60 group-hover:opacity-90 transition-opacity"
+                style={{ background: sectionColor }}
+              />
+            )}
+
             {/* Drag handle */}
             <div
               {...listeners}
@@ -445,7 +527,6 @@ export function ItemCard({ item, sections: _sections }: Props) {
                   <p className="text-xs font-semibold text-foreground leading-snug">
                     {item.title || "Sin título"}
                   </p>
-                  {/* Metrics bar — populated once YouTube API key is configured */}
                   <div className="flex items-center gap-3 text-[10px] text-muted-foreground/35 font-medium tabular-nums">
                     <span title="Vistas">👁 —</span>
                     <span title="Duración">⏱ —</span>
@@ -465,32 +546,38 @@ export function ItemCard({ item, sections: _sections }: Props) {
                 <div className="min-w-0">
                   <p className="text-sm font-medium text-foreground truncate">{item.title || item.body}</p>
                   {item.title && item.body && (
-                    <p className="text-[10px] text-muted-foreground/60 truncate mt-0.5">
+                    <p className="text-[10px] text-muted-foreground/50 truncate mt-0.5">
                       {(() => { try { return new URL(item.body).hostname; } catch { return item.body; } })()}
                     </p>
                   )}
                 </div>
               </a>
-            ) : (
-              <>
-                {item.kind === "doc" && item.title && (
-                  <p className="text-xs font-semibold mb-1.5 text-foreground tracking-tight">{item.title}</p>
+            ) : item.kind === "doc" ? (
+              <div className="p-5">
+                {item.title && (
+                  <p className="text-base font-bold text-foreground leading-tight mb-3 pr-5">
+                    {item.title}
+                  </p>
                 )}
-                <p className="text-sm text-foreground/85 whitespace-pre-wrap leading-relaxed">
-                  {item.body || <span className="text-muted-foreground/60 italic text-xs">No content</span>}
+                {item.body ? (
+                  <DocBody body={item.body} />
+                ) : (
+                  <span className="text-xs text-muted-foreground/40 italic">Sin contenido</span>
+                )}
+              </div>
+            ) : (
+              <div className="p-4">
+                <p className="text-sm text-foreground/85 leading-relaxed whitespace-pre-wrap">
+                  {item.body || <span className="text-muted-foreground/40 italic text-xs">Sin contenido</span>}
                 </p>
-              </>
+              </div>
             )}
 
-            <div className="absolute top-2.5 right-2.5 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 items-center">
-              {!bodyIsVideo && !isGenericLink && (
-                <span className="text-[10px] text-muted-foreground bg-muted/80 rounded px-1.5 py-0.5 font-medium">
-                  {item.kind}
-                </span>
-              )}
+            {/* Actions — shown on hover, respect section dot position */}
+            <div className={`absolute bottom-2.5 right-2.5 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 items-center`}>
               <button
                 onClick={(e) => { e.stopPropagation(); handleDelete(); }}
-                className="text-muted-foreground hover:text-destructive text-sm leading-none w-5 h-5 flex items-center justify-center rounded hover:bg-destructive/10 transition-colors"
+                className="text-muted-foreground/50 hover:text-destructive text-sm leading-none w-5 h-5 flex items-center justify-center rounded hover:bg-destructive/10 transition-colors"
               >
                 ×
               </button>
