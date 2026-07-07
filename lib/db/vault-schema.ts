@@ -34,6 +34,7 @@ export const vaultItems = pgTable("vault_items", {
   kind: text("kind").notNull().default("card"),
   title: text("title"),
   body: text("body"),
+  transcript: text("transcript"),
   position: integer("position").default(0).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),

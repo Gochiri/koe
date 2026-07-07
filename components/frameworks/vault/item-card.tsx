@@ -532,6 +532,16 @@ export function ItemCard({ item, sections }: Props) {
                     <span title="Duración">⏱ —</span>
                     <span title="Engagement">📊 —%</span>
                   </div>
+                  {item.transcript && (
+                    <details className="pt-1" onClick={(e) => e.stopPropagation()}>
+                      <summary className="text-[10px] text-muted-foreground/50 cursor-pointer select-none hover:text-muted-foreground">
+                        Transcript · {Math.round(item.transcript.length / 1000)}k caracteres
+                      </summary>
+                      <p className="mt-1.5 text-[11px] text-muted-foreground/70 leading-relaxed max-h-48 overflow-y-auto whitespace-pre-wrap">
+                        {item.transcript}
+                      </p>
+                    </details>
+                  )}
                 </div>
               </div>
             ) : isGenericLink ? (
