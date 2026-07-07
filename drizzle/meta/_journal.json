@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1778569039844,
+      "tag": "0000_omniscient_night_thrasher",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1778573184311,
+      "tag": "0001_narrow_cardiac",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1778604474274,
+      "tag": "0002_woozy_clint_barton",
+      "breakpoints": true
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+ALTER TABLE "cor_notes" ADD COLUMN "obsidian_path" text;
