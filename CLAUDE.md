@@ -9,6 +9,8 @@ Repo de **Germán Borrello** (Buenos Aires). Contiene dos cosas que conviene no 
 
 Lo de Eden **no vive acá**: vive en Eden (workspace `6040eb87-2a22-4c91-8a8f-b33ea6723c0a`), y se lee por MCP. Este repo no lo espeja a propósito.
 
+Para trabajar este repo en local con los mismos conectores MCP y las mismas skills, ver `docs/SETUP-LOCAL.md`.
+
 ---
 
 ## Los dos frentes de negocio, y por qué no se mezclan
