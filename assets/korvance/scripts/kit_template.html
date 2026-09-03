@@ -1,0 +1,274 @@
+<title>Kit de venta Korvance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500;600&display=swap">
+<style>
+  :root {
+    --bg: #F2EFE9;
+    --bg-2: #E9E4DB;
+    --line: #D8D0C3;
+    --ink: #1A1713;
+    --ink-dim: #4A423A;
+    --ink-faint: #7A7168;
+    --accent: #B85206;
+    --accent-soft: rgba(240, 120, 22, .12);
+    --quote-bg: #FBF9F5;
+    --quote-bar: #F07816;
+    --warn-bg: #FFF3E6;
+    --warn-ink: #7A3A00;
+    --ok: #2E6B3A;
+    --display: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+    --body: 'Inter Tight', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    --side: 272px;
+    --measure: 68ch;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0B0A09;
+      --bg-2: #141210;
+      --line: #2A2622;
+      --ink: #F2EFE9;
+      --ink-dim: #A39C92;
+      --ink-faint: #746C63;
+      --accent: #F07816;
+      --accent-soft: rgba(240, 120, 22, .16);
+      --quote-bg: #141210;
+      --quote-bar: #F07816;
+      --warn-bg: #2A1A0A;
+      --warn-ink: #F3B37A;
+      --ok: #8BD39A;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0B0A09;
+    --bg-2: #141210;
+    --line: #2A2622;
+    --ink: #F2EFE9;
+    --ink-dim: #A39C92;
+    --ink-faint: #746C63;
+    --accent: #F07816;
+    --accent-soft: rgba(240, 120, 22, .16);
+    --quote-bg: #141210;
+    --quote-bar: #F07816;
+    --warn-bg: #2A1A0A;
+    --warn-ink: #F3B37A;
+    --ok: #8BD39A;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 1.02rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+  ::selection { background: var(--accent); color: var(--bg); }
+
+  /* ── frame ─────────────────────────────────────── */
+  .frame { display: grid; grid-template-columns: var(--side) 1fr; min-height: 100vh; }
+  .side {
+    border-right: 1px solid var(--line);
+    background: var(--bg-2);
+    position: sticky; top: 0; height: 100vh; overflow-y: auto;
+    padding: 1.4rem 1.1rem 2rem;
+    display: flex; flex-direction: column; gap: 1.4rem;
+  }
+  .brand { display: flex; flex-direction: column; gap: .2rem; }
+  .brand .name { font-family: var(--display); font-size: 1.55rem; line-height: 1; letter-spacing: -.01em; }
+  .brand .sub { font-family: var(--mono); font-size: .68rem; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); }
+  .nav { display: flex; flex-direction: column; gap: .15rem; }
+  .nav .group { font-family: var(--mono); font-size: .64rem; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); margin: .9rem 0 .35rem; }
+  .nav a {
+    display: grid; grid-template-columns: 1.6rem 1fr; align-items: baseline; gap: .4rem;
+    padding: .45rem .55rem; border-radius: 8px; color: var(--ink-dim); text-decoration: none; font-size: .92rem; line-height: 1.25;
+  }
+  .nav a .k { font-family: var(--mono); font-size: .68rem; color: var(--ink-faint); letter-spacing: .04em; }
+  .nav a:hover { background: var(--accent-soft); color: var(--ink); }
+  .nav a[aria-current="page"] { background: var(--accent-soft); color: var(--ink); font-weight: 500; }
+  .nav a[aria-current="page"] .k { color: var(--accent); }
+  .side .foot { margin-top: auto; font-family: var(--mono); font-size: .66rem; letter-spacing: .06em; color: var(--ink-faint); line-height: 1.5; }
+
+  .main { min-width: 0; }
+  .topbar { display: none; }
+
+  /* ── header of the kit ─────────────────────────── */
+  .head { padding: 2.6rem clamp(1.2rem, 4vw, 3.4rem) 1.6rem; border-bottom: 1px solid var(--line); }
+  .head .eyebrow { font-family: var(--mono); font-size: .7rem; letter-spacing: .16em; text-transform: uppercase; color: var(--accent); margin: 0 0 .8rem; }
+  .head h1 { font-family: var(--display); font-weight: 400; font-size: clamp(2rem, 4.2vw, 3.1rem); line-height: 1; letter-spacing: -.02em; margin: 0 0 .9rem; max-width: 20ch; text-wrap: balance; }
+  .head p { max-width: var(--measure); color: var(--ink-dim); margin: 0; }
+  .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: .8rem 1.6rem; margin-top: 1.5rem; max-width: 760px; }
+  .facts div { border-top: 1px solid var(--line); padding-top: .55rem; }
+  .facts .l { font-family: var(--mono); font-size: .64rem; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); }
+  .facts .v { font-family: var(--display); font-size: 1.45rem; line-height: 1.1; margin-top: .15rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .facts .v small { font-family: var(--body); font-size: .8rem; color: var(--ink-dim); margin-left: .3rem; }
+
+  /* ── checklist ─────────────────────────────────── */
+  .confirm { padding: 1.4rem clamp(1.2rem, 4vw, 3.4rem); border-bottom: 1px solid var(--line); background: var(--bg-2); }
+  .confirm h2 { font-family: var(--display); font-weight: 400; font-size: 1.35rem; margin: 0 0 .25rem; }
+  .confirm p { margin: 0 0 .9rem; color: var(--ink-dim); max-width: var(--measure); font-size: .95rem; }
+  .confirm ul { list-style: none; padding: 0; margin: 0; display: grid; gap: .35rem; max-width: 760px; }
+  .confirm li { display: grid; grid-template-columns: 1.2rem 1fr; gap: .7rem; align-items: start; padding: .45rem .55rem; border-radius: 8px; }
+  .confirm li:has(:checked) { color: var(--ink-faint); text-decoration: line-through; text-decoration-color: var(--line); }
+  .confirm input { width: 1.05rem; height: 1.05rem; margin: .2rem 0 0; accent-color: var(--accent); }
+  .confirm label { cursor: pointer; }
+
+  /* ── pieces ────────────────────────────────────── */
+  .piece { padding: 2.4rem clamp(1.2rem, 4vw, 3.4rem) 3rem; border-bottom: 1px solid var(--line); }
+  .piece:last-child { border-bottom: none; }
+  .piece > .tag { font-family: var(--mono); font-size: .68rem; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); margin: 0 0 .5rem; }
+  .piece > .use { color: var(--ink-dim); max-width: var(--measure); margin: 0 0 1.6rem; font-size: .95rem; }
+  .md { max-width: var(--measure); }
+  .md > :first-child { margin-top: 0; }
+  .md h1 { font-family: var(--display); font-weight: 400; font-size: clamp(1.7rem, 3.2vw, 2.3rem); line-height: 1.05; letter-spacing: -.015em; margin: 0 0 1rem; text-wrap: balance; }
+  .md h2 { font-family: var(--display); font-weight: 400; font-size: 1.55rem; line-height: 1.15; margin: 2.4rem 0 .7rem; padding-top: 1.2rem; border-top: 1px solid var(--line); text-wrap: balance; }
+  .md h3 { font-family: var(--body); font-weight: 600; font-size: 1.02rem; margin: 1.8rem 0 .5rem; letter-spacing: -.005em; }
+  .md h4 { font-family: var(--mono); font-weight: 500; font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); margin: 1.4rem 0 .4rem; }
+  .md p { margin: 0 0 .85rem; }
+  .md ul, .md ol { padding-left: 1.3rem; margin: 0 0 .9rem; }
+  .md li { margin: .25rem 0; }
+  .md li > p { margin: 0 0 .3rem; }
+  .md strong { font-weight: 600; }
+  .md em { font-style: italic; color: var(--ink-dim); }
+  .md hr { border: 0; border-top: 1px solid var(--line); margin: 1.8rem 0; }
+  .md code { font-family: var(--mono); font-size: .85em; background: var(--accent-soft); padding: .1em .35em; border-radius: 4px; }
+  .md pre { background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; padding: .9rem 1rem; overflow-x: auto; font-size: .85rem; line-height: 1.5; }
+  .md pre code { background: none; padding: 0; }
+  /* lo que se dice en voz alta */
+  .md blockquote {
+    margin: .9rem 0 1.1rem; padding: .75rem 1rem .75rem 1.05rem;
+    background: var(--quote-bg); border-left: 3px solid var(--quote-bar); border-radius: 0 10px 10px 0;
+    font-family: var(--display); font-size: 1.16rem; line-height: 1.4; color: var(--ink);
+  }
+  .md blockquote p { margin: 0 0 .5rem; }
+  .md blockquote p:last-child { margin: 0; }
+  .md blockquote em { font-family: var(--body); font-size: .86rem; font-style: italic; color: var(--ink-dim); display: inline-block; margin-top: .15rem; }
+  .md .tbl { overflow-x: auto; margin: 0 0 1.1rem; border: 1px solid var(--line); border-radius: 10px; }
+  .md table { border-collapse: collapse; width: 100%; font-size: .9rem; min-width: 480px; }
+  .md th, .md td { text-align: left; vertical-align: top; padding: .55rem .7rem; border-bottom: 1px solid var(--line); }
+  .md th { font-family: var(--mono); font-size: .66rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); background: var(--bg-2); font-weight: 500; }
+  .md tr:last-child td { border-bottom: none; }
+  .md td { font-variant-numeric: tabular-nums; }
+
+  .md .xref { color: var(--accent); text-decoration: none; border-bottom: 1px dotted var(--accent); }
+  .md .xref:hover { border-bottom-style: solid; }
+  .md h2[id^="hoja-"] { scroll-margin-top: 1rem; }
+  .warn { background: var(--warn-bg); color: var(--warn-ink); border-radius: 10px; padding: .8rem 1rem; margin: 0 0 1.4rem; max-width: var(--measure); font-size: .95rem; }
+  .warn strong { font-weight: 600; }
+
+  /* ── responsive ────────────────────────────────── */
+  @media (max-width: 900px) {
+    .frame { grid-template-columns: 1fr; }
+    .side { display: none; }
+    .topbar {
+      display: flex; gap: .7rem; align-items: center; position: sticky; top: 0; z-index: 10;
+      background: var(--bg-2); border-bottom: 1px solid var(--line); padding: .7rem 1rem;
+    }
+    .topbar .name { font-family: var(--display); font-size: 1.2rem; white-space: nowrap; }
+    .topbar select { flex: 1; min-width: 0; font: inherit; font-size: .9rem; padding: .45rem .6rem; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); }
+  }
+  @media print {
+    .side, .topbar, .confirm { display: none; }
+    .frame { display: block; }
+    .piece { page-break-before: always; padding: 0; border: 0; }
+    .head { page-break-after: avoid; }
+    body { font-size: 11pt; }
+    .md blockquote { break-inside: avoid; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html { scroll-behavior: smooth; }
+  }
+</style>
+
+<div class="frame">
+  <aside class="side">
+    <div class="brand">
+      <div class="name">Kit de venta</div>
+      <div class="sub">Korvance · septiembre 2026</div>
+    </div>
+    <nav class="nav" aria-label="Piezas del kit">
+      <!--NAV-->
+    </nav>
+    <div class="foot">Vigencia: 1 al 30 de septiembre.<br>La hoja de números manda sobre todo lo demás.</div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <span class="name">Kit de venta</span>
+      <select id="jump" aria-label="Ir a una pieza">
+        <!--OPTIONS-->
+      </select>
+    </div>
+
+    <header class="head" id="inicio">
+      <p class="eyebrow">Consultoría de descubrimiento · US$249</p>
+      <h1>Una oferta. Treinta días. Cero reinicios.</h1>
+      <p>Todo lo que se dice, se pregunta, se cobra y se entrega para vender el diagnóstico y, después, la implementación. Escrito para tenerlo abierto durante la conversación: las líneas entre comillas se dicen tal cual; lo que va entre paréntesis y en cursiva es instrucción para vos.</p>
+      <div class="facts">
+        <div><div class="l">Puerta</div><div class="v">US$249<small>90 min</small></div></div>
+        <div><div class="l">Nivel 1</div><div class="v">desde 1.500<small>1 semana</small></div></div>
+        <div><div class="l">Nivel 2</div><div class="v">desde 3.500<small>3–4 semanas</small></div></div>
+        <div><div class="l">Nivel 3</div><div class="v">800–1.200<small>por mes</small></div></div>
+        <div><div class="l">Mínimo diario</div><div class="v">5<small>contactos</small></div></div>
+        <div><div class="l">Objetivo</div><div class="v">2<small>cierres</small></div></div>
+      </div>
+    </header>
+
+    <section class="confirm" aria-labelledby="confirm-h">
+      <h2 id="confirm-h">Lo único que queda por confirmar</h2>
+      <p>Cinco decisiones que no son mías. Todo lo demás está decidido en la hoja de números. Lo que marques acá queda guardado en este navegador.</p>
+      <ul>
+        <!--CONFIRM-->
+      </ul>
+    </section>
+
+    <!--PIECES-->
+  </div>
+</div>
+
+<script>
+  (function () {
+    var links = Array.prototype.slice.call(document.querySelectorAll('.nav a[data-target]'));
+    var sections = links.map(function (a) { return document.getElementById(a.getAttribute('data-target')); }).filter(Boolean);
+    function mark(id) {
+      links.forEach(function (a) {
+        if (a.getAttribute('data-target') === id) a.setAttribute('aria-current', 'page');
+        else a.removeAttribute('aria-current');
+      });
+      var sel = document.getElementById('jump');
+      if (sel && sel.value !== id) sel.value = id;
+    }
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { if (e.isIntersecting) mark(e.target.id); });
+      }, { rootMargin: '-20% 0px -70% 0px' });
+      sections.forEach(function (s) { io.observe(s); });
+    }
+    var sel = document.getElementById('jump');
+    if (sel) sel.addEventListener('change', function () {
+      var el = document.getElementById(sel.value);
+      if (el) el.scrollIntoView({ block: 'start' });
+    });
+
+    var boxes = document.querySelectorAll('.confirm input[type=checkbox]');
+    var KEY = 'korvance-kit-confirm';
+    var saved = {};
+    try { saved = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) { saved = {}; }
+    boxes.forEach(function (b) {
+      if (saved[b.id]) b.checked = true;
+      b.addEventListener('change', function () {
+        saved[b.id] = b.checked;
+        try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch (e) {}
+      });
+    });
+  })();
+</script>
