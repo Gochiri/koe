@@ -1,192 +1,266 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>La cuenta de la fuga — Korvance</title>
+<meta name="description" content="Antes de automatizar nada, el número de lo que se está perdiendo hoy. Seis datos, tres preguntas, cinco minutos.">
+<meta name="theme-color" content="#0B0A09">
+<meta property="og:type" content="website">
+<meta property="og:title" content="La cuenta de la fuga — Korvance">
+<meta property="og:description" content="Antes de automatizar nada, el número de lo que se está perdiendo hoy.">
+<meta property="og:locale" content="es_AR">
+<meta name="robots" content="noindex">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500;600&display=swap">
+
 <style>
-  :root{
-    --ink:#1A1713; --dim:#4A423A; --line:#D8D0C3;
-    --bg:#FBF8F3; --card:#FFFFFF; --box:#F5F1EA;
-    --accent:#B85206; --accent-soft:#F3E3D4;
-    --ok:#2F6B3D; --warn:#8A5A00;
-    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-  }
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);line-height:1.55;font-size:17px}
-  .wrap{max-width:720px;margin:0 auto;padding:40px 20px 80px}
-  h1{font-size:clamp(26px,5vw,36px);line-height:1.15;margin:0 0 14px;letter-spacing:-.02em}
-  h2{font-size:20px;margin:0 0 6px;letter-spacing:-.01em}
-  p{margin:0 0 14px}
-  .lead{color:var(--dim);font-size:18px;margin-bottom:8px}
-  .rule{height:1px;background:var(--line);border:0;margin:32px 0}
-  .step{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px;margin-bottom:18px}
-  .step-n{display:inline-block;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:10px}
-  .hint{color:var(--dim);font-size:15px;margin:-4px 0 16px}
-  .q{margin:0 0 20px}
-  .q:last-child{margin-bottom:0}
-  label.lbl{display:block;font-weight:600;margin-bottom:4px}
-  .sub{display:block;color:var(--dim);font-size:14px;font-weight:400;margin-bottom:8px}
-  select,input[type=number],input[type=email],input[type=text]{
-    width:100%;padding:11px 12px;font-size:16px;font-family:inherit;color:var(--ink);
-    background:#fff;border:1px solid var(--line);border-radius:8px}
-  select:focus,input:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
-  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-  @media(max-width:560px){.grid{grid-template-columns:1fr}}
-  button{
-    width:100%;padding:15px 20px;font-size:17px;font-weight:700;font-family:inherit;
-    background:var(--accent);color:#fff;border:0;border-radius:8px;cursor:pointer;margin-top:6px}
-  button:hover{filter:brightness(.94)}
-  a.btn{display:block;text-align:center;text-decoration:none;padding:15px 20px;font-size:17px;
-    font-weight:700;background:var(--accent);color:#fff;border-radius:8px;margin-top:14px}
-  a.btn:hover{filter:brightness(.94)}
-  a.btn.sec{background:transparent;color:var(--accent);border:1px solid var(--accent);
-    font-size:15px;padding:11px;margin-top:10px;font-weight:600}
-  button.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent);margin-top:10px;font-size:15px;padding:11px}
-  .err{color:#9B2226;font-size:15px;margin-top:10px;display:none}
-  /* resultado */
-  #out{display:none}
-  .big{background:var(--box);border-left:5px solid var(--accent);border-radius:0 10px 10px 0;padding:22px;margin:0 0 18px}
-  .num{font-size:clamp(30px,7vw,44px);font-weight:800;letter-spacing:-.03em;line-height:1.05;margin:2px 0 2px}
-  .cap{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);font-weight:700}
-  .split{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
-  @media(max-width:560px){.split{grid-template-columns:1fr}}
-  .mini{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px}
-  .mini .v{font-size:22px;font-weight:700;letter-spacing:-.02em}
-  .tag{display:inline-block;background:var(--accent-soft);color:#7A3604;font-weight:700;
-    font-size:13px;letter-spacing:.08em;text-transform:uppercase;padding:5px 11px;border-radius:999px;margin-bottom:10px}
-  ul{margin:0 0 14px;padding-left:20px}
-  li{margin-bottom:8px}
-  .foot{color:var(--dim);font-size:14px;border-top:1px solid var(--line);padding-top:18px;margin-top:28px}
-  code.f{background:var(--box);padding:2px 6px;border-radius:4px;font-size:15px}
+:root{
+  --ink:#0B0A09; --ink-2:#141210; --ink-3:#1F1C19;
+  --bone:#F2EFE9; --bone-dim:#A39C92;
+  --flame:#F07816; --flame-dk:#D2640C;
+  --display:'Instrument Serif', Georgia, 'Times New Roman', serif;
+  --body:'Inter Tight', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --gut: clamp(1.25rem, 5vw, 4.5rem);
+  --maxw: 760px;
+  --r-card:18px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{
+  background:var(--ink);color:var(--bone);font-family:var(--body);
+  font-size:1.0625rem;line-height:1.65;overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body::after{
+  content:'';position:fixed;inset:0;z-index:500;pointer-events:none;opacity:.038;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E")}
+h1,h2,h3,.display{font-family:var(--display);font-weight:400;letter-spacing:-.02em}
+a{color:inherit}
+img{display:block;max-width:100%}
+::selection{background:var(--flame);color:var(--ink)}
+:focus-visible{outline:2px solid var(--flame);outline-offset:3px;border-radius:2px}
+
+.wrap{max-width:var(--maxw);margin:0 auto;width:100%;padding:0 var(--gut)}
+
+/* ── nav ─────────────────────────────────────────────── */
+.nav{display:flex;align-items:center;justify-content:space-between;
+  padding:0 var(--gut);height:72px;border-bottom:1px solid var(--ink-3)}
+.nav-logo{display:flex;align-items:center;height:72px;overflow:hidden}
+.nav-logo img{height:140px;width:auto}
+.nav-meta{font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--bone-dim)}
+
+/* ── encabezado ──────────────────────────────────────── */
+.head{padding:clamp(3.5rem,9vh,6rem) 0 2.5rem}
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--flame);margin-bottom:1.4rem}
+h1{font-size:clamp(2.6rem,7vw,4.4rem);line-height:.95;letter-spacing:-.03em;margin-bottom:1.5rem}
+h1 em{font-style:italic;color:var(--flame)}
+.lede{color:var(--bone-dim);max-width:46ch;margin-bottom:1rem}
+.fine{color:var(--bone-dim);font-size:.92rem;max-width:52ch}
+.fine em{font-family:var(--display);font-style:italic;font-size:1.12em;line-height:1}
+
+/* ── pasos ───────────────────────────────────────────── */
+.step{background:var(--ink-2);border:1px solid var(--ink-3);border-radius:var(--r-card);
+  padding:clamp(1.5rem,4vw,2.2rem);margin-bottom:1.1rem}
+.step-n{font-family:var(--mono);font-size:.72rem;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--flame);display:block;margin-bottom:1rem}
+.step h2{font-size:clamp(1.5rem,3.4vw,2rem);line-height:1.1;margin-bottom:.5rem}
+.step-lede{color:var(--bone-dim);font-size:.95rem;margin-bottom:1.6rem}
+
+.field{display:block;margin-bottom:1.35rem}
+.field:last-child{margin-bottom:0}
+.field>span{display:block;font-size:.95rem;font-weight:500;margin-bottom:.2rem}
+.field>small{display:block;font-size:.82rem;color:var(--bone-dim);line-height:1.45;margin-bottom:.55rem}
+select,input{
+  width:100%;padding:.85rem 1rem;background:var(--ink);border:1px solid var(--ink-3);
+  border-radius:12px;color:var(--bone);font-family:var(--body);font-size:.98rem;
+  appearance:none;-webkit-appearance:none}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23A39C92' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 1rem center;padding-right:2.4rem}
+select:focus,input:focus{outline:none;border-color:var(--flame)}
+input::placeholder{color:#5E574F}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:1.35rem}
+@media(max-width:600px){.duo{grid-template-columns:1fr}}
+
+.btn{display:block;width:100%;text-align:center;text-decoration:none;
+  font-family:var(--body);font-size:1rem;font-weight:500;letter-spacing:.01em;
+  padding:1.1rem 2rem;color:#0B0A09;background:var(--flame);
+  border:1px solid var(--flame);border-radius:999px;cursor:pointer;
+  transition:background .2s ease,border-color .2s ease}
+.btn:hover{background:var(--flame-dk);border-color:var(--flame-dk)}
+.btn.sec{background:none;color:var(--bone-dim);border-color:var(--ink-3);
+  font-size:.92rem;padding:.9rem 1.6rem;margin-top:.7rem}
+.btn.sec:hover{color:var(--bone);border-color:var(--bone-dim);background:none}
+.btn+.btn{margin-top:.7rem}
+.err{color:#F0764F;font-size:.88rem;min-height:1.3em;margin-top:.7rem;display:none}
+
+/* ── resultado ───────────────────────────────────────── */
+#out{display:none}
+.big{background:var(--ink-2);border:1px solid var(--ink-3);border-left:3px solid var(--flame);
+  border-radius:var(--r-card);padding:clamp(1.6rem,4vw,2.2rem);margin-bottom:1.1rem}
+.cap{font-family:var(--mono);font-size:.7rem;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--bone-dim);display:block}
+.num{font-family:var(--display);font-size:clamp(3rem,10vw,4.8rem);line-height:1;
+  color:var(--flame);letter-spacing:-.02em;margin:.35rem 0 .5rem}
+.duo-mini{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;margin-bottom:1.1rem}
+@media(max-width:600px){.duo-mini{grid-template-columns:1fr}}
+.mini{background:var(--ink-2);border:1px solid var(--ink-3);border-radius:var(--r-card);padding:1.4rem 1.5rem}
+.mini .v{font-family:var(--display);font-size:2rem;line-height:1;margin:.4rem 0 .5rem}
+.mini small{color:var(--bone-dim);font-size:.8rem;line-height:1.45;display:block}
+.pill{display:inline-block;font-family:var(--mono);font-size:.7rem;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--flame);border:1px solid var(--flame);
+  border-radius:999px;padding:.35rem .95rem;margin-bottom:1.1rem}
+#out h2{font-size:clamp(1.5rem,3.6vw,2.1rem);line-height:1.12;margin-bottom:1rem}
+#out p{color:var(--bone-dim);margin-bottom:.9rem}
+#out p strong{color:var(--bone);font-weight:500}
+#out ul{list-style:none;margin:0 0 1.1rem}
+#out ul li{position:relative;padding-left:1.4rem;color:var(--bone-dim);margin-bottom:.65rem;font-size:.97rem}
+#out ul li::before{content:'—';position:absolute;left:0;color:var(--flame)}
+#out ul li strong{color:var(--bone);font-weight:500}
+
+.foot-note{color:var(--bone-dim);font-size:.88rem;border-top:1px solid var(--ink-3);
+  padding-top:1.6rem;margin-top:2.2rem}
+footer{padding:2.5rem var(--gut);border-top:1px solid var(--ink-3);
+  display:flex;align-items:center;justify-content:space-between;gap:1.5rem;flex-wrap:wrap;margin-top:3rem}
+footer>a{display:flex;align-items:center;height:48px;overflow:hidden}
+footer img{height:120px;width:auto}
+.fcopy{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;color:var(--bone-dim)}
+
+/* ── host GHL ────────────────────────────────────────── */
+body{background:var(--ink) !important;margin:0 !important}
+.bgCover,.bg-fixed{background:var(--ink) !important}
+.hl_page-preview--content .c-section,.hl_page-preview--content .c-row,
+.hl_page-preview--content .c-column,.c-section,.c-row,.c-column,.c-wrapper,
+.c-custom-code,.custom-code-container,.c-column .inner,.c-row .inner,
+.c-section .inner,.vertical.inner{
+  max-width:100% !important;width:100% !important;padding:0 !important;
+  margin:0 !important;background:transparent !important}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{transition-duration:.01ms !important}
+}
 </style>
 </head>
 <body>
+
+<nav class="nav">
+  <a href="https://korvance.com" class="nav-logo" aria-label="Korvance — inicio">
+    <img src="https://assets.cdn.filesafe.space/QZXWRBXmom6lw3tOgxpC/media/69fe04b4a3dd25aa2a9e12db.png"
+         alt="Korvance" width="140" height="140" decoding="async">
+  </a>
+  <span class="nav-meta">Cinco minutos · sin registro</span>
+</nav>
+
 <div class="wrap">
 
-  <h1>La cuenta de la fuga</h1>
-  <p class="lead">Antes de automatizar nada, el número de lo que se está perdiendo hoy.</p>
-  <p class="hint">Son seis datos y tres preguntas. Cinco minutos, sin registrarte. Al final vas a tener tu número y cuál de las tres fallas tenés — no una recomendación de qué comprar.</p>
-
-  <hr class="rule">
+  <header class="head">
+    <p class="eyebrow">Antes de automatizar</p>
+    <h1>La cuenta de <em>la fuga.</em></h1>
+    <p class="lede">Seis datos y tres preguntas. Al final vas a tener tu número y cuál de las tres fallas tenés.</p>
+    <p class="fine">No es una recomendación de qué comprar: <em>eso no se puede contestar sin mirar tu operación.</em></p>
+  </header>
 
   <form id="f" novalidate>
 
     <div class="step">
       <span class="step-n">Paso 1 · qué pasa hoy</span>
       <h2>Cómo entra y qué pasa después</h2>
-      <p class="hint">Esto decide cuál de las tres fallas tenés. Contestá con lo que pasa de verdad, no con lo que debería pasar.</p>
+      <p class="step-lede">Esto decide cuál de las tres fallas tenés. Contestá con lo que pasa de verdad, no con lo que debería pasar.</p>
 
-      <div class="q">
-        <label class="lbl" for="C">Consultas nuevas por mes
-          <span class="sub">Entre todos los canales: web, WhatsApp, teléfono, referidos, redes.</span></label>
-        <input type="number" id="C" min="0" step="1" inputmode="numeric" placeholder="ej. 40">
-      </div>
+      <label class="field" for="C"><span>Consultas nuevas por mes</span>
+        <small>Entre todos los canales: web, WhatsApp, teléfono, referidos, redes.</small>
+        <input type="number" id="C" min="0" step="1" inputmode="numeric" placeholder="ej. 40"></label>
 
-      <div class="q">
-        <label class="lbl" for="Q2">Cuánto tardás normalmente en responder una consulta nueva</label>
+      <label class="field" for="Q2"><span>Cuánto tardás en responder una consulta nueva</span>
         <select id="Q2">
           <option value="">Elegí una</option>
           <option value="rapido">Menos de una hora</option>
           <option value="dia">El mismo día</option>
           <option value="lento">Más de un día</option>
           <option value="nunca">A veces no se responde</option>
-        </select>
-      </div>
+        </select></label>
 
-      <div class="q">
-        <label class="lbl" for="Q3">Si esa persona no contesta tu primer mensaje, ¿qué pasa?</label>
+      <label class="field" for="Q3"><span>Si esa persona no contesta tu primer mensaje, ¿qué pasa?</span>
         <select id="Q3">
           <option value="">Elegí una</option>
           <option value="rutina">Hay una rutina de seguimiento, con responsable y días fijos</option>
           <option value="acuerdo">Le escribo una vez más, cuando me acuerdo</option>
           <option value="nada">No pasa nada</option>
-        </select>
-      </div>
+        </select></label>
     </div>
 
     <div class="step">
       <span class="step-n">Paso 2 · los números</span>
       <h2>Lo que se pierde en ventas</h2>
-      <p class="hint">Si dudás de alguno, poné el número más bajo que te parezca creíble. Un número inflado te hace gastar de más.</p>
+      <p class="step-lede">Si dudás de alguno, poné el número más bajo que te parezca creíble. Un número inflado te hace gastar de más.</p>
 
-      <div class="grid">
-        <div class="q">
-          <label class="lbl" for="F">Qué parte se pierde por el camino
-            <span class="sub">Contestadas tarde o nunca retomadas.</span></label>
+      <div class="duo">
+        <label class="field" for="F"><span>Qué parte se pierde por el camino</span>
+          <small>Contestadas tarde o nunca retomadas.</small>
           <select id="F">
             <option value="">Elegí una</option>
             <option value="0.10">Alrededor del 10%</option>
             <option value="0.20">Alrededor del 20%</option>
             <option value="0.30">Alrededor del 30%</option>
             <option value="0.50">La mitad o más</option>
-          </select>
-        </div>
-        <div class="q">
-          <label class="lbl" for="P">De las que sí atendés bien, cuántas compran
-            <span class="sub">Tu conversión real, no la buena.</span></label>
+          </select></label>
+        <label class="field" for="P"><span>De las que atendés bien, cuántas compran</span>
+          <small>Tu conversión real, no la buena.</small>
           <select id="P">
             <option value="">Elegí una</option>
             <option value="0.05">Alrededor del 5%</option>
             <option value="0.10">Alrededor del 10%</option>
             <option value="0.20">Alrededor del 20%</option>
             <option value="0.35">Alrededor del 35% o más</option>
-          </select>
-        </div>
+          </select></label>
       </div>
 
-      <div class="q">
-        <label class="lbl" for="T">Cuánto te deja la primera venta de un cliente nuevo (USD)
-          <span class="sub">Facturación, no ganancia.</span></label>
-        <input type="number" id="T" min="0" step="1" inputmode="numeric" placeholder="ej. 350">
+      <label class="field" for="T"><span>Cuánto te deja la primera venta de un cliente nuevo (USD)</span>
+        <small>Facturación, no ganancia.</small>
+        <input type="number" id="T" min="0" step="1" inputmode="numeric" placeholder="ej. 350"></label>
+
+      <h2 style="margin-top:2rem">Lo que se pierde en horas</h2>
+      <div class="duo" style="margin-top:1.4rem">
+        <label class="field" for="H"><span>Horas por semana en tareas que se repiten</span>
+          <small>Entre todos: pasar datos, armar presupuestos de cero, contestar lo mismo, cargar facturas.</small>
+          <input type="number" id="H" min="0" step="1" inputmode="numeric" placeholder="ej. 8"></label>
+        <label class="field" for="V"><span>Cuánto cuesta esa hora (USD)</span>
+          <small>Si no lo sabés: sueldo mensual con cargas ÷ 170.</small>
+          <input type="number" id="V" min="0" step="0.5" inputmode="decimal" placeholder="ej. 6"></label>
       </div>
 
-      <h2 style="margin-top:22px">Lo que se pierde en horas</h2>
-      <div class="grid">
-        <div class="q">
-          <label class="lbl" for="H">Horas por semana en tareas que se repiten
-            <span class="sub">Entre todos: pasar datos, armar presupuestos de cero, contestar lo mismo, cargar facturas.</span></label>
-          <input type="number" id="H" min="0" step="1" inputmode="numeric" placeholder="ej. 8">
-        </div>
-        <div class="q">
-          <label class="lbl" for="V">Cuánto cuesta esa hora (USD)
-            <span class="sub">Si no lo sabés: sueldo mensual con cargas ÷ 170.</span></label>
-          <input type="number" id="V" min="0" step="0.5" inputmode="decimal" placeholder="ej. 6">
-        </div>
-      </div>
-
-      <div class="q">
-        <label class="lbl" for="FACT">Facturación mensual del negocio (USD)</label>
+      <label class="field" for="FACT"><span>Facturación mensual del negocio (USD)</span>
         <select id="FACT">
           <option value="">Elegí una</option>
           <option value="lt10">Menos de 10.000</option>
           <option value="10a30">Entre 10.000 y 30.000</option>
           <option value="30a100">Entre 30.000 y 100.000</option>
           <option value="gt100">Más de 100.000</option>
-        </select>
-      </div>
+        </select></label>
     </div>
 
     <div class="step">
-      <span class="step-n">Paso 3 · a dónde te lo mando</span>
-      <div class="grid">
-        <div class="q">
-          <label class="lbl" for="NOM">Tu nombre</label>
-          <input type="text" id="NOM" autocomplete="name" placeholder="Nombre">
-        </div>
-        <div class="q">
-          <label class="lbl" for="MAIL">Tu email</label>
-          <input type="email" id="MAIL" autocomplete="email" placeholder="vos@tunegocio.com">
-        </div>
+      <span class="step-n">Paso 3 · quién sos</span>
+      <div class="duo">
+        <label class="field" for="NOM"><span>Tu nombre</span>
+          <input type="text" id="NOM" autocomplete="name" placeholder="Nombre"></label>
+        <label class="field" for="MAIL"><span>Tu email</span>
+          <input type="email" id="MAIL" autocomplete="email" placeholder="vos@tunegocio.com"></label>
       </div>
-      <button type="submit">Ver mi número</button>
+      <button type="submit" class="btn">Ver mi número</button>
       <p class="err" id="err">Faltan datos: completá todos los campos de arriba.</p>
     </div>
   </form>
 
   <section id="out" aria-live="polite">
-    <hr class="rule">
-    <h1 id="saludo">Tu cuenta</h1>
+    <header class="head" style="padding-top:1rem">
+      <p class="eyebrow">Tu cuenta</p>
+      <h1 id="saludo">El número.</h1>
+    </header>
 
     <div class="big">
       <span class="cap">Se te está yendo por mes</span>
@@ -194,15 +268,15 @@
       <span class="cap" id="seis">—</span>
     </div>
 
-    <div class="split">
+    <div class="duo-mini">
       <div class="mini"><span class="cap">En ventas</span><div class="v" id="vent">—</div>
-        <p class="hint" style="margin:6px 0 0">consultas × lo que se pierde × conversión × ticket</p></div>
+        <small>consultas × lo que se pierde × conversión × ticket</small></div>
       <div class="mini"><span class="cap">En horas</span><div class="v" id="hor">—</div>
-        <p class="hint" style="margin:6px 0 0">horas por semana × 4,3 × valor de la hora</p></div>
+        <small>horas por semana × 4,3 × valor de la hora</small></div>
     </div>
 
     <div class="step">
-      <span class="tag" id="fallaTag">—</span>
+      <span class="pill" id="fallaTag">—</span>
       <h2 id="fallaTit">—</h2>
       <div id="fallaTxt"></div>
     </div>
@@ -211,34 +285,39 @@
       <h2 id="nivelTit">—</h2>
       <div id="nivelTxt"></div>
       <div id="cta"></div>
-      <button class="ghost" type="button" id="copiar">Copiar el resultado</button>
+      <button class="btn sec" type="button" id="copiar">Copiar el resultado</button>
     </div>
 
-    <p class="foot">
+    <p class="foot-note">
       Este número es <strong>facturación en juego, no ganancia</strong>, y no es lo que vas a recuperar: es el tamaño del agujero, no el del arreglo.
-      Esta página <strong>mide y ubica la falla</strong>. Qué conviene arreglar primero en tu operación concreta es otra conversación, y no se puede contestar sin mirarla.
-      <br><br>Germán Borrello — Korvance · Implementación de sistemas de automatización
+      Esta página mide y ubica la falla. Qué conviene arreglar primero en tu operación concreta es otra conversación.
     </p>
   </section>
 </div>
+
+<footer>
+  <a href="https://korvance.com" aria-label="Korvance — inicio">
+    <img src="https://assets.cdn.filesafe.space/QZXWRBXmom6lw3tOgxpC/media/69fe04b4a3dd25aa2a9e12db.png"
+         alt="Korvance" width="120" height="120" loading="lazy" decoding="async">
+  </a>
+  <p class="fcopy">© 2026 Korvance · Buenos Aires</p>
+</footer>
 
 <script>
 (function(){
   "use strict";
 
   // ── Configuración ────────────────────────────────────────────────
-  // Pegá acá la URL del webhook (GHL / n8n / Zapier) para recibir los envíos.
-  // Si queda vacío, la página funciona igual: muestra el resultado y ofrece copiarlo.
-  var WEBHOOK = "";
-  // WHATSAPP es el CTA principal: el que califica va a una conversación, no a un calendario.
-  // Acepta el link completo ("https://wa.me/54911...") o solo el número ("54911...").
+  // Webhook de GHL / n8n para que el lead entre al CRM aunque no escriba.
+  var WEBHOOK     = "";
+  // CTA principal: el que califica va a una conversación, no a un calendario.
   var WHATSAPP    = "5491171646536";
-  // Opcional. Si lo llenás, aparece como segundo botón para los que califican.
+  // Opcional. Si se completa, aparece como segundo botón para los que califican.
   var LINK_AGENDA = "";
 
   var $ = function(id){ return document.getElementById(id); };
+  var usd = function(n){ return "US$ " + Math.round(n).toLocaleString("es-AR"); };
 
-  // Acepta un wa.me completo o solo el número; devuelve "" si no hay nada configurado.
   function waLink(msg){
     if (!WHATSAPP) return "";
     var base = /^https?:\/\//.test(WHATSAPP)
@@ -252,8 +331,6 @@
     return '<a class="btn' + (sec ? " sec" : "") + '" href="' + u + '" rel="noopener">' + label + '</a>';
   }
 
-  var usd = function(n){ return "US$ " + Math.round(n).toLocaleString("es-AR"); };
-
   function leer(){
     return {
       C: parseFloat($("C").value), F: parseFloat($("F").value),
@@ -263,14 +340,13 @@
       nom: $("NOM").value.trim(), mail: $("MAIL").value.trim()
     };
   }
-
   function completo(d){
     var nums = [d.C,d.F,d.P,d.T,d.H,d.V];
     for (var i=0;i<nums.length;i++){ if (isNaN(nums[i])) return false; }
     return d.Q2 && d.Q3 && d.FACT && d.nom && /.+@.+\..+/.test(d.mail);
   }
 
-  // ── La falla: demanda > seguimiento > velocidad ──────────────────
+  // La falla: demanda > seguimiento > velocidad
   function falla(d){
     if (d.C < 20) return "demanda";
     if (d.Q3 === "nada" || d.Q3 === "acuerdo") return "seguimiento";
@@ -306,7 +382,7 @@
   var ARREGLOS = "<p>Con ese número, hoy no te conviene contratar a nadie. Va lo que yo haría en tu lugar, sin comprar software:</p><ul>"
     + "<li><strong>Ninguna consulta sin segundo mensaje.</strong> Una hoja de tres columnas y una alarma diaria. Diez minutos por día.</li>"
     + "<li><strong>Un solo lugar por cliente.</strong> Y el que cerró la venta escribe primero ahí, antes de que arranque el trabajo.</li>"
-    + "<li><strong>Las preguntas que te repiten, contestadas una vez.</strong> Anotalas una semana: van a ser cinco a ocho, no cincuenta. Guardalas en respuestas rápidas.</li>"
+    + "<li><strong>Las preguntas que te repiten, contestadas una vez.</strong> Anotalas una semana: van a ser cinco a ocho, no cincuenta.</li>"
     + "<li><strong>Una sola planilla, una sola persona, un día fijo.</strong> El problema no es cargar datos: es que los cargan tres personas en tres lugares.</li></ul>"
     + "<p><strong>Y lo que no haría todavía:</strong> comprar un CRM que nadie va a cargar, ni poner un bot a atender antes de tener escritas esas preguntas. El inventario va antes que el bot, siempre.</p>";
 
@@ -324,7 +400,7 @@
     var seis  = total * 6;
     var fa    = falla(d);
 
-    $("saludo").textContent = d.nom ? (d.nom + ", tu cuenta") : "Tu cuenta";
+    $("saludo").textContent = d.nom ? (d.nom + ", tu número.") : "El número.";
     $("total").textContent  = usd(total);
     $("seis").textContent   = "En seis meses: " + usd(seis);
     $("vent").textContent   = usd(vent);
@@ -336,12 +412,11 @@
 
     var califica = (d.FACT !== "lt10") && (seis >= 1500);
     var nivel;
-    if (fa === "demanda") nivel = "demanda";   // manda sobre el número: automatizar no es el primer movimiento
+    if (fa === "demanda") nivel = "demanda";   // manda sobre el número
     else if (!califica) nivel = "todavia";
     else if (seis < 3500) nivel = "n1";
     else nivel = "n2";
 
-    // Mensaje que el visitante manda ya escrito: llega con su cuenta hecha.
     var FTXT = { velocidad:"la fuga me da en la entrada, respondo tarde",
                  seguimiento:"la fuga me da en el seguimiento",
                  demanda:"me faltan consultas",
@@ -355,12 +430,12 @@
       $("nivelTxt").innerHTML = "<p>Tu número puede ser grande o chico, y no cambia lo anterior: con ese volumen de consultas, ordenar y automatizar la atención mejora algo que hoy no es el cuello de botella.</p>"
         + "<p>Lo honesto es decirlo: <strong>esto no lo resuelve una implementación mía.</strong> Lo que sigue es de dónde van a salir más conversaciones — y eso es otro trabajo.</p>"
         + "<p>Igual, lo de abajo sirve y no cuesta nada:</p>" + ARREGLOS;
-      $("cta").innerHTML = btnWa(msg, "Escribime igual, si querés que lo charlemos", true);
+      $("cta").innerHTML = btnWa(msg, "Escribime igual, si querés charlarlo", true);
 
     } else if (nivel === "todavia"){
       $("nivelTit").textContent = "Todavía no te conviene pagar por esto.";
       $("nivelTxt").innerHTML = ARREGLOS;
-      $("cta").innerHTML = btnWa(msg, "Si el número te queda grande más adelante, escribime", true);
+      $("cta").innerHTML = btnWa(msg, "Si más adelante el número te queda grande, escribime", true);
 
     } else if (nivel === "n1"){
       $("nivelTit").textContent = "El número da para arreglar un tramo, no la operación entera.";
@@ -402,15 +477,15 @@
             falla:fa, nivel:nivel
           })
         }).catch(function(){});
-      }catch(e){}
+      }catch(err){}
     }
 
     $("f").style.display = "none";
     $("out").style.display = "block";
-    $("out").scrollIntoView({behavior:"smooth", block:"start"});
+    window.scrollTo({top:0, behavior:"smooth"});
   });
 
-  // Si la página está embebida (visor de archivos, iframe de un builder), el click
+  // Si la página corre embebida (visor de archivos, iframe del builder), el click
   // dentro del marco no llega a ningún lado: se fuerza al nivel más alto disponible.
   document.addEventListener("click", function(e){
     var a = e.target && e.target.closest ? e.target.closest("a.btn") : null;
@@ -434,7 +509,7 @@
     } else {
       var ta = document.createElement("textarea");
       ta.value = resumen; document.body.appendChild(ta); ta.select();
-      try{ document.execCommand("copy"); done(); }catch(e){}
+      try{ document.execCommand("copy"); done(); }catch(err){}
       document.body.removeChild(ta);
     }
   });
