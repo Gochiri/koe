@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La cuenta de la fuga — Korvance</title>
+<style>
+  :root{
+    --ink:#1A1713; --dim:#4A423A; --line:#D8D0C3;
+    --bg:#FBF8F3; --card:#FFFFFF; --box:#F5F1EA;
+    --accent:#B85206; --accent-soft:#F3E3D4;
+    --ok:#2F6B3D; --warn:#8A5A00;
+    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);line-height:1.55;font-size:17px}
+  .wrap{max-width:720px;margin:0 auto;padding:40px 20px 80px}
+  h1{font-size:clamp(26px,5vw,36px);line-height:1.15;margin:0 0 14px;letter-spacing:-.02em}
+  h2{font-size:20px;margin:0 0 6px;letter-spacing:-.01em}
+  p{margin:0 0 14px}
+  .lead{color:var(--dim);font-size:18px;margin-bottom:8px}
+  .rule{height:1px;background:var(--line);border:0;margin:32px 0}
+  .step{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px;margin-bottom:18px}
+  .step-n{display:inline-block;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:10px}
+  .hint{color:var(--dim);font-size:15px;margin:-4px 0 16px}
+  .q{margin:0 0 20px}
+  .q:last-child{margin-bottom:0}
+  label.lbl{display:block;font-weight:600;margin-bottom:4px}
+  .sub{display:block;color:var(--dim);font-size:14px;font-weight:400;margin-bottom:8px}
+  select,input[type=number],input[type=email],input[type=text]{
+    width:100%;padding:11px 12px;font-size:16px;font-family:inherit;color:var(--ink);
+    background:#fff;border:1px solid var(--line);border-radius:8px}
+  select:focus,input:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:560px){.grid{grid-template-columns:1fr}}
+  button{
+    width:100%;padding:15px 20px;font-size:17px;font-weight:700;font-family:inherit;
+    background:var(--accent);color:#fff;border:0;border-radius:8px;cursor:pointer;margin-top:6px}
+  button:hover{filter:brightness(.94)}
+  button.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent);margin-top:10px;font-size:15px;padding:11px}
+  .err{color:#9B2226;font-size:15px;margin-top:10px;display:none}
+  /* resultado */
+  #out{display:none}
+  .big{background:var(--box);border-left:5px solid var(--accent);border-radius:0 10px 10px 0;padding:22px;margin:0 0 18px}
+  .num{font-size:clamp(30px,7vw,44px);font-weight:800;letter-spacing:-.03em;line-height:1.05;margin:2px 0 2px}
+  .cap{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);font-weight:700}
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
+  @media(max-width:560px){.split{grid-template-columns:1fr}}
+  .mini{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px}
+  .mini .v{font-size:22px;font-weight:700;letter-spacing:-.02em}
+  .tag{display:inline-block;background:var(--accent-soft);color:#7A3604;font-weight:700;
+    font-size:13px;letter-spacing:.08em;text-transform:uppercase;padding:5px 11px;border-radius:999px;margin-bottom:10px}
+  ul{margin:0 0 14px;padding-left:20px}
+  li{margin-bottom:8px}
+  .foot{color:var(--dim);font-size:14px;border-top:1px solid var(--line);padding-top:18px;margin-top:28px}
+  code.f{background:var(--box);padding:2px 6px;border-radius:4px;font-size:15px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>La cuenta de la fuga</h1>
+  <p class="lead">Antes de automatizar nada, el número de lo que se está perdiendo hoy.</p>
+  <p class="hint">Son seis datos y tres preguntas. Cinco minutos, sin registrarte. Al final vas a tener tu número y cuál de las tres fallas tenés — no una recomendación de qué comprar.</p>
+
+  <hr class="rule">
+
+  <form id="f" novalidate>
+
+    <div class="step">
+      <span class="step-n">Paso 1 · qué pasa hoy</span>
+      <h2>Cómo entra y qué pasa después</h2>
+      <p class="hint">Esto decide cuál de las tres fallas tenés. Contestá con lo que pasa de verdad, no con lo que debería pasar.</p>
+
+      <div class="q">
+        <label class="lbl" for="C">Consultas nuevas por mes
+          <span class="sub">Entre todos los canales: web, WhatsApp, teléfono, referidos, redes.</span></label>
+        <input type="number" id="C" min="0" step="1" inputmode="numeric" placeholder="ej. 40">
+      </div>
+
+      <div class="q">
+        <label class="lbl" for="Q2">Cuánto tardás normalmente en responder una consulta nueva</label>
+        <select id="Q2">
+          <option value="">Elegí una</option>
+          <option value="rapido">Menos de una hora</option>
+          <option value="dia">El mismo día</option>
+          <option value="lento">Más de un día</option>
+          <option value="nunca">A veces no se responde</option>
+        </select>
+      </div>
+
+      <div class="q">
+        <label class="lbl" for="Q3">Si esa persona no contesta tu primer mensaje, ¿qué pasa?</label>
+        <select id="Q3">
+          <option value="">Elegí una</option>
+          <option value="rutina">Hay una rutina de seguimiento, con responsable y días fijos</option>
+          <option value="acuerdo">Le escribo una vez más, cuando me acuerdo</option>
+          <option value="nada">No pasa nada</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="step">
+      <span class="step-n">Paso 2 · los números</span>
+      <h2>Lo que se pierde en ventas</h2>
+      <p class="hint">Si dudás de alguno, poné el número más bajo que te parezca creíble. Un número inflado te hace gastar de más.</p>
+
+      <div class="grid">
+        <div class="q">
+          <label class="lbl" for="F">Qué parte se pierde por el camino
+            <span class="sub">Contestadas tarde o nunca retomadas.</span></label>
+          <select id="F">
+            <option value="">Elegí una</option>
+            <option value="0.10">Alrededor del 10%</option>
+            <option value="0.20">Alrededor del 20%</option>
+            <option value="0.30">Alrededor del 30%</option>
+            <option value="0.50">La mitad o más</option>
+          </select>
+        </div>
+        <div class="q">
+          <label class="lbl" for="P">De las que sí atendés bien, cuántas compran
+            <span class="sub">Tu conversión real, no la buena.</span></label>
+          <select id="P">
+            <option value="">Elegí una</option>
+            <option value="0.05">Alrededor del 5%</option>
+            <option value="0.10">Alrededor del 10%</option>
+            <option value="0.20">Alrededor del 20%</option>
+            <option value="0.35">Alrededor del 35% o más</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="q">
+        <label class="lbl" for="T">Cuánto te deja la primera venta de un cliente nuevo (USD)
+          <span class="sub">Facturación, no ganancia.</span></label>
+        <input type="number" id="T" min="0" step="1" inputmode="numeric" placeholder="ej. 350">
+      </div>
+
+      <h2 style="margin-top:22px">Lo que se pierde en horas</h2>
+      <div class="grid">
+        <div class="q">
+          <label class="lbl" for="H">Horas por semana en tareas que se repiten
+            <span class="sub">Entre todos: pasar datos, armar presupuestos de cero, contestar lo mismo, cargar facturas.</span></label>
+          <input type="number" id="H" min="0" step="1" inputmode="numeric" placeholder="ej. 8">
+        </div>
+        <div class="q">
+          <label class="lbl" for="V">Cuánto cuesta esa hora (USD)
+            <span class="sub">Si no lo sabés: sueldo mensual con cargas ÷ 170.</span></label>
+          <input type="number" id="V" min="0" step="0.5" inputmode="decimal" placeholder="ej. 6">
+        </div>
+      </div>
+
+      <div class="q">
+        <label class="lbl" for="FACT">Facturación mensual del negocio (USD)</label>
+        <select id="FACT">
+          <option value="">Elegí una</option>
+          <option value="lt10">Menos de 10.000</option>
+          <option value="10a30">Entre 10.000 y 30.000</option>
+          <option value="30a100">Entre 30.000 y 100.000</option>
+          <option value="gt100">Más de 100.000</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="step">
+      <span class="step-n">Paso 3 · a dónde te lo mando</span>
+      <div class="grid">
+        <div class="q">
+          <label class="lbl" for="NOM">Tu nombre</label>
+          <input type="text" id="NOM" autocomplete="name" placeholder="Nombre">
+        </div>
+        <div class="q">
+          <label class="lbl" for="MAIL">Tu email</label>
+          <input type="email" id="MAIL" autocomplete="email" placeholder="vos@tunegocio.com">
+        </div>
+      </div>
+      <button type="submit">Ver mi número</button>
+      <p class="err" id="err">Faltan datos: completá todos los campos de arriba.</p>
+    </div>
+  </form>
+
+  <section id="out" aria-live="polite">
+    <hr class="rule">
+    <h1 id="saludo">Tu cuenta</h1>
+
+    <div class="big">
+      <span class="cap">Se te está yendo por mes</span>
+      <div class="num" id="total">—</div>
+      <span class="cap" id="seis">—</span>
+    </div>
+
+    <div class="split">
+      <div class="mini"><span class="cap">En ventas</span><div class="v" id="vent">—</div>
+        <p class="hint" style="margin:6px 0 0">consultas × lo que se pierde × conversión × ticket</p></div>
+      <div class="mini"><span class="cap">En horas</span><div class="v" id="hor">—</div>
+        <p class="hint" style="margin:6px 0 0">horas por semana × 4,3 × valor de la hora</p></div>
+    </div>
+
+    <div class="step">
+      <span class="tag" id="fallaTag">—</span>
+      <h2 id="fallaTit">—</h2>
+      <div id="fallaTxt"></div>
+    </div>
+
+    <div class="step">
+      <h2 id="nivelTit">—</h2>
+      <div id="nivelTxt"></div>
+      <div id="cta"></div>
+      <button class="ghost" type="button" id="copiar">Copiar el resultado</button>
+    </div>
+
+    <p class="foot">
+      Este número es <strong>facturación en juego, no ganancia</strong>, y no es lo que vas a recuperar: es el tamaño del agujero, no el del arreglo.
+      Esta página <strong>mide y ubica la falla</strong>. Qué conviene arreglar primero en tu operación concreta es otra conversación, y no se puede contestar sin mirarla.
+      <br><br>Germán Borrello — Korvance · Implementación de sistemas de automatización
+    </p>
+  </section>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // ── Configuración ────────────────────────────────────────────────
+  // Pegá acá la URL del webhook (GHL / n8n / Zapier) para recibir los envíos.
+  // Si queda vacío, la página funciona igual: muestra el resultado y ofrece copiarlo.
+  var WEBHOOK = "";
+  var LINK_AGENDA = "";   // link de agenda para los que califican
+  var WHATSAPP   = "";    // ej. "https://wa.me/54911XXXXXXX"
+
+  var $ = function(id){ return document.getElementById(id); };
+  var usd = function(n){ return "US$ " + Math.round(n).toLocaleString("es-AR"); };
+
+  function leer(){
+    return {
+      C: parseFloat($("C").value), F: parseFloat($("F").value),
+      P: parseFloat($("P").value), T: parseFloat($("T").value),
+      H: parseFloat($("H").value), V: parseFloat($("V").value),
+      Q2: $("Q2").value, Q3: $("Q3").value, FACT: $("FACT").value,
+      nom: $("NOM").value.trim(), mail: $("MAIL").value.trim()
+    };
+  }
+
+  function completo(d){
+    var nums = [d.C,d.F,d.P,d.T,d.H,d.V];
+    for (var i=0;i<nums.length;i++){ if (isNaN(nums[i])) return false; }
+    return d.Q2 && d.Q3 && d.FACT && d.nom && /.+@.+\..+/.test(d.mail);
+  }
+
+  // ── La falla: demanda > seguimiento > velocidad ──────────────────
+  function falla(d){
+    if (d.C < 20) return "demanda";
+    if (d.Q3 === "nada" || d.Q3 === "acuerdo") return "seguimiento";
+    if (d.Q2 === "lento" || d.Q2 === "nunca") return "velocidad";
+    return "ninguna";
+  }
+
+  var FALLAS = {
+    demanda: {
+      tit: "Tu problema no es atender. Es que no entran suficientes consultas.",
+      txt: "<p>Con ese volumen, automatizar la atención no toca la causa. Una automatización puede procesar demanda; no puede inventarla.</p>"
+         + "<p>Es como construir una recepción perfecta para una puerta por la que casi nadie entra. Lo que sigue no es un agente ni un bot: es de dónde van a salir más conversaciones.</p>"
+    },
+    seguimiento: {
+      tit: "Tu fuga está después del primer contacto.",
+      txt: "<p>Las consultas entran y se contestan. Lo que no hay es una segunda conversación: sin regla de cuándo volver a escribir y sin responsable, cada consulta que no contesta en el momento se pierde sola.</p>"
+         + "<p>Responder más rápido no arregla esto. Aceleraría la entrada a un proceso que sigue perdiendo después.</p>"
+         + "<p><strong>La regla mínima, y se hace a mano:</strong> ninguna consulta se queda sin un segundo mensaje. Una hoja con tres columnas —quién consultó, cuándo, cuándo le escribiste— y una alarma a la misma hora todos los días hábiles. Diez minutos.</p>"
+    },
+    velocidad: {
+      tit: "Tu fuga está en la entrada.",
+      txt: "<p>Hay consultas y hay seguimiento, pero la primera respuesta llega tarde. Hoy, si tardás horas, es probable que esa persona ya haya hablado con otro.</p>"
+         + "<p>Esta es la única de las tres donde una respuesta automática ayuda de verdad — y funciona porque atrás sí hay un proceso que la sostiene.</p>"
+    },
+    ninguna: {
+      tit: "Tu fuga no está donde se suele mirar.",
+      txt: "<p>Respondés rápido, hay seguimiento con responsable y entra volumen. Las tres fallas habituales de la entrada no explican tu número.</p>"
+         + "<p>Pero el número existe, y vos mismo marcaste que algo se pierde por el camino. Entonces está más adelante: en la calificación, en la cotización, en la entrega o en el trabajo que se repite.</p>"
+         + "<p>Eso no se puede ubicar desde un formulario. Es exactamente el tipo de caso donde mirar el proceso completo rinde, porque la respuesta no es ninguna de las obvias.</p>"
+    }
+  };
+
+  var ARREGLOS = "<p>Con ese número, hoy no te conviene contratar a nadie. Va lo que yo haría en tu lugar, sin comprar software:</p><ul>"
+    + "<li><strong>Ninguna consulta sin segundo mensaje.</strong> Una hoja de tres columnas y una alarma diaria. Diez minutos por día.</li>"
+    + "<li><strong>Un solo lugar por cliente.</strong> Y el que cerró la venta escribe primero ahí, antes de que arranque el trabajo.</li>"
+    + "<li><strong>Las preguntas que te repiten, contestadas una vez.</strong> Anotalas una semana: van a ser cinco a ocho, no cincuenta. Guardalas en respuestas rápidas.</li>"
+    + "<li><strong>Una sola planilla, una sola persona, un día fijo.</strong> El problema no es cargar datos: es que los cargan tres personas en tres lugares.</li></ul>"
+    + "<p><strong>Y lo que no haría todavía:</strong> comprar un CRM que nadie va a cargar, ni poner un bot a atender antes de tener escritas esas preguntas. El inventario va antes que el bot, siempre.</p>";
+
+  var resumen = "";
+
+  $("f").addEventListener("submit", function(e){
+    e.preventDefault();
+    var d = leer();
+    if (!completo(d)){ $("err").style.display = "block"; return; }
+    $("err").style.display = "none";
+
+    var vent  = d.C * d.F * d.P * d.T;
+    var horas = d.H * 4.3 * d.V;
+    var total = vent + horas;
+    var seis  = total * 6;
+    var fa    = falla(d);
+
+    $("saludo").textContent = d.nom ? (d.nom + ", tu cuenta") : "Tu cuenta";
+    $("total").textContent  = usd(total);
+    $("seis").textContent   = "En seis meses: " + usd(seis);
+    $("vent").textContent   = usd(vent);
+    $("hor").textContent    = usd(horas);
+
+    $("fallaTag").textContent = fa === "ninguna" ? "sin falla evidente" : fa;
+    $("fallaTit").textContent = FALLAS[fa].tit;
+    $("fallaTxt").innerHTML   = FALLAS[fa].txt;
+
+    var califica = (d.FACT !== "lt10") && (seis >= 1500);
+    var nivel;
+    if (fa === "demanda") nivel = "demanda";   // manda sobre el número: automatizar no es el primer movimiento
+    else if (!califica) nivel = "todavia";
+    else if (seis < 3500) nivel = "n1";
+    else nivel = "n2";
+
+    if (nivel === "demanda"){
+      $("nivelTit").textContent = "Automatizar no es tu primer movimiento.";
+      $("nivelTxt").innerHTML = "<p>Tu número puede ser grande o chico, y no cambia lo anterior: con ese volumen de consultas, ordenar y automatizar la atención mejora algo que hoy no es el cuello de botella.</p>"
+        + "<p>Lo honesto es decirlo: <strong>esto no lo resuelve una implementación mía.</strong> Lo que sigue es de dónde van a salir más conversaciones — y eso es otro trabajo.</p>"
+        + "<p>Igual, lo de abajo sirve y no cuesta nada:</p>" + ARREGLOS;
+      $("cta").innerHTML = WHATSAPP
+        ? '<p>Si cuando entre más volumen querés que lo miremos, escribime: <a href="'+WHATSAPP+'">acá</a>.</p>' : "";
+    } else if (nivel === "todavia"){
+      $("nivelTit").textContent = "Todavía no te conviene pagar por esto.";
+      $("nivelTxt").innerHTML = ARREGLOS;
+      $("cta").innerHTML = WHATSAPP
+        ? '<p>Si en algún momento el número te queda grande, escribime: <a href="'+WHATSAPP+'">acá</a>.</p>' : "";
+    } else if (nivel === "n1"){
+      $("nivelTit").textContent = "El número da para arreglar un tramo, no la operación entera.";
+      $("nivelTxt").innerHTML = "<p>Con esa fuga a seis meses tiene sentido ordenar y automatizar <strong>un</strong> tramo — el de entrada y seguimiento — y no mucho más. Arreglarlo arranca en US$ 1.500, así que el número tiene que superarlo con holgura, no apenas.</p>"
+        + "<p>Y una condición que se ignora seguido: <strong>el proceso tiene que estar funcionando a mano antes de automatizarlo.</strong> Automatizar algo que no funciona lo hace fallar más rápido y en más lugares.</p>";
+      $("cta").innerHTML = LINK_AGENDA
+        ? '<p>Si querés que lo miremos sobre tu operación, el siguiente paso es el diagnóstico: una sesión donde ubicamos la fuga principal y salís con qué conviene automatizar, qué conviene ordenar y qué todavía no tiene sentido tocar. <a href="'+LINK_AGENDA+'">Agendar</a>.</p>'
+        : "<p>El siguiente paso es el diagnóstico: una sesión donde ubicamos la fuga principal y salís con qué conviene automatizar, qué conviene ordenar y qué todavía no tiene sentido tocar.</p>";
+    } else {
+      $("nivelTit").textContent = "El número da para trabajar la operación, no un tramo suelto.";
+      $("nivelTxt").innerHTML = "<p>Con esa fuga a seis meses, arreglar solo la entrada te deja la mayor parte del agujero abierto. Lo que corresponde mirar es el proceso completo: dónde entra, quién decide, dónde se corta y qué se repite.</p>"
+        + "<p>Sigue valiendo la misma condición: <strong>lo que no funciona a mano no se automatiza.</strong> Primero se ordena, después se acelera.</p>";
+      $("cta").innerHTML = LINK_AGENDA
+        ? '<p>El siguiente paso es el diagnóstico, y con este número es el que más rinde. <a href="'+LINK_AGENDA+'">Agendar</a>.</p>'
+        : "<p>El siguiente paso es el diagnóstico, y con este número es el que más rinde.</p>";
+    }
+
+    resumen = [
+      "Cuenta de la fuga — " + d.nom + " (" + d.mail + ")",
+      "Consultas/mes: " + d.C + " · se pierde: " + (d.F*100) + "% · conversión: " + (d.P*100) + "% · ticket: " + d.T,
+      "Horas/semana: " + d.H + " · valor hora: " + d.V + " · facturación: " + d.FACT,
+      "Respuesta: " + d.Q2 + " · seguimiento: " + d.Q3,
+      "Fuga en ventas: " + usd(vent) + " · en horas: " + usd(horas),
+      "TOTAL/mes: " + usd(total) + " · a 6 meses: " + usd(seis),
+      "Falla: " + fa + " · Nivel: " + nivel
+    ].join("\n");
+
+    if (WEBHOOK){
+      try{
+        fetch(WEBHOOK, {
+          method:"POST", headers:{"Content-Type":"application/json"},
+          body: JSON.stringify({
+            nombre:d.nom, email:d.mail, consultas:d.C, fraccion:d.F, conversion:d.P,
+            ticket:d.T, horas:d.H, valor_hora:d.V, facturacion:d.FACT,
+            respuesta:d.Q2, seguimiento:d.Q3,
+            fuga_ventas:Math.round(vent), fuga_horas:Math.round(horas),
+            total_mes:Math.round(total), total_6m:Math.round(seis),
+            falla:fa, nivel:nivel
+          })
+        }).catch(function(){});
+      }catch(e){}
+    }
+
+    $("f").style.display = "none";
+    $("out").style.display = "block";
+    $("out").scrollIntoView({behavior:"smooth", block:"start"});
+  });
+
+  $("copiar").addEventListener("click", function(){
+    var btn = this;
+    var done = function(){ btn.textContent = "Copiado"; setTimeout(function(){ btn.textContent = "Copiar el resultado"; }, 2000); };
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(resumen).then(done, function(){});
+    } else {
+      var ta = document.createElement("textarea");
+      ta.value = resumen; document.body.appendChild(ta); ta.select();
+      try{ document.execCommand("copy"); done(); }catch(e){}
+      document.body.removeChild(ta);
+    }
+  });
+})();
+</script>
+</body>
+</html>
