@@ -45,6 +45,24 @@ Están separados desde agosto de 2026 y mezclarlos es el error más caro que se 
 
 ## Trabajando con Eden por MCP
 
+**Primero la herramienta, después la prosa.** Para cualquier trabajo de contenido o análisis se corre la skill o el Custom AI de Eden que ya existe, y se entrega su salida con un veredicto encima. Analizar a mano lo que una herramienta ya hace es la forma más cara de irse por las ramas. Si no hay herramienta para esa tarea, se dice y se trabaja a mano.
+
+| Tarea | Qué se corre |
+| --- | --- |
+| filtrar o fichar material ajeno | Custom AI `Ficha de Referencia` |
+| escribir o reescribir una pieza del canal | Custom AI `El receptor` (10 fuentes) |
+| adaptar una pieza ajena a su historia | Custom AI `Adaptador de Formatos` |
+| títulos | skill `youtube-titles` |
+| guion largo + empaque | Custom AI `YouTube Script Studio` |
+| sacar ideas de sus propias notas | Custom AI `Thought Partner` |
+| oferta y argumento de venta | Custom AI `Offer Architect` |
+| landing | Custom AI `Landing Page Studio` |
+| tabla, tracker, swipe file | skill `table-builder` |
+
+**Bloqueadas hoy por el plan:** `Creator Deep Dive`, `Topic Research`, `Ad Research` y la skill `weekly-strategist` dependen de las tools de investigación social, que devuelven *upgrade required*. Lo que ya está guardado en un board sí se lee — con `eden_read_media_card`, no con `eden_read_social_post`.
+
+**Respuestas cortas.** El default es la salida de la herramienta más un veredicto. Un ensayo se escribe solo si lo pide.
+
 **Para saber qué hay en un board, solo sirve `eden_read_board`.** `eden_search_workspace_items` no es confiable: falla con URLs y devuelve resultados sin relación.
 
 **En español, la búsqueda semántica falla.** `eden_find_workspace_items` con una frase en castellano devuelve ruido en inglés. Se usa `depth: "deep"` con **una sola palabra clave** en español.
