@@ -249,7 +249,7 @@
   function btnWa(msg, label, sec){
     var u = waLink(msg);
     if (!u) return "";
-    return '<a class="btn' + (sec ? " sec" : "") + '" href="' + u + '" target="_blank" rel="noopener">' + label + '</a>';
+    return '<a class="btn' + (sec ? " sec" : "") + '" href="' + u + '" rel="noopener">' + label + '</a>';
   }
 
   var usd = function(n){ return "US$ " + Math.round(n).toLocaleString("es-AR"); };
@@ -368,7 +368,7 @@
         + "<p>Y una condición que se ignora seguido: <strong>el proceso tiene que estar funcionando a mano antes de automatizarlo.</strong> Automatizar algo que no funciona lo hace fallar más rápido y en más lugares.</p>"
         + "<p>Si querés que lo miremos sobre tu operación, escribime y te digo en dos mensajes si tiene sentido o no. Sin llamada de venta.</p>";
       $("cta").innerHTML = btnWa(msg, "Escribime por WhatsApp")
-        + (LINK_AGENDA ? '<a class="btn sec" href="'+LINK_AGENDA+'" target="_blank" rel="noopener">O agendá la consultoría directo</a>' : "");
+        + (LINK_AGENDA ? '<a class="btn sec" href="'+LINK_AGENDA+'" rel="noopener">O agendá la consultoría directo</a>' : "");
 
     } else {
       $("nivelTit").textContent = "El número da para trabajar la operación, no un tramo suelto.";
@@ -376,7 +376,7 @@
         + "<p>Sigue valiendo la misma condición: <strong>lo que no funciona a mano no se automatiza.</strong> Primero se ordena, después se acelera.</p>"
         + "<p>Con este número la conversación vale la pena. Escribime y te digo en dos mensajes si tiene sentido o no. Sin llamada de venta.</p>";
       $("cta").innerHTML = btnWa(msg, "Escribime por WhatsApp")
-        + (LINK_AGENDA ? '<a class="btn sec" href="'+LINK_AGENDA+'" target="_blank" rel="noopener">O agendá la consultoría directo</a>' : "");
+        + (LINK_AGENDA ? '<a class="btn sec" href="'+LINK_AGENDA+'" rel="noopener">O agendá la consultoría directo</a>' : "");
     }
 
     resumen = [
@@ -408,6 +408,22 @@
     $("f").style.display = "none";
     $("out").style.display = "block";
     $("out").scrollIntoView({behavior:"smooth", block:"start"});
+  });
+
+  // Si la página está embebida (visor de archivos, iframe de un builder), el click
+  // dentro del marco no llega a ningún lado: se fuerza al nivel más alto disponible.
+  document.addEventListener("click", function(e){
+    var a = e.target && e.target.closest ? e.target.closest("a.btn") : null;
+    if (!a || !a.href) return;
+    try {
+      if (window.top && window.top !== window.self){
+        e.preventDefault();
+        window.top.location.href = a.href;
+      }
+    } catch (err) {
+      e.preventDefault();
+      window.open(a.href, "_blank");
+    }
   });
 
   $("copiar").addEventListener("click", function(){
