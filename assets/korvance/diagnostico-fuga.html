@@ -37,6 +37,11 @@
     width:100%;padding:15px 20px;font-size:17px;font-weight:700;font-family:inherit;
     background:var(--accent);color:#fff;border:0;border-radius:8px;cursor:pointer;margin-top:6px}
   button:hover{filter:brightness(.94)}
+  a.btn{display:block;text-align:center;text-decoration:none;padding:15px 20px;font-size:17px;
+    font-weight:700;background:var(--accent);color:#fff;border-radius:8px;margin-top:14px}
+  a.btn:hover{filter:brightness(.94)}
+  a.btn.sec{background:transparent;color:var(--accent);border:1px solid var(--accent);
+    font-size:15px;padding:11px;margin-top:10px;font-weight:600}
   button.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent);margin-top:10px;font-size:15px;padding:11px}
   .err{color:#9B2226;font-size:15px;margin-top:10px;display:none}
   /* resultado */
@@ -225,10 +230,28 @@
   // Pegá acá la URL del webhook (GHL / n8n / Zapier) para recibir los envíos.
   // Si queda vacío, la página funciona igual: muestra el resultado y ofrece copiarlo.
   var WEBHOOK = "";
-  var LINK_AGENDA = "";   // link de agenda para los que califican
-  var WHATSAPP   = "";    // ej. "https://wa.me/54911XXXXXXX"
+  // WHATSAPP es el CTA principal: el que califica va a una conversación, no a un calendario.
+  // Acepta el link completo ("https://wa.me/54911...") o solo el número ("54911...").
+  var WHATSAPP    = "";
+  // Opcional. Si lo llenás, aparece como segundo botón para los que califican.
+  var LINK_AGENDA = "";
 
   var $ = function(id){ return document.getElementById(id); };
+
+  // Acepta un wa.me completo o solo el número; devuelve "" si no hay nada configurado.
+  function waLink(msg){
+    if (!WHATSAPP) return "";
+    var base = /^https?:\/\//.test(WHATSAPP)
+      ? WHATSAPP.replace(/[?#].*$/, "")
+      : "https://wa.me/" + WHATSAPP.replace(/[^0-9]/g, "");
+    return base + "?text=" + encodeURIComponent(msg);
+  }
+  function btnWa(msg, label, sec){
+    var u = waLink(msg);
+    if (!u) return "";
+    return '<a class="btn' + (sec ? " sec" : "") + '" href="' + u + '" target="_blank" rel="noopener">' + label + '</a>';
+  }
+
   var usd = function(n){ return "US$ " + Math.round(n).toLocaleString("es-AR"); };
 
   function leer(){
@@ -318,32 +341,42 @@
     else if (seis < 3500) nivel = "n1";
     else nivel = "n2";
 
+    // Mensaje que el visitante manda ya escrito: llega con su cuenta hecha.
+    var FTXT = { velocidad:"la fuga me da en la entrada, respondo tarde",
+                 seguimiento:"la fuga me da en el seguimiento",
+                 demanda:"me faltan consultas",
+                 ninguna:"no me dio ninguna de las tres" };
+    var msg = "Hola Germán. Hice la cuenta de la fuga en tu página. Me dio "
+            + usd(total) + " por mes, " + usd(seis) + " a seis meses, y " + FTXT[fa] + ". "
+            + "Me gustaría que lo miremos.";
+
     if (nivel === "demanda"){
       $("nivelTit").textContent = "Automatizar no es tu primer movimiento.";
       $("nivelTxt").innerHTML = "<p>Tu número puede ser grande o chico, y no cambia lo anterior: con ese volumen de consultas, ordenar y automatizar la atención mejora algo que hoy no es el cuello de botella.</p>"
         + "<p>Lo honesto es decirlo: <strong>esto no lo resuelve una implementación mía.</strong> Lo que sigue es de dónde van a salir más conversaciones — y eso es otro trabajo.</p>"
         + "<p>Igual, lo de abajo sirve y no cuesta nada:</p>" + ARREGLOS;
-      $("cta").innerHTML = WHATSAPP
-        ? '<p>Si cuando entre más volumen querés que lo miremos, escribime: <a href="'+WHATSAPP+'">acá</a>.</p>' : "";
+      $("cta").innerHTML = btnWa(msg, "Escribime igual, si querés que lo charlemos", true);
+
     } else if (nivel === "todavia"){
       $("nivelTit").textContent = "Todavía no te conviene pagar por esto.";
       $("nivelTxt").innerHTML = ARREGLOS;
-      $("cta").innerHTML = WHATSAPP
-        ? '<p>Si en algún momento el número te queda grande, escribime: <a href="'+WHATSAPP+'">acá</a>.</p>' : "";
+      $("cta").innerHTML = btnWa(msg, "Si el número te queda grande más adelante, escribime", true);
+
     } else if (nivel === "n1"){
       $("nivelTit").textContent = "El número da para arreglar un tramo, no la operación entera.";
       $("nivelTxt").innerHTML = "<p>Con esa fuga a seis meses tiene sentido ordenar y automatizar <strong>un</strong> tramo — el de entrada y seguimiento — y no mucho más. Arreglarlo arranca en US$ 1.500, así que el número tiene que superarlo con holgura, no apenas.</p>"
-        + "<p>Y una condición que se ignora seguido: <strong>el proceso tiene que estar funcionando a mano antes de automatizarlo.</strong> Automatizar algo que no funciona lo hace fallar más rápido y en más lugares.</p>";
-      $("cta").innerHTML = LINK_AGENDA
-        ? '<p>Si querés que lo miremos sobre tu operación, el siguiente paso es el diagnóstico: una sesión donde ubicamos la fuga principal y salís con qué conviene automatizar, qué conviene ordenar y qué todavía no tiene sentido tocar. <a href="'+LINK_AGENDA+'">Agendar</a>.</p>'
-        : "<p>El siguiente paso es el diagnóstico: una sesión donde ubicamos la fuga principal y salís con qué conviene automatizar, qué conviene ordenar y qué todavía no tiene sentido tocar.</p>";
+        + "<p>Y una condición que se ignora seguido: <strong>el proceso tiene que estar funcionando a mano antes de automatizarlo.</strong> Automatizar algo que no funciona lo hace fallar más rápido y en más lugares.</p>"
+        + "<p>Si querés que lo miremos sobre tu operación, escribime y te digo en dos mensajes si tiene sentido o no. Sin llamada de venta.</p>";
+      $("cta").innerHTML = btnWa(msg, "Escribime por WhatsApp")
+        + (LINK_AGENDA ? '<a class="btn sec" href="'+LINK_AGENDA+'" target="_blank" rel="noopener">O agendá la consultoría directo</a>' : "");
+
     } else {
       $("nivelTit").textContent = "El número da para trabajar la operación, no un tramo suelto.";
       $("nivelTxt").innerHTML = "<p>Con esa fuga a seis meses, arreglar solo la entrada te deja la mayor parte del agujero abierto. Lo que corresponde mirar es el proceso completo: dónde entra, quién decide, dónde se corta y qué se repite.</p>"
-        + "<p>Sigue valiendo la misma condición: <strong>lo que no funciona a mano no se automatiza.</strong> Primero se ordena, después se acelera.</p>";
-      $("cta").innerHTML = LINK_AGENDA
-        ? '<p>El siguiente paso es el diagnóstico, y con este número es el que más rinde. <a href="'+LINK_AGENDA+'">Agendar</a>.</p>'
-        : "<p>El siguiente paso es el diagnóstico, y con este número es el que más rinde.</p>";
+        + "<p>Sigue valiendo la misma condición: <strong>lo que no funciona a mano no se automatiza.</strong> Primero se ordena, después se acelera.</p>"
+        + "<p>Con este número la conversación vale la pena. Escribime y te digo en dos mensajes si tiene sentido o no. Sin llamada de venta.</p>";
+      $("cta").innerHTML = btnWa(msg, "Escribime por WhatsApp")
+        + (LINK_AGENDA ? '<a class="btn sec" href="'+LINK_AGENDA+'" target="_blank" rel="noopener">O agendá la consultoría directo</a>' : "");
     }
 
     resumen = [
